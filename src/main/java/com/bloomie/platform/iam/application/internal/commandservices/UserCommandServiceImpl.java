@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
  *
  * <p>Coordinates the {@link UserRepository} (domain port) and the {@link HashingService}
  * (outbound service) to register users, update profiles, and change passwords.
- * Domain events are registered on the aggregate and published after each successful save.</p>
+ * Domain events are registered and published by the repository adapter after each save.</p>
  */
 @Service
 public class UserCommandServiceImpl implements UserCommandService {
@@ -27,8 +27,8 @@ public class UserCommandServiceImpl implements UserCommandService {
     private final HashingService hashingService;
 
     private static final String EMAIL_ALREADY_REGISTERED = "user.email.already.registered";
-    private static final String USER_NOT_FOUND ="user.not.found";
-    private static final String INVALID_PASSWORD    = "user.password.incorrect";
+    private static final String USER_NOT_FOUND = "user.not.found";
+    private static final String INVALID_PASSWORD = "user.password.incorrect";
     private static final String ROLE_NOT_FOUND = "user.rol.not.found";
 
     public UserCommandServiceImpl(UserRepository userRepository, HashingService hashingService) {
@@ -39,7 +39,7 @@ public class UserCommandServiceImpl implements UserCommandService {
     @Override
     public Result<User, ApplicationError> handle(RegisterUserCommand command) {
         if (userRepository.existsByEmailAddress(new EmailAddress(command.email())))
-            return Result.failure(ApplicationError.conflict("user",EMAIL_ALREADY_REGISTERED));
+            return Result.failure(ApplicationError.conflict("user", EMAIL_ALREADY_REGISTERED));
 
         var role = userRepository.findRoleByName(UserRole.ROLE_YOUNG_ADULT)
                 .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
@@ -49,10 +49,7 @@ public class UserCommandServiceImpl implements UserCommandService {
                 new RegisterUserCommand(command.email(), hashedPassword, command.firstName(), command.lastName()),
                 role);
 
-        userRepository.save(user);
-        user.onRegistered();
-
-        return Result.success(user);
+        return Result.success(userRepository.save(user));
     }
 
     @Override
@@ -64,12 +61,11 @@ public class UserCommandServiceImpl implements UserCommandService {
                 .orElseThrow(() -> new RuntimeException(ROLE_NOT_FOUND));
 
         var hashedPassword = hashingService.encode(command.password());
-        var user = new User(new RegisterDermatologistCommand(command.email(),hashedPassword, command.firstName(), command.lastName()),
+        var user = new User(
+                new RegisterDermatologistCommand(command.email(), hashedPassword, command.firstName(), command.lastName()),
                 role);
 
-        userRepository.save(user);
-        user.onDermatologistRegistered();
-        return Result.success(user);
+        return Result.success(userRepository.save(user));
     }
 
     @Override
@@ -89,10 +85,10 @@ public class UserCommandServiceImpl implements UserCommandService {
     public Result<Void, ApplicationError> handle(ChangePasswordCommand command) {
         var user = userRepository.findById(Long.parseLong(command.userId()));
         if (user.isEmpty())
-            return Result.failure(ApplicationError.notFound("user",USER_NOT_FOUND));
+            return Result.failure(ApplicationError.notFound("user", USER_NOT_FOUND));
 
         if (!hashingService.matches(command.currentPassword(), user.get().getPassword()))
-            return Result.failure(ApplicationError.businessRuleViolation("user",INVALID_PASSWORD));
+            return Result.failure(ApplicationError.businessRuleViolation("user", INVALID_PASSWORD));
 
         var hashedNewPassword = hashingService.encode(command.newPassword());
         user.get().changePassword(new ChangePasswordCommand(command.userId(), command.currentPassword(), hashedNewPassword));

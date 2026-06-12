@@ -23,4 +23,11 @@ public interface IamContextFacade {
      * @param email the email address to check
      */
     boolean existsUserByEmail(String email);
+
+    /**
+     * Returns {@code true} if a user with the given id exists.
+     *
+     * @param userId the numeric user id to check
+     */
+    boolean existsUserById(Long userId);
 }

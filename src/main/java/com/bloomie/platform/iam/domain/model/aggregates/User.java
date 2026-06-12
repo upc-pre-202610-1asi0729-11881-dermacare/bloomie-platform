@@ -79,9 +79,17 @@ public class User extends AbstractDomainAggregateRoot<User>{
         );
     }
 
-    /** Registers and publishes a {@link UserRegisteredEvent} after a Young Adult is created. */
+    /**
+     * Registers the appropriate domain event based on the user's role.
+     * Dermatologist users fire {@link DermatologistRegisteredEvent};
+     * all others fire {@link UserRegisteredEvent}.
+     */
     public void onRegistered() {
-        registerDomainEvent(UserRegisteredEvent.from(this));
+        if (roles.stream().anyMatch(r -> r.getName() == UserRole.ROLE_DERMATOLOGIST)) {
+            registerDomainEvent(DermatologistRegisteredEvent.from(this));
+        } else {
+            registerDomainEvent(UserRegisteredEvent.from(this));
+        }
     }
 
     /** Creates a new Dermatologist user from a {@link RegisterDermatologistCommand}. */
