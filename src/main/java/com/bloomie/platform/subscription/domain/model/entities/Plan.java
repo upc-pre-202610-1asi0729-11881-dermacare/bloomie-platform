@@ -2,15 +2,28 @@
 package com.bloomie.platform.subscription.domain.model.entities;
 
 import com.bloomie.platform.subscription.domain.model.valueobjects.PlanType;
+import lombok.Setter;
+
 import java.util.List;
 
 public class Plan {
 
+    @Setter
     private Long id;
+
+    @Setter
     private PlanType type;
+
+    @Setter
     private String name;
+
+    @Setter
     private Double price;
+
+    @Setter
     private Integer durationDays;
+
+    @Setter
     private List<String> modules;
 
     public Plan() {}

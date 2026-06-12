@@ -17,13 +17,21 @@ public class Subscription extends AbstractDomainAggregateRoot<Subscription> {
     @Getter @Setter
     private Long id;
 
+    @Setter
     private PatientId patientId;
+
+    @Setter
     private PlanId planId;
+
+    @Setter
     private SubscriptionStatus status;
+
+    @Setter
     private LocalDateTime startDate;
+
+    @Setter
     private LocalDateTime endDate;
 
-    // Constructor para el assembler
     public Subscription(Long id, PatientId patientId, PlanId planId,
                         SubscriptionStatus status, LocalDateTime startDate,
                         LocalDateTime endDate) {
