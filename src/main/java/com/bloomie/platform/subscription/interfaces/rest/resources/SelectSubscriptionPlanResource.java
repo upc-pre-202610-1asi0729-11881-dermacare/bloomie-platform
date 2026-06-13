@@ -1,4 +1,4 @@
-package com.bloomie.platform.subscription.interfaces.resources;
+package com.bloomie.platform.subscription.interfaces.rest.resources;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

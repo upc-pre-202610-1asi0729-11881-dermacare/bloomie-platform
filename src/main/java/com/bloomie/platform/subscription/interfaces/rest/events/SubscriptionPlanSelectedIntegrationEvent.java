@@ -1,4 +1,4 @@
-package com.bloomie.platform.subscription.interfaces.events;
+package com.bloomie.platform.subscription.interfaces.rest.events;
 
 import com.bloomie.platform.subscription.domain.model.aggregates.Subscription;
 
