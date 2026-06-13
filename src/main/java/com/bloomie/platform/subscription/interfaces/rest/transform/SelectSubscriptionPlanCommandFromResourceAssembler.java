@@ -7,7 +7,7 @@ public class SelectSubscriptionPlanCommandFromResourceAssembler {
     public static SelectSubscriptionPlanCommand toCommandFromResource(SelectSubscriptionPlanResource resource) {
         return new SelectSubscriptionPlanCommand(
                 resource.patientId(),
-                resource.plandId()
+                resource.planId()
         );
     }
 }

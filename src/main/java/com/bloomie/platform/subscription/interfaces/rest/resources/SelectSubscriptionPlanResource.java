@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(
         name = "SelectSubscriptionPlanRequest",
         description = "Request payload for selecting subscription plan",
-        example = "{\"PatientId\":1, \"PlanId\": 2}"
+        example = "{\"patientId\":1, \"planId\": 1}"
 )
 public record SelectSubscriptionPlanResource(
 
@@ -13,6 +13,6 @@ public record SelectSubscriptionPlanResource(
         Long patientId,
 
         @Schema(description = "Plan id to subscribe to", example = "1")
-        Long plandId
+        Long planId
 ){
 }

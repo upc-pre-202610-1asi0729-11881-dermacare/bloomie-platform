@@ -1,6 +1,6 @@
 package com.bloomie.platform.subscription.infrastructure.converters;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.PatientId;
+import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
+@Service("subscriptionExternalIamService")
 public class ExternalIamService {
     private final IamContextFacade iamContextFacade;
 
@@ -15,7 +15,8 @@ public class ExternalIamService {
     }
 
     public Optional<PatientId> fetchPatientById(Long userId) {
-        var existes = iamContextFacade.fetchUserByEmail(userId.toString());
-        return userId == 0L ? Optional.empty() : Optional.of(new PatientId(userId));
+        return iamContextFacade.existsUserById(userId)
+                ? Optional.of(new PatientId(userId))
+                : Optional.empty();
     }
 }

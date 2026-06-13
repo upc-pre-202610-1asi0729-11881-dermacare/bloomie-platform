@@ -30,7 +30,7 @@ public class PlanPersistenceEntity extends AuditableAbstractPersistenceEntity {
     private Integer durationDays;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(joinColumns = @JoinColumn(name = "plan_id"))
+    @CollectionTable(name = "plan_modules", joinColumns = @JoinColumn(name = "plan_id"))
     @Column(name = "module", nullable = false)
     private List<String> modules = new ArrayList<>();
 }

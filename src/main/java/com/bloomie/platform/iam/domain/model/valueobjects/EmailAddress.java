@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 /**
  * EmailAddress Value Object.
  */
-public record EmailAddress(@Email String address) {
+public record EmailAddress(String address) {
     private static final String NOT_BLANK_MESSAGE_KEY = "user.email.blank";
     private static final String INVALID_MESSAGE_KEY = "user.email.invalid";
 

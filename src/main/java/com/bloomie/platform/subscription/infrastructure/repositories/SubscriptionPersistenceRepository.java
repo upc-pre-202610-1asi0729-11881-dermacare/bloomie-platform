@@ -17,6 +17,6 @@ public interface SubscriptionPersistenceRepository
     @Query("select s from SubscriptionPersistenceEntity s where s.patientId = :patientId")
     Optional<SubscriptionPersistenceEntity> findByPatientId(@Param("patientId") PatientId patientId);
 
-    @Query("select count(s) from SubscriptionPersistenceEntity s where s.patientId = :patientId")
-    long countByPatientId(@Param("patientId") PatientId patientId);
+    @Query("select (count(s) > 0) from SubscriptionPersistenceEntity s where s.patientId = :patientId")
+    boolean existsByPatientId(@Param("patientId") PatientId patientId);
 }
