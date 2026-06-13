@@ -7,10 +7,10 @@ import com.bloomie.platform.iam.interfaces.rest.resources.RegisterDermatologistR
 public class RegisterDermatologistCommandFromResourceAssembler {
     public static RegisterDermatologistCommand toCommandFromResource(RegisterDermatologistResource resource) {
         return new RegisterDermatologistCommand(
-                resource.firstName(),
-                resource.lastName(),
                 resource.email(),
-                resource.password()
+                resource.password(),
+                resource.firstName(),
+                resource.lastName()
         );
     }
 }

@@ -7,10 +7,10 @@ import com.bloomie.platform.iam.interfaces.rest.resources.RegisterUserResource;
 public class RegisterUserCommandFromResourceAssembler {
     public static RegisterUserCommand toCommandFromResource(RegisterUserResource resource) {
         return new RegisterUserCommand(
-                resource.firstName(),
-                resource.lastName(),
                 resource.email(),
-                resource.password()
+                resource.password(),
+                resource.firstName(),
+                resource.lastName()
         );
     }
 }

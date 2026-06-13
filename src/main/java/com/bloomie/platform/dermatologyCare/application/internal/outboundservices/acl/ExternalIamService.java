@@ -10,7 +10,7 @@ import java.util.Optional;
  * Outbound ACL service that wraps {@link IamContextFacade} to provide
  * IAM lookups in terms of Dermatology Care's own value objects.
  */
-@Service
+@Service("dermatologyCareExternalIamService")
 public class ExternalIamService {
 
     private final IamContextFacade iamContextFacade;
