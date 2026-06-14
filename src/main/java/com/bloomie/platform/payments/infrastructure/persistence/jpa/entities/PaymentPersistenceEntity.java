@@ -12,9 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * JPA persistence entity for payments.
+ */
 @Entity
 @Table(name = "payments")
 @Getter
@@ -25,15 +25,15 @@ public class PaymentPersistenceEntity extends AuditableAbstractPersistenceEntity
     @Column(nullable = false)
     private PatientId patientId;
 
-    @Convert(converter =PlanIdPersistenceConverter.class)
+    @Convert(converter = PlanIdPersistenceConverter.class)
     @Column(nullable = false)
     private PlanId planId;
 
-    @Convert(converter =SubscriptionIdPersistenceConverter.class)
+    @Convert(converter = SubscriptionIdPersistenceConverter.class)
     @Column(nullable = false)
     private SubscriptionId subscriptionId;
 
-    @Convert(converter =PaymentAmountPersistenceConverter.class)
+    @Convert(converter = PaymentAmountPersistenceConverter.class)
     @Column(nullable = false)
     private PaymentAmount paymentAmount;
 

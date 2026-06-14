@@ -8,28 +8,40 @@ import com.bloomie.platform.payments.domain.model.queries.GetPaymentsByPatientId
 import com.bloomie.platform.payments.domain.repositories.PaymentRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
+/**
+ * Application service that resolves Payments bounded-context read queries.
+ */
 @Service
 public class PaymentQueryServiceImpl implements PaymentQueryService {
     private final PaymentRepository paymentRepository;
 
+    /**
+     * Creates the query service with the payment repository dependency.
+     *
+     * @param paymentRepository payment repository port
+     */
     public PaymentQueryServiceImpl(PaymentRepository paymentRepository) {
         this.paymentRepository = paymentRepository;
     }
 
+    // inherited javadoc
     @Override
     public Optional<Payment> handle(GetPaymentByIdQuery query) {
         return paymentRepository.findById(query.paymentId());
     }
 
+    // inherited javadoc
     @Override
-    public Optional<Payment> handle(GetPaymentsByPatientIdQuery query) {
-        return paymentRepository.findById(query.patientId().patientId());
+    public List<Payment> handle(GetPaymentsByPatientIdQuery query) {
+        return paymentRepository.findAllByPatientId(query.patientId());
     }
 
+    // inherited javadoc
     @Override
     public Optional<Payment> handle(GetPaymentBySubscriptionIdQuery query) {
-        return paymentRepository.findById(query.subscriptionId().subscriptionId());
+        return paymentRepository.findBySubscriptionId(query.subscriptionId());
     }
 }

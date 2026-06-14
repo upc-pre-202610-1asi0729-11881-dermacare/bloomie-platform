@@ -4,6 +4,9 @@ import com.bloomie.platform.payments.domain.model.valueobjects.PatientId;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
+/**
+ * Converts patient ids between the domain model and persistence column values.
+ */
 @Converter(autoApply = false)
 public class PatientIdPersistenceConverter implements AttributeConverter<PatientId, Long> {
 

@@ -1,16 +1,17 @@
 package com.bloomie.platform.payments.infrastructure.persistence.jpa.converters;
 
-import com.bloomie.platform.payments.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.payments.domain.model.valueobjects.PaymentAmount;
-import com.bloomie.platform.payments.domain.model.valueobjects.PaymentType;
-import com.bloomie.platform.payments.domain.model.valueobjects.SubscriptionId;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
+/**
+ * Converts payment amounts between the domain model and persistence column values.
+ */
 @Converter(autoApply = false)
-public class PaymentAmountPersistenceConverter implements AttributeConverter<PaymentAmount, Double>  {
+public class PaymentAmountPersistenceConverter implements AttributeConverter<PaymentAmount, Double> {
+
     @Override
-    public Double convertToDatabaseColumn(PaymentAmount attribute)  {
+    public Double convertToDatabaseColumn(PaymentAmount attribute) {
         return attribute == null ? null : attribute.amount();
     }
 

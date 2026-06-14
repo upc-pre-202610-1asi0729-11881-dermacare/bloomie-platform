@@ -2,10 +2,13 @@ package com.bloomie.platform.payments.interfaces.rest.resources;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * Resource for processing a subscription payment.
+ */
 @Schema(
-        name = "ProcessSubscriptionPaymentResponse",
+        name = "ProcessSubscriptionPaymentRequest",
         description = "Request payload for processing a subscription payment",
-        example = "{\"patienId\":1, \"planId\": 2, \"subscriptionId\": 1 ,\"paymentAmount\": 9.99}"
+        example = "{\"patientId\":1, \"planId\": 2, \"subscriptionId\": 1, \"paymentAmount\": 9.99}"
 )
 public record ProcessSubscriptionPaymentResource(
         @Schema(description = "Patient unique identifier", example = "1")

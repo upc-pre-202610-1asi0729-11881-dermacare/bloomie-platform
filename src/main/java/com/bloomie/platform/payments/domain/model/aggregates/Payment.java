@@ -3,12 +3,18 @@ package com.bloomie.platform.payments.domain.model.aggregates;
 import com.bloomie.platform.payments.domain.model.commands.ProcessSubscriptionPaymentCommand;
 import com.bloomie.platform.payments.domain.model.events.SubscriptionPaymentProcessedEvent;
 import com.bloomie.platform.payments.domain.model.valueobjects.*;
-import com.bloomie.platform.payments.infrastructure.persistence.jpa.entities.PaymentPersistenceEntity;
 import com.bloomie.platform.shared.domain.model.aggregates.AbstractDomainAggregateRoot;
 import com.bloomie.platform.payments.domain.model.valueobjects.PlanId;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Payment aggregate root.
+ *
+ * <p>Extends {@link AbstractDomainAggregateRoot} to gain domain event registration
+ * support. No JPA or persistence annotation is present here — those concerns live
+ * exclusively in {@code PaymentPersistenceEntity}.</p>
+ */
 @Getter
 public class Payment extends AbstractDomainAggregateRoot<Payment> {
     @Setter
@@ -32,7 +38,10 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
     @Setter
     PaymentStatus status;
 
-    public Payment(Long id, PatientId patientId, PlanId planId, SubscriptionId subscriptionId,PaymentType type, PaymentAmount amount, PaymentStatus status) {
+    /**
+     * Creates a payment from the provided domain values.
+     */
+    public Payment(Long id, PatientId patientId, PlanId planId, SubscriptionId subscriptionId, PaymentType type, PaymentAmount amount, PaymentStatus status) {
         this.id = id;
         this.patientId = patientId;
         this.planId = planId;
@@ -42,6 +51,11 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
         this.status = status;
     }
 
+    /**
+     * Creates a payment from the provided {@link ProcessSubscriptionPaymentCommand}.
+     *
+     * @param command The {@link ProcessSubscriptionPaymentCommand} command
+     */
     public Payment(ProcessSubscriptionPaymentCommand command) {
         this.patientId = new PatientId(command.patientId());
         this.planId = new PlanId(command.planId());
@@ -51,23 +65,50 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
         this.status = PaymentStatus.PENDING;
     }
 
+    /**
+     * Signals that this payment has just been processed and persisted.
+     *
+     * <p>Called by the repository adapter after the JPA identity has been assigned.
+     * Registers a {@link SubscriptionPaymentProcessedEvent} so the infrastructure can publish it
+     * to interested subscribers in other bounded contexts.</p>
+     */
     public void onProcessSubscriptionPayment() {
         registerDomainEvent(SubscriptionPaymentProcessedEvent.from(this));
     }
 
+    /**
+     * Patient id getter.
+     *
+     * @return Patient id
+     */
     public Long getPatientId() {
         return patientId.patientId();
     }
 
+    /**
+     * Plan id getter.
+     *
+     * @return Plan id
+     */
     public Long getPlanId() {
         return planId.planId();
     }
 
+    /**
+     * Payment amount getter.
+     *
+     * @return Payment amount
+     */
     public Double getAmount() {
         return amount.amount();
     }
 
-    public Long getSubscriptionId() {return  subscriptionId.subscriptionId();}
+    /**
+     * Subscription id getter.
+     *
+     * @return Subscription id
+     */
+    public Long getSubscriptionId() { return subscriptionId.subscriptionId(); }
 
     public PatientId getPatientIdValue() { return patientId; }
     public PlanId getPlanIdValue() { return planId; }

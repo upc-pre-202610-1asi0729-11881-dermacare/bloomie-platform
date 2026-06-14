@@ -2,9 +2,12 @@ package com.bloomie.platform.payments.infrastructure.persistence.jpa.assemblers;
 
 import com.bloomie.platform.payments.domain.model.aggregates.Payment;
 import com.bloomie.platform.payments.infrastructure.persistence.jpa.entities.PaymentPersistenceEntity;
-import com.bloomie.platform.payments.infrastructure.persistence.jpa.repositories.PaymentPersistenceRepository;
 
+/**
+ * Static assembler between payment domain and persistence representations.
+ */
 public class PaymentPersistenceAssembler {
+
     PaymentPersistenceAssembler() {
     }
 
@@ -20,6 +23,7 @@ public class PaymentPersistenceAssembler {
                 entity.getStatus()
         );
     }
+
     public static PaymentPersistenceEntity toPersistenceFromDomain(Payment payment) {
         if (payment == null) return null;
         var entity = new PaymentPersistenceEntity();

@@ -10,7 +10,7 @@ package com.bloomie.platform.payments.domain.model.valueobjects;
  */
 public record PatientId(Long patientId) {
 
-    private static final String INVALID_MESSAGE_KEY = "appointment.patient.id.invalid";
+    private static final String INVALID_MESSAGE_KEY = "payment.patient.id.invalid";
 
     /**
      * Compact constructor that validates the patient id.

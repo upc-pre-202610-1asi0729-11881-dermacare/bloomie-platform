@@ -2,10 +2,13 @@ package com.bloomie.platform.payments.interfaces.rest.resources;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * Resource for a payment.
+ */
 @Schema(
         name = "PaymentResponse",
         description = "Payment information response",
-        example = "{\"id\": 1, \"patienId\":1, \"planId\": 2, \"subscriptionId\": 1 ,\"paymentType\": \"SUBSCRIPTION\",\"paymentAmount\": 9.99, \"paymentStatus\": \"PENDING\" }"
+        example = "{\"id\": 1, \"patientId\":1, \"planId\": 2, \"subscriptionId\": 1, \"paymentType\": \"SUBSCRIPTION\", \"paymentAmount\": 9.99, \"paymentStatus\": \"PENDING\"}"
 )
 public record PaymentResource(
         @Schema(description = "Payment unique identifier", example = "1")
@@ -28,6 +31,5 @@ public record PaymentResource(
 
         @Schema(description = "Payment status", example = "PENDING")
         String paymentStatus
-
 ) {
 }
