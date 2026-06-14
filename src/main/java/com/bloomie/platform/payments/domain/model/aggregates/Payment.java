@@ -20,6 +20,9 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
     PlanId planId;
 
     @Setter
+    SubscriptionId subscriptionId;
+
+    @Setter
     PaymentType type;
 
     @Setter
@@ -28,11 +31,12 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
     @Setter
     PaymentStatus status;
 
-    public Payment(Long id, PatientId patientId, PlanId planId, PaymentType type, PaymentAmount amount, PaymentStatus status) {
+    public Payment(Long id, PatientId patientId, PlanId planId, SubscriptionId subscriptionId,PaymentType type, PaymentAmount amount, PaymentStatus status) {
         this.id = id;
         this.patientId = patientId;
         this.planId = planId;
-        this.type = type;
+        this.subscriptionId = subscriptionId;
+        this.type = PaymentType.SUBSCRIPTION;
         this.amount = amount;
         this.status = status;
     }
@@ -40,6 +44,7 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
     public Payment(ProcessSubscriptionPaymentCommand command) {
         this.patientId = new PatientId(command.patientId());
         this.planId = new PlanId(command.planId());
+        this.subscriptionId = new SubscriptionId(command.subscriptionId());
         this.amount = new PaymentAmount(command.amount());
     }
 
@@ -58,4 +63,6 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
     public Double getAmount() {
         return amount.amount();
     }
+
+    public Long getSubscriptionId() {return  subscriptionId.subscriptionId();}
 }
