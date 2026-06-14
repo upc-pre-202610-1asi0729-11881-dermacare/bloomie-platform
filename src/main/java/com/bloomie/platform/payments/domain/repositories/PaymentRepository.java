@@ -9,11 +9,7 @@ import java.util.Optional;
 public interface PaymentRepository {
     Optional<Payment> findById(Long id);
 
-    Optional<Payment> findByPatientId(PatientId patientId);
+    List<Payment> findAllByPatientId(PatientId patientId);
 
     Payment save(Payment payment);
-
-    boolean existsById(Long id);
-
-    boolean existsByPatientId(PatientId patientId);
 }
