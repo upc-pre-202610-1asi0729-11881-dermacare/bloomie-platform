@@ -1,5 +1,7 @@
 package com.bloomie.platform.payments.domain.model.aggregates;
 
+import com.bloomie.platform.payments.domain.model.commands.ProcessSubscriptionPaymentCommand;
+import com.bloomie.platform.payments.domain.model.events.SubscriptionPaymentProcessedEvent;
 import com.bloomie.platform.payments.domain.model.valueobjects.*;
 import com.bloomie.platform.shared.domain.model.aggregates.AbstractDomainAggregateRoot;
 import com.bloomie.platform.payments.domain.model.valueobjects.PlanId;
@@ -33,6 +35,16 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
         this.type = type;
         this.amount = amount;
         this.status = status;
+    }
+
+    public Payment(ProcessSubscriptionPaymentCommand command) {
+        this.patientId = new PatientId(command.patientId());
+        this.planId = new PlanId(command.planId());
+        this.amount = new PaymentAmount(command.amount());
+    }
+
+    public void onProcessSubscriptionPayment() {
+        registerDomainEvent(SubscriptionPaymentProcessedEvent.from(this));
     }
 
     public Long getPatientId() {
