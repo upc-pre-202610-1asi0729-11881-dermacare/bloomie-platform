@@ -48,43 +48,39 @@ public class OpenApiConfiguration {
                         .description(this.applicationDescription)
                         .version(this.applicationVersion)
                         .contact(new Contact()
-                                .name("ACME Learning Center Support")
-                                .email("support@acme-learning.com")
-                                .url("https://acme-learning.com/support"))
+                                .name("Bloomie Support")
+                                .email("support@bloomie.com")
+                                .url("https://bloomie.com/support"))
                         .license(new License()
                                 .name("Apache 2.0")
                                 .url("https://www.apache.org/licenses/LICENSE-2.0.html")))
                 .externalDocs(new ExternalDocumentation()
-                        .description("ACME Learning Platform wiki Documentation")
-                        .url("https://acme-learning-platform.wiki.github.io/docs"));
+                        .description("Bloomie Platform Documentation")
+                        .url("https://bloomie.wiki.github.io/docs"));
 
-        // Add server configurations
+        // Use a relative server URL so Swagger UI always targets the same origin
+        // it is being served from (localhost, Docker or Azure), avoiding CORS issues.
         openApi.servers(List.of(
                 new Server()
-                        .url("http://localhost:8080")
-                        .description("Local Development Environment"),
-                new Server()
-                        .url("https://staging-api.acme-learning.com")
-                        .description("Staging Environment"),
-                new Server()
-                        .url("https://api.acme-learning.com")
-                        .description("Production Environment")
+                        .url("/")
+                        .description("Current environment")
         ));
 
         // Add a security scheme
-       /*final String securitySchemeName = "bearerAuth";
+      /*final String securitySchemeName = "bearerAuth";
 
-       openApi.addSecurityItem(new SecurityRequirement()
-                       .addList(securitySchemeName))
-               .components(new Components()
-                       .addSecuritySchemes(securitySchemeName,
-                               new SecurityScheme()
-                                       .name(securitySchemeName)
-                                       .type(SecurityScheme.Type.HTTP)
-                                       .scheme("bearer")
-                                       .bearerFormat("JWT")
-                                       .description("JWT Bearer token for API authentication")));*/
+      openApi.addSecurityItem(new SecurityRequirement()
+                      .addList(securitySchemeName))
+              .components(new Components()
+                      .addSecuritySchemes(securitySchemeName,
+                              new SecurityScheme()
+                                      .name(securitySchemeName)
+                                      .type(SecurityScheme.Type.HTTP)
+                                      .scheme("bearer")
+                                      .bearerFormat("JWT")
+                                      .description("JWT Bearer token for API authentication")));*/
 
         return openApi;
     }
 }
+
