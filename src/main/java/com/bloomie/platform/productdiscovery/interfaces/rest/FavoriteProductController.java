@@ -2,11 +2,16 @@ package com.bloomie.platform.productdiscovery.interfaces.rest;
 
 import com.bloomie.platform.productdiscovery.application.commandservices.FavoriteProductCommandService;
 import com.bloomie.platform.productdiscovery.application.queryservices.FavoriteProductQueryService;
+import com.bloomie.platform.productdiscovery.domain.model.aggregates.FavoriteProduct;
+import com.bloomie.platform.productdiscovery.domain.model.commands.RemoveProductFromFavoritesCommand;
 import com.bloomie.platform.productdiscovery.domain.model.queries.GetFavoriteProductsByUserIdQuery;
 import com.bloomie.platform.productdiscovery.interfaces.rest.resources.FavoriteProductResource;
 import com.bloomie.platform.productdiscovery.interfaces.rest.resources.SaveFavoriteProductResource;
 import com.bloomie.platform.productdiscovery.interfaces.rest.transform.FavoriteProductResourceFromEntityAssembler;
 import com.bloomie.platform.productdiscovery.interfaces.rest.transform.SaveProductAsFavoriteCommandFromResourceAssembler;
+import com.bloomie.platform.shared.application.result.ApplicationError;
+import com.bloomie.platform.shared.application.result.Result;
+import com.bloomie.platform.shared.interfaces.rest.transform.ErrorResponseAssembler;
 import com.bloomie.platform.shared.interfaces.rest.transform.ResponseEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -106,5 +111,35 @@ public class FavoriteProductController {
                 .map(FavoriteProductResourceFromEntityAssembler::toResourceFromEntity)
                 .toList();
         return ResponseEntity.ok(resources);
+    }
+
+    /**
+     * Remove a product from a user's favorites.
+     *
+     * @param favoriteProductId the unique identifier of the favorite product record
+     * @return 204 No Content on success, or an error response
+     */
+    @DeleteMapping("/{favoriteProductId}")
+    @Operation(
+            summary = "Remove a product from favorites",
+            description = "Removes the specified favorite product record for a user."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Favorite product removed successfully"),
+            @ApiResponse(responseCode = "404", description = "Favorite product not found")
+    })
+    public ResponseEntity<?> removeFavoriteProduct(
+            @PathVariable
+            @Parameter(description = "Favorite product unique identifier", example = "1", required = true)
+            Long favoriteProductId
+    ) {
+        var command = new RemoveProductFromFavoritesCommand(favoriteProductId);
+        var result = favoriteProductCommandService.handle(command);
+        return switch (result) {
+            case Result.Success<FavoriteProduct, ApplicationError> ignored ->
+                    ResponseEntity.noContent().build();
+            case Result.Failure<FavoriteProduct, ApplicationError> failure ->
+                    ErrorResponseAssembler.toErrorResponseFromApplicationError(failure.error());
+        };
     }
 }
