@@ -26,11 +26,13 @@ public class FavoriteProduct extends AbstractDomainAggregateRoot<FavoriteProduct
     /**
      * The product identifier associated with the favorite product.
      */
+    @Setter
     private ProductId productId;
 
     /**
      * The user identifier associated with the favorite product.
      */
+    @Setter
     private UserId userId;
 
     /**
