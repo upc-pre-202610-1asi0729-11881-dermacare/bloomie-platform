@@ -1,10 +1,10 @@
-package com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.adapters;
+package com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.adapters;
 
-import com.bloomie.platform.dermatologyCare.domain.model.aggregates.Availability;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.DermatologistId;
-import com.bloomie.platform.dermatologyCare.domain.repositories.AvailabilityRepository;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.assemblers.AvailabilityPersistenceAssembler;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.repositories.AvailabilityPersistenceRepository;
+import com.bloomie.platform.dermatologycare.domain.model.aggregates.Availability;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologycare.domain.repositories.AvailabilityRepository;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.assemblers.AvailabilityPersistenceAssembler;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.repositories.AvailabilityPersistenceRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
-package com.bloomie.platform.dermatologyCare.domain.model.events;
+package com.bloomie.platform.dermatologycare.domain.model.events;
 
-import com.bloomie.platform.dermatologyCare.domain.model.aggregates.Availability;
+import com.bloomie.platform.dermatologycare.domain.model.aggregates.Availability;
 
 public record AvailabilityUpdatedEvent(Long availabilityId, Long dermatologistId, String dayOfWeek, String startTime, String endTime) {
     public static AvailabilityUpdatedEvent from(Availability availability) {

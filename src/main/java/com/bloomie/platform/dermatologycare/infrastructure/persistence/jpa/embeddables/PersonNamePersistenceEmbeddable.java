@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.embeddables;
+package com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.embeddables;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

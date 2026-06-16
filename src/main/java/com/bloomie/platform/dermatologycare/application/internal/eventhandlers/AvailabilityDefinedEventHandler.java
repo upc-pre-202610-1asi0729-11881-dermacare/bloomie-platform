@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologyCare.application.internal.eventhandlers;
+package com.bloomie.platform.dermatologycare.application.internal.eventhandlers;
 
-import com.bloomie.platform.dermatologyCare.domain.model.events.AvailabilityDefinedEvent;
-import com.bloomie.platform.dermatologyCare.interfaces.events.AvailabilityDefinedIntegrationEvent;
+import com.bloomie.platform.dermatologycare.domain.model.events.AvailabilityDefinedEvent;
+import com.bloomie.platform.dermatologycare.interfaces.events.AvailabilityDefinedIntegrationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;

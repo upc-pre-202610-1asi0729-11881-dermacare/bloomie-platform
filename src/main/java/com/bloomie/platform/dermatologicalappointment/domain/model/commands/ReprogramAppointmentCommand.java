@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologicalAppointment.domain.model.commands;
+package com.bloomie.platform.dermatologicalappointment.domain.model.commands;
 
 /**
  * Command to execute the rescheduling of a dermatological appointment to a new date.

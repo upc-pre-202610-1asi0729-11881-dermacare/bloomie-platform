@@ -1,6 +1,6 @@
-package com.bloomie.platform.dermatologicalAppointment.domain.model.events;
+package com.bloomie.platform.dermatologicalappointment.domain.model.events;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.aggregates.Consultation;
+import com.bloomie.platform.dermatologicalappointment.domain.model.aggregates.Consultation;
 
 /**
  * Domain event raised when a clinical photo has been uploaded and added to a consultation.

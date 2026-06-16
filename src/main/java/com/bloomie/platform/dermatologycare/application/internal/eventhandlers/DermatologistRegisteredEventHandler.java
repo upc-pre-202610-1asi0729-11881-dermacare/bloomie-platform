@@ -1,8 +1,8 @@
-package com.bloomie.platform.dermatologyCare.application.internal.eventhandlers;
+package com.bloomie.platform.dermatologycare.application.internal.eventhandlers;
 
-import com.bloomie.platform.dermatologyCare.application.commandservices.DermatologistProfileCommandService;
-import com.bloomie.platform.dermatologyCare.domain.model.commands.RegisterDermatologistProfileCommand;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologycare.application.commandservices.DermatologistProfileCommandService;
+import com.bloomie.platform.dermatologycare.domain.model.commands.RegisterDermatologistProfileCommand;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.DermatologistId;
 import com.bloomie.platform.iam.interfaces.events.DermatologistRegisteredIntegrationEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

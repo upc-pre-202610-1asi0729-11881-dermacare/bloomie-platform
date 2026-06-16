@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologicalAppointment.application.internal.eventhandlers;
+package com.bloomie.platform.dermatologicalappointment.application.internal.eventhandlers;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.events.DermatologyAppointmentScheduledEvent;
-import com.bloomie.platform.dermatologicalAppointment.interfaces.events.RequestConsultationPaymentIntegrationEvent;
+import com.bloomie.platform.dermatologicalappointment.domain.model.events.DermatologyAppointmentScheduledEvent;
+import com.bloomie.platform.dermatologicalappointment.interfaces.events.RequestConsultationPaymentIntegrationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologyCare.interfaces.rest.transform;
+package com.bloomie.platform.dermatologycare.interfaces.rest.transform;
 
-import com.bloomie.platform.dermatologyCare.domain.model.aggregates.Availability;
-import com.bloomie.platform.dermatologyCare.interfaces.rest.resources.AvailabilityResource;
+import com.bloomie.platform.dermatologycare.domain.model.aggregates.Availability;
+import com.bloomie.platform.dermatologycare.interfaces.rest.resources.AvailabilityResource;
 
 /**
  * Stateless assembler that converts an {@link Availability} aggregate

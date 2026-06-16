@@ -1,15 +1,15 @@
-package com.bloomie.platform.dermatologicalAppointment.application.internal.commandservices;
+package com.bloomie.platform.dermatologicalappointment.application.internal.commandservices;
 
-import com.bloomie.platform.dermatologicalAppointment.application.commandservices.ConsultationCommandService;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.aggregates.Consultation;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.FinishConsultationCommand;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.RecordDermatologicalDiagnosisCommand;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.SaveNotesCommand;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.StartConsultationCommand;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.UploadClinicalPhotoCommand;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.AppointmentStatus;
-import com.bloomie.platform.dermatologicalAppointment.domain.repositories.AppointmentRepository;
-import com.bloomie.platform.dermatologicalAppointment.domain.repositories.ConsultationRepository;
+import com.bloomie.platform.dermatologicalappointment.application.commandservices.ConsultationCommandService;
+import com.bloomie.platform.dermatologicalappointment.domain.model.aggregates.Consultation;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.FinishConsultationCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.RecordDermatologicalDiagnosisCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.SaveNotesCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.StartConsultationCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.UploadClinicalPhotoCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.AppointmentStatus;
+import com.bloomie.platform.dermatologicalappointment.domain.repositories.AppointmentRepository;
+import com.bloomie.platform.dermatologicalappointment.domain.repositories.ConsultationRepository;
 import com.bloomie.platform.shared.application.result.ApplicationError;
 import com.bloomie.platform.shared.application.result.Result;
 import org.springframework.stereotype.Service;

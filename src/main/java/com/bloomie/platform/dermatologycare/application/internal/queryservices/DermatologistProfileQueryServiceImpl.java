@@ -1,11 +1,11 @@
-package com.bloomie.platform.dermatologyCare.application.internal.queryservices;
+package com.bloomie.platform.dermatologycare.application.internal.queryservices;
 
-import com.bloomie.platform.dermatologyCare.application.queryservices.DermatologistProfileQueryService;
-import com.bloomie.platform.dermatologyCare.domain.model.aggregates.DermatologistProfile;
-import com.bloomie.platform.dermatologyCare.domain.model.queries.GetAllDermatologistProfilesQuery;
-import com.bloomie.platform.dermatologyCare.domain.model.queries.GetDermatologistProfileByDermatologistIdQuery;
-import com.bloomie.platform.dermatologyCare.domain.model.queries.GetDermatologistProfileByIdQuery;
-import com.bloomie.platform.dermatologyCare.domain.repositories.DermatologistProfileRepository;
+import com.bloomie.platform.dermatologycare.application.queryservices.DermatologistProfileQueryService;
+import com.bloomie.platform.dermatologycare.domain.model.aggregates.DermatologistProfile;
+import com.bloomie.platform.dermatologycare.domain.model.queries.GetAllDermatologistProfilesQuery;
+import com.bloomie.platform.dermatologycare.domain.model.queries.GetDermatologistProfileByDermatologistIdQuery;
+import com.bloomie.platform.dermatologycare.domain.model.queries.GetDermatologistProfileByIdQuery;
+import com.bloomie.platform.dermatologycare.domain.repositories.DermatologistProfileRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

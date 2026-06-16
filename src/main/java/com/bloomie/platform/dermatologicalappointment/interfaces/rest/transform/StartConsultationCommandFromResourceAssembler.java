@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologicalAppointment.interfaces.rest.transform;
+package com.bloomie.platform.dermatologicalappointment.interfaces.rest.transform;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.StartConsultationCommand;
-import com.bloomie.platform.dermatologicalAppointment.interfaces.rest.resources.StartConsultationResource;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.StartConsultationCommand;
+import com.bloomie.platform.dermatologicalappointment.interfaces.rest.resources.StartConsultationResource;
 
 public final class StartConsultationCommandFromResourceAssembler {
 

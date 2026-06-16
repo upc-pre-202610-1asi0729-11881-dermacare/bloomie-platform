@@ -1,6 +1,6 @@
-package com.bloomie.platform.dermatologyCare.application.internal.outboundservices.acl;
+package com.bloomie.platform.dermatologycare.application.internal.outboundservices.acl;
 
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.DermatologistId;
 import com.bloomie.platform.iam.interfaces.acl.IamContextFacade;
 import org.springframework.stereotype.Service;
 

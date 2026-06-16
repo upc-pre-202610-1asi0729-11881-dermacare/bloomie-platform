@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologyCare.interfaces.rest.transform;
+package com.bloomie.platform.dermatologycare.interfaces.rest.transform;
 
-import com.bloomie.platform.dermatologyCare.domain.model.commands.UpdateDermatologistProfileCommand;
-import com.bloomie.platform.dermatologyCare.interfaces.rest.resources.UpdateDermatologistProfileResource;
+import com.bloomie.platform.dermatologycare.domain.model.commands.UpdateDermatologistProfileCommand;
+import com.bloomie.platform.dermatologycare.interfaces.rest.resources.UpdateDermatologistProfileResource;
 
 /**
  * Stateless assembler that builds an {@link UpdateDermatologistProfileCommand}

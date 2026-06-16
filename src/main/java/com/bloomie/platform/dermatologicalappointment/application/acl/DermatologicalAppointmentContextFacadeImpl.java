@@ -1,9 +1,9 @@
-package com.bloomie.platform.dermatologicalAppointment.application.acl;
+package com.bloomie.platform.dermatologicalappointment.application.acl;
 
-import com.bloomie.platform.dermatologicalAppointment.application.queryservices.AppointmentQueryService;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.queries.GetAppointmentByIdQuery;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.queries.GetAppointmentsByPatientIdQuery;
-import com.bloomie.platform.dermatologicalAppointment.interfaces.acl.DermatologicalAppointmentContextFacade;
+import com.bloomie.platform.dermatologicalappointment.application.queryservices.AppointmentQueryService;
+import com.bloomie.platform.dermatologicalappointment.domain.model.queries.GetAppointmentByIdQuery;
+import com.bloomie.platform.dermatologicalappointment.domain.model.queries.GetAppointmentsByPatientIdQuery;
+import com.bloomie.platform.dermatologicalappointment.interfaces.acl.DermatologicalAppointmentContextFacade;
 import org.springframework.stereotype.Service;
 
 /**

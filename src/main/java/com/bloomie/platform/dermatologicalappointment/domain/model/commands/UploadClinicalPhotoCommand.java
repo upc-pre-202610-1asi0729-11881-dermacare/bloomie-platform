@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologicalAppointment.domain.model.commands;
+package com.bloomie.platform.dermatologicalappointment.domain.model.commands;
 
 /**
  * Command to attach a clinical photo to an ongoing consultation.

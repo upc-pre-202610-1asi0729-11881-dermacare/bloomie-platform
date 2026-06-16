@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologyCare.domain.model.valueobjects;
+package com.bloomie.platform.dermatologycare.domain.model.valueobjects;
 
 /**
  * Value object representing a dermatologist's contact phone number.

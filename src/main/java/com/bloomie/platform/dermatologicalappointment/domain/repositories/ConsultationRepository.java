@@ -1,6 +1,6 @@
-package com.bloomie.platform.dermatologicalAppointment.domain.repositories;
+package com.bloomie.platform.dermatologicalappointment.domain.repositories;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.aggregates.Consultation;
+import com.bloomie.platform.dermatologicalappointment.domain.model.aggregates.Consultation;
 
 import java.util.Optional;
 

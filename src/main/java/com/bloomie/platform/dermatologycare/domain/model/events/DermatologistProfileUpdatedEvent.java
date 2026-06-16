@@ -1,6 +1,6 @@
-package com.bloomie.platform.dermatologyCare.domain.model.events;
+package com.bloomie.platform.dermatologycare.domain.model.events;
 
-import com.bloomie.platform.dermatologyCare.domain.model.aggregates.DermatologistProfile;
+import com.bloomie.platform.dermatologycare.domain.model.aggregates.DermatologistProfile;
 
 /**
  * Domain event raised when a {@link DermatologistProfile} has been updated.

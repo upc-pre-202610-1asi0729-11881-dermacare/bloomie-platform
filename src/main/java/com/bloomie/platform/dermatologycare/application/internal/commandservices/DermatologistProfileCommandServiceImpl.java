@@ -1,10 +1,10 @@
-package com.bloomie.platform.dermatologyCare.application.internal.commandservices;
+package com.bloomie.platform.dermatologycare.application.internal.commandservices;
 
-import com.bloomie.platform.dermatologyCare.application.commandservices.DermatologistProfileCommandService;
-import com.bloomie.platform.dermatologyCare.domain.model.aggregates.DermatologistProfile;
-import com.bloomie.platform.dermatologyCare.domain.model.commands.RegisterDermatologistProfileCommand;
-import com.bloomie.platform.dermatologyCare.domain.model.commands.UpdateDermatologistProfileCommand;
-import com.bloomie.platform.dermatologyCare.domain.repositories.DermatologistProfileRepository;
+import com.bloomie.platform.dermatologycare.application.commandservices.DermatologistProfileCommandService;
+import com.bloomie.platform.dermatologycare.domain.model.aggregates.DermatologistProfile;
+import com.bloomie.platform.dermatologycare.domain.model.commands.RegisterDermatologistProfileCommand;
+import com.bloomie.platform.dermatologycare.domain.model.commands.UpdateDermatologistProfileCommand;
+import com.bloomie.platform.dermatologycare.domain.repositories.DermatologistProfileRepository;
 import com.bloomie.platform.shared.application.result.ApplicationError;
 import com.bloomie.platform.shared.application.result.Result;
 import org.springframework.stereotype.Service;

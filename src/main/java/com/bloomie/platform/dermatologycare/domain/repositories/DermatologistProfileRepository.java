@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologyCare.domain.repositories;
+package com.bloomie.platform.dermatologycare.domain.repositories;
 
-import com.bloomie.platform.dermatologyCare.domain.model.aggregates.DermatologistProfile;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologycare.domain.model.aggregates.DermatologistProfile;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.DermatologistId;
 
 import java.util.List;
 import java.util.Optional;

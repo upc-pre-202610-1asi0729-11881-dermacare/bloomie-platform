@@ -1,8 +1,8 @@
-package com.bloomie.platform.dermatologicalAppointment.application.internal.eventhandlers;
+package com.bloomie.platform.dermatologicalappointment.application.internal.eventhandlers;
 
-import com.bloomie.platform.dermatologicalAppointment.application.commandservices.AppointmentCommandService;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.ReprogramAppointmentCommand;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.events.AppointmentReprogramRequestSubmittedEvent;
+import com.bloomie.platform.dermatologicalappointment.application.commandservices.AppointmentCommandService;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.ReprogramAppointmentCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentReprogramRequestSubmittedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologyCare.interfaces.rest.transform;
+package com.bloomie.platform.dermatologycare.interfaces.rest.transform;
 
-import com.bloomie.platform.dermatologyCare.domain.model.aggregates.DermatologistProfile;
-import com.bloomie.platform.dermatologyCare.interfaces.rest.resources.DermatologistProfileResource;
+import com.bloomie.platform.dermatologycare.domain.model.aggregates.DermatologistProfile;
+import com.bloomie.platform.dermatologycare.interfaces.rest.resources.DermatologistProfileResource;
 
 /**
  * Stateless assembler that converts a {@link DermatologistProfile} aggregate

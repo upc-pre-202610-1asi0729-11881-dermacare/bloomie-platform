@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects;
+package com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects;
 
 /**
  * Value object representing a reference to a Dermatologist from the IAM bounded context.

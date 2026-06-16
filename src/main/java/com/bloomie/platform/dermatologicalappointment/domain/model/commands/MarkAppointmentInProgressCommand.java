@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologicalAppointment.domain.model.commands;
+package com.bloomie.platform.dermatologicalappointment.domain.model.commands;
 
 /**
  * Internal command to transition an appointment's status from {@code CONFIRMED} to

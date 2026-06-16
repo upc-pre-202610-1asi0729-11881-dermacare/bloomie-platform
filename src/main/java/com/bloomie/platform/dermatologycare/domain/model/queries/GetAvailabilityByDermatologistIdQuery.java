@@ -1,6 +1,6 @@
-package com.bloomie.platform.dermatologyCare.domain.model.queries;
+package com.bloomie.platform.dermatologycare.domain.model.queries;
 
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.DermatologistId;
 
 /**
  * Query to retrieve all availability slots for a dermatologist.

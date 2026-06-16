@@ -1,13 +1,13 @@
-package com.bloomie.platform.dermatologicalAppointment.infrastructure.persistence.jpa.adapters;
+package com.bloomie.platform.dermatologicalappointment.infrastructure.persistence.jpa.adapters;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.aggregates.Appointment;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.AppointmentDateTime;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.AppointmentStatus;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.DermatologistId;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.PatientId;
-import com.bloomie.platform.dermatologicalAppointment.domain.repositories.AppointmentRepository;
-import com.bloomie.platform.dermatologicalAppointment.infrastructure.persistence.jpa.assemblers.AppointmentPersistenceAssembler;
-import com.bloomie.platform.dermatologicalAppointment.infrastructure.persistence.jpa.repositories.AppointmentPersistenceRepository;
+import com.bloomie.platform.dermatologicalappointment.domain.model.aggregates.Appointment;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.AppointmentDateTime;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.AppointmentStatus;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.PatientId;
+import com.bloomie.platform.dermatologicalappointment.domain.repositories.AppointmentRepository;
+import com.bloomie.platform.dermatologicalappointment.infrastructure.persistence.jpa.assemblers.AppointmentPersistenceAssembler;
+import com.bloomie.platform.dermatologicalappointment.infrastructure.persistence.jpa.repositories.AppointmentPersistenceRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Repository;
 

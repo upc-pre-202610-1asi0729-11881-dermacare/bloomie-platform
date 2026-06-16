@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologicalAppointment.domain.model.queries;
+package com.bloomie.platform.dermatologicalappointment.domain.model.queries;
 
 /**
  * Query to retrieve all appointments belonging to a specific patient.

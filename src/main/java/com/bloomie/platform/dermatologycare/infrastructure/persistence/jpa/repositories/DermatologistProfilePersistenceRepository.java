@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.repositories;
+package com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.repositories;
 
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.DermatologistId;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.entities.DermatologistProfilePersistenceEntity;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.entities.DermatologistProfilePersistenceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

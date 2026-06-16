@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologicalAppointment.domain.model.commands;
+package com.bloomie.platform.dermatologicalappointment.domain.model.commands;
 
 /**
  * Command to start the clinical consultation session for a confirmed appointment.

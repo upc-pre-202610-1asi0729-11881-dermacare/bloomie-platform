@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects;
+package com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects;
 
 import java.util.regex.Pattern;
 

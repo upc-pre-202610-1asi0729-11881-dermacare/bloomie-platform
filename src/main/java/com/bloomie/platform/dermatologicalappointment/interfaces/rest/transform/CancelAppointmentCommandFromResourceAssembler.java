@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologicalAppointment.interfaces.rest.transform;
+package com.bloomie.platform.dermatologicalappointment.interfaces.rest.transform;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.CancelAppointmentCommand;
-import com.bloomie.platform.dermatologicalAppointment.interfaces.rest.resources.CancelAppointmentResource;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.CancelAppointmentCommand;
+import com.bloomie.platform.dermatologicalappointment.interfaces.rest.resources.CancelAppointmentResource;
 
 public final class CancelAppointmentCommandFromResourceAssembler {
 

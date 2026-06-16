@@ -1,6 +1,6 @@
-package com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.converters;
+package com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.converters;
 
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.DermatologistId;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

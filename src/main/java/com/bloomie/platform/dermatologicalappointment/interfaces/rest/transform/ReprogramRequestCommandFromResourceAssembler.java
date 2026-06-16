@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologicalAppointment.interfaces.rest.transform;
+package com.bloomie.platform.dermatologicalappointment.interfaces.rest.transform;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.RequestReprogramAppointmentCommand;
-import com.bloomie.platform.dermatologicalAppointment.interfaces.rest.resources.ReprogramRequestResource;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.RequestReprogramAppointmentCommand;
+import com.bloomie.platform.dermatologicalappointment.interfaces.rest.resources.ReprogramRequestResource;
 
 public final class ReprogramRequestCommandFromResourceAssembler {
 
