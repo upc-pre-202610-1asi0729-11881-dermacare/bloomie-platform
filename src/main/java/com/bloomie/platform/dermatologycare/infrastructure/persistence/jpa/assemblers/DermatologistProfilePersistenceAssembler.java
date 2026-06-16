@@ -22,7 +22,8 @@ public final class DermatologistProfilePersistenceAssembler {
                 entity.getSpecialty(),
                 entity.getLicenseNumber(),
                 entity.getContactPhone(),
-                entity.getBiography());
+                entity.getBiography(),
+                entity.getConsultationFee());
     }
 
     /** Converts a {@link DermatologistProfile} aggregate to a persistence entity ready to save. */
@@ -35,6 +36,7 @@ public final class DermatologistProfilePersistenceAssembler {
         entity.setLicenseNumber(profile.getLicenseNumber());
         entity.setContactPhone(profile.getContactPhone());
         entity.setBiography(profile.getBiography());
+        entity.setConsultationFee(profile.getConsultationFee());
         return entity;
     }
 
