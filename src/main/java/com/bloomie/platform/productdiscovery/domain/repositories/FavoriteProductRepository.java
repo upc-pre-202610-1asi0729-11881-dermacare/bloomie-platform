@@ -19,4 +19,6 @@ public interface FavoriteProductRepository {
     FavoriteProduct save(FavoriteProduct favoriteProduct);
 
     boolean existsByProductIdAndUserId(ProductId productId, UserId userId);
+
+    void delete(FavoriteProduct favoriteProduct);
 }
