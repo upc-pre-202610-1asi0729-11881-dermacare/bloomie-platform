@@ -14,7 +14,8 @@ public class UserResourceFromEntityAssembler {
                 user.getId(),
                 user.getFullName(),
                 user.getEmail(),
-                roles
+                roles,
+                user.getPhotoUrl()
         );
     }
 }
