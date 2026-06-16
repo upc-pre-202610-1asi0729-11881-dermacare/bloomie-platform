@@ -4,8 +4,10 @@ import com.bloomie.platform.iam.application.commandservices.UserCommandService;
 import com.bloomie.platform.iam.application.queryservices.UserQueryService;
 import com.bloomie.platform.iam.domain.model.queries.GetAllUsersQuery;
 import com.bloomie.platform.iam.domain.model.queries.GetUserByIdQuery;
+import com.bloomie.platform.iam.interfaces.rest.resources.UpdateUserPhotoResource;
 import com.bloomie.platform.iam.interfaces.rest.resources.UpdateUserProfileResource;
 import com.bloomie.platform.iam.interfaces.rest.resources.UserResource;
+import com.bloomie.platform.iam.interfaces.rest.transform.UpdateUserPhotoCommandFromResourceAssembler;
 import com.bloomie.platform.iam.interfaces.rest.transform.UpdateUserProfileCommandFromResourceAssembler;
 import com.bloomie.platform.iam.interfaces.rest.transform.UserResourceFromEntityAssembler;
 import com.bloomie.platform.shared.application.result.ApplicationError;
@@ -74,6 +76,23 @@ public class UsersController {
             @PathVariable String userId,
             @Valid @RequestBody UpdateUserProfileResource resource) {
         var command = UpdateUserProfileCommandFromResourceAssembler.toCommandFromResource(userId, resource);
+        var result = userCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                UserResourceFromEntityAssembler::toResourceFromEntity,
+                org.springframework.http.HttpStatus.OK);
+    }
+
+    @PutMapping("/{userId}/photo")
+    @Operation(summary = "Update user photo", description = "Update the profile photo URL of a user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User photo updated successfully."),
+            @ApiResponse(responseCode = "400", description = "Invalid input data."),
+            @ApiResponse(responseCode = "404", description = "User not found.")})
+    public ResponseEntity<?> updateUserPhoto(
+            @PathVariable Long userId,
+            @Valid @RequestBody UpdateUserPhotoResource resource) {
+        var command = UpdateUserPhotoCommandFromResourceAssembler.toCommandFromResource(userId, resource);
         var result = userCommandService.handle(command);
         return ResponseEntityAssembler.toResponseEntityFromResult(
                 result,
