@@ -30,7 +30,8 @@ public final class UserPersistenceAssembler {
                 toDomainFromPersistence(entity.getName()),
                 entity.getEmailAddress(),
                 entity.getHashedPassword(),
-                roles);
+                roles,
+                entity.getPhotoUrl());
     }
 
     /** Converts a {@link User} domain aggregate to a {@link UserPersistenceEntity} ready to be saved. */
@@ -40,6 +41,7 @@ public final class UserPersistenceAssembler {
         entity.setName(toPersistenceFromDomain(user.getName()));
         entity.setEmailAddress(user.getEmailAddressValue());
         entity.setHashedPassword(user.getHashedPassword());
+        entity.setPhotoUrl(user.getPhotoUrl());
         var roleEntities = user.getRoles().stream()
                 .map(RolePersistenceAssembler::toPersistenceFromDomain)
                 .collect(Collectors.toSet());
