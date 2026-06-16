@@ -20,6 +20,7 @@ public final class UpdateDermatologistProfileCommandFromResourceAssembler {
                 resource.specialty(),
                 resource.licenseNumber(),
                 resource.phone(),
-                resource.biography());
+                resource.biography(),
+                resource.consultationFee());
     }
 }
