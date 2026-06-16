@@ -2,6 +2,7 @@ package com.bloomie.platform.productdiscovery.application.internal.commandservic
 
 import com.bloomie.platform.productdiscovery.application.commandservices.FavoriteProductCommandService;
 import com.bloomie.platform.productdiscovery.domain.model.aggregates.FavoriteProduct;
+import com.bloomie.platform.productdiscovery.domain.model.commands.RemoveProductFromFavoritesCommand;
 import com.bloomie.platform.productdiscovery.domain.model.commands.SaveProductAsFavoriteCommand;
 import com.bloomie.platform.productdiscovery.domain.model.valueobjects.ProductId;
 import com.bloomie.platform.productdiscovery.domain.model.valueobjects.UserId;
