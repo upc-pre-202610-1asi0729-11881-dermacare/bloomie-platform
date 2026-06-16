@@ -10,6 +10,7 @@ package com.bloomie.platform.dermatologycare.domain.model.commands;
  * @param licenseNumber          updated license number
  * @param phone                  updated contact phone
  * @param biography              updated biography
+ * @param consultationFee        updated consultation fee; must not be negative
  */
 public record UpdateDermatologistProfileCommand(
         Long dermatologistProfileId,
@@ -18,5 +19,6 @@ public record UpdateDermatologistProfileCommand(
         String specialty,
         String licenseNumber,
         String phone,
-        String biography) {
+        String biography,
+        Double consultationFee) {
 }
