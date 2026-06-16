@@ -15,4 +15,7 @@ public record UserResource(
         String email,
 
         @Schema(description = "Assigned roles", example = "[\"ROLE_YOUNG_ADULT\"]")
-        List<String> roles) {}
+        List<String> roles,
+
+        @Schema(description = "Profile photo URL — null if not set", example = "https://example.com/photo.jpg", nullable = true)
+        String photoUrl) {}
