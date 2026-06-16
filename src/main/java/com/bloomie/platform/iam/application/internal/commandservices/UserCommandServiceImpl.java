@@ -6,6 +6,7 @@ import com.bloomie.platform.iam.domain.model.aggregates.User;
 import com.bloomie.platform.iam.domain.model.commands.ChangePasswordCommand;
 import com.bloomie.platform.iam.domain.model.commands.RegisterDermatologistCommand;
 import com.bloomie.platform.iam.domain.model.commands.RegisterUserCommand;
+import com.bloomie.platform.iam.domain.model.commands.UpdateUserPhotoCommand;
 import com.bloomie.platform.iam.domain.model.commands.UpdateUserProfileCommand;
 import com.bloomie.platform.iam.domain.model.valueobjects.EmailAddress;
 import com.bloomie.platform.iam.domain.model.valueobjects.UserRole;
@@ -77,6 +78,19 @@ public class UserCommandServiceImpl implements UserCommandService {
         user.get().updateProfile(command);
         userRepository.save(user.get());
         user.get().onProfileUpdate();
+
+        return Result.success(user.get());
+    }
+
+    @Override
+    public Result<User, ApplicationError> handle(UpdateUserPhotoCommand command) {
+        var user = userRepository.findById(command.userId());
+        if (user.isEmpty()) {
+            return Result.failure(ApplicationError.notFound("user", USER_NOT_FOUND));
+        }
+        user.get().updatePhoto(command);
+        userRepository.save(user.get());
+        user.get().onPhotoUpdated();
 
         return Result.success(user.get());
     }
