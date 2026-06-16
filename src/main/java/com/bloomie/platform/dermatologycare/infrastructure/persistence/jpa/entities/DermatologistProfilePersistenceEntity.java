@@ -41,6 +41,9 @@ public class DermatologistProfilePersistenceEntity extends AuditableAbstractPers
     @Column(name = "biography", columnDefinition = "TEXT")
     private String biography;
 
+    @Column(name = "consultation_fee", nullable = false)
+    private Double consultationFee;
+
     public DermatologistProfilePersistenceEntity() {}
 
     public DermatologistId getDermatologistId() { return dermatologistId; }
@@ -55,4 +58,6 @@ public class DermatologistProfilePersistenceEntity extends AuditableAbstractPers
     public void setContactPhone(ContactPhone contactPhone) { this.contactPhone = contactPhone; }
     public String getBiography() { return biography; }
     public void setBiography(String biography) { this.biography = biography; }
+    public Double getConsultationFee() { return consultationFee; }
+    public void setConsultationFee(Double consultationFee) { this.consultationFee = consultationFee; }
 }
