@@ -1,5 +1,7 @@
 package com.bloomie.platform.productdiscovery.domain.model.aggregates;
 
+import com.bloomie.platform.productdiscovery.domain.model.events.ProductRemovedFromFavoritesEvent;
+import com.bloomie.platform.productdiscovery.domain.model.events.ProductSavedAsFavoriteEvent;
 import com.bloomie.platform.productdiscovery.domain.model.valueobjects.ProductId;
 import com.bloomie.platform.productdiscovery.domain.model.valueobjects.UserId;
 import com.bloomie.platform.shared.domain.model.aggregates.AbstractDomainAggregateRoot;
@@ -66,5 +68,21 @@ public class FavoriteProduct extends AbstractDomainAggregateRoot<FavoriteProduct
      */
     public Long getUserIdValue() {
         return this.userId.userId();
+    }
+
+    /**
+     * Registers the domain event for when this product is saved as a favorite.
+     * Called by the repository after the aggregate is persisted and has an assigned id.
+     */
+    public void onSavedAsFavorite() {
+        registerDomainEvent(new ProductSavedAsFavoriteEvent(this.id, this.productId.productId(), this.userId.userId()));
+    }
+
+    /**
+     * Registers the domain event for when this product is removed from favorites.
+     * Called by the command service before deletion.
+     */
+    public void removeFromFavorites() {
+        registerDomainEvent(new ProductRemovedFromFavoritesEvent(this.id, this.productId.productId(), this.userId.userId()));
     }
 }

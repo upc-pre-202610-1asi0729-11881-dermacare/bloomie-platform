@@ -2,6 +2,7 @@ package com.bloomie.platform.productdiscovery.application.internal.commandservic
 
 import com.bloomie.platform.productdiscovery.application.commandservices.FavoriteProductCommandService;
 import com.bloomie.platform.productdiscovery.domain.model.aggregates.FavoriteProduct;
+import com.bloomie.platform.productdiscovery.domain.model.commands.RemoveProductFromFavoritesCommand;
 import com.bloomie.platform.productdiscovery.domain.model.commands.SaveProductAsFavoriteCommand;
 import com.bloomie.platform.productdiscovery.domain.model.valueobjects.ProductId;
 import com.bloomie.platform.productdiscovery.domain.model.valueobjects.UserId;
@@ -41,6 +42,25 @@ public class FavoriteProductCommandServiceImpl implements FavoriteProductCommand
             return Result.success(favoriteProduct);
         } catch (Exception e) {
             return Result.failure(ApplicationError.unexpected("save-product-as-favorite", e.getMessage()));
+        }
+    }
+
+    @Override
+    public Result<FavoriteProduct, ApplicationError> handle(RemoveProductFromFavoritesCommand command) {
+        var existing = favoriteProductRepository.findById(command.favoriteProductId());
+        if (existing.isEmpty()) {
+            return Result.failure(ApplicationError.notFound(
+                    "FavoriteProduct",
+                    command.favoriteProductId().toString()
+            ));
+        }
+        try {
+            var favoriteProduct = existing.get();
+            favoriteProduct.removeFromFavorites();
+            favoriteProductRepository.delete(favoriteProduct);
+            return Result.success(favoriteProduct);
+        } catch (Exception e) {
+            return Result.failure(ApplicationError.unexpected("remove-product-from-favorites", e.getMessage()));
         }
     }
 }
