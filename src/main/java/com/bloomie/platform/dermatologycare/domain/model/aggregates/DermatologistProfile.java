@@ -1,14 +1,14 @@
-package com.bloomie.platform.dermatologyCare.domain.model.aggregates;
+package com.bloomie.platform.dermatologycare.domain.model.aggregates;
 
-import com.bloomie.platform.dermatologyCare.domain.model.commands.RegisterDermatologistProfileCommand;
-import com.bloomie.platform.dermatologyCare.domain.model.commands.UpdateDermatologistProfileCommand;
-import com.bloomie.platform.dermatologyCare.domain.model.events.DermatologistProfileRegisteredEvent;
-import com.bloomie.platform.dermatologyCare.domain.model.events.DermatologistProfileUpdatedEvent;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.ContactPhone;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.DermatologistId;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.LicenseNumber;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.PersonName;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.SpecialtyName;
+import com.bloomie.platform.dermatologycare.domain.model.commands.RegisterDermatologistProfileCommand;
+import com.bloomie.platform.dermatologycare.domain.model.commands.UpdateDermatologistProfileCommand;
+import com.bloomie.platform.dermatologycare.domain.model.events.DermatologistProfileRegisteredEvent;
+import com.bloomie.platform.dermatologycare.domain.model.events.DermatologistProfileUpdatedEvent;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.ContactPhone;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.LicenseNumber;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.PersonName;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.SpecialtyName;
 import com.bloomie.platform.shared.domain.model.aggregates.AbstractDomainAggregateRoot;
 import lombok.Getter;
 import lombok.Setter;

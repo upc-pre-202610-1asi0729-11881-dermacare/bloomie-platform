@@ -1,9 +1,9 @@
-package com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.assemblers;
+package com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.assemblers;
 
-import com.bloomie.platform.dermatologyCare.domain.model.aggregates.Availability;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.TimeSlot;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.embeddables.TimeSlotPersistenceEmbeddable;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.entities.AvailabilityPersistenceEntity;
+import com.bloomie.platform.dermatologycare.domain.model.aggregates.Availability;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.TimeSlot;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.embeddables.TimeSlotPersistenceEmbeddable;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.entities.AvailabilityPersistenceEntity;
 
 /**
  * Stateless assembler that converts between the {@link Availability} domain aggregate

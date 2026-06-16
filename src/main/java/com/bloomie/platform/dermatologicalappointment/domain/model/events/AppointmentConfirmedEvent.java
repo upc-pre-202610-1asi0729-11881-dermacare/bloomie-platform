@@ -1,6 +1,6 @@
-package com.bloomie.platform.dermatologicalAppointment.domain.model.events;
+package com.bloomie.platform.dermatologicalappointment.domain.model.events;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.aggregates.Appointment;
+import com.bloomie.platform.dermatologicalappointment.domain.model.aggregates.Appointment;
 
 /**
  * Domain event raised when a patient has confirmed their dermatological appointment.

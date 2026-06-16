@@ -1,10 +1,10 @@
-package com.bloomie.platform.dermatologicalAppointment.infrastructure.persistence.jpa.repositories;
+package com.bloomie.platform.dermatologicalappointment.infrastructure.persistence.jpa.repositories;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.AppointmentDateTime;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.AppointmentStatus;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.DermatologistId;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.PatientId;
-import com.bloomie.platform.dermatologicalAppointment.infrastructure.persistence.jpa.entities.AppointmentPersistenceEntity;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.AppointmentDateTime;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.AppointmentStatus;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.PatientId;
+import com.bloomie.platform.dermatologicalappointment.infrastructure.persistence.jpa.entities.AppointmentPersistenceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

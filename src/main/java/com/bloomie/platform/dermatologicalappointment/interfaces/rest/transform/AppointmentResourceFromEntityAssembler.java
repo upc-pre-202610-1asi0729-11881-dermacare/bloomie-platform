@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologicalAppointment.interfaces.rest.transform;
+package com.bloomie.platform.dermatologicalappointment.interfaces.rest.transform;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.aggregates.Appointment;
-import com.bloomie.platform.dermatologicalAppointment.interfaces.rest.resources.AppointmentResource;
+import com.bloomie.platform.dermatologicalappointment.domain.model.aggregates.Appointment;
+import com.bloomie.platform.dermatologicalappointment.interfaces.rest.resources.AppointmentResource;
 
 public final class AppointmentResourceFromEntityAssembler {
 

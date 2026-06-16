@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologicalAppointment.interfaces.acl;
+package com.bloomie.platform.dermatologicalappointment.interfaces.acl;
 
 /**
  * Anti-Corruption Layer facade exposed by the Dermatological Appointment bounded context.

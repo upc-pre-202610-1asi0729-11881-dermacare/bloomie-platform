@@ -1,10 +1,10 @@
-package com.bloomie.platform.dermatologicalAppointment.application.internal.queryservices;
+package com.bloomie.platform.dermatologicalappointment.application.internal.queryservices;
 
-import com.bloomie.platform.dermatologicalAppointment.application.queryservices.ConsultationQueryService;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.aggregates.Consultation;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.queries.GetConsultationByAppointmentIdQuery;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.queries.GetConsultationByIdQuery;
-import com.bloomie.platform.dermatologicalAppointment.domain.repositories.ConsultationRepository;
+import com.bloomie.platform.dermatologicalappointment.application.queryservices.ConsultationQueryService;
+import com.bloomie.platform.dermatologicalappointment.domain.model.aggregates.Consultation;
+import com.bloomie.platform.dermatologicalappointment.domain.model.queries.GetConsultationByAppointmentIdQuery;
+import com.bloomie.platform.dermatologicalappointment.domain.model.queries.GetConsultationByIdQuery;
+import com.bloomie.platform.dermatologicalappointment.domain.repositories.ConsultationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

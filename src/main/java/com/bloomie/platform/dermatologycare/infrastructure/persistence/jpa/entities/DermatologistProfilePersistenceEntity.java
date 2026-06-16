@@ -1,14 +1,14 @@
-package com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.entities;
+package com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.entities;
 
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.ContactPhone;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.DermatologistId;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.LicenseNumber;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.SpecialtyName;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.converters.ContactPhonePersistenceConverter;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.converters.DermatologistIdPersistenceConverter;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.converters.LicenseNumberPersistenceConverter;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.converters.SpecialtyNamePersistenceConverter;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.embeddables.PersonNamePersistenceEmbeddable;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.ContactPhone;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.LicenseNumber;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.SpecialtyName;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.converters.ContactPhonePersistenceConverter;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.converters.DermatologistIdPersistenceConverter;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.converters.LicenseNumberPersistenceConverter;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.converters.SpecialtyNamePersistenceConverter;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.embeddables.PersonNamePersistenceEmbeddable;
 import com.bloomie.platform.shared.infrastructure.persistence.jpa.entities.AuditableAbstractPersistenceEntity;
 import jakarta.persistence.*;
 

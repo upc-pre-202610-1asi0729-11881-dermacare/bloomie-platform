@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologyCare.domain.model.valueobjects;
+package com.bloomie.platform.dermatologycare.domain.model.valueobjects;
 
 public record LicenseNumber(String licenseNumber) {
     private static final String LICENSE_NUMBER_BLANK = "dermatology.license.number.blank";

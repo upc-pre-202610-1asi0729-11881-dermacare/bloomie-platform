@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologyCare.interfaces.acl;
+package com.bloomie.platform.dermatologycare.interfaces.acl;
 
 /**
  * Anti-Corruption Layer facade exposed by the Dermatology Care bounded context.

@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologyCare.domain.model.valueobjects;
+package com.bloomie.platform.dermatologycare.domain.model.valueobjects;
 
 public record SpecialtyName(String specialtyName) {
     private static final String SPECIALTY_OVER_100_KEY = "dermatology.specialityName.long";

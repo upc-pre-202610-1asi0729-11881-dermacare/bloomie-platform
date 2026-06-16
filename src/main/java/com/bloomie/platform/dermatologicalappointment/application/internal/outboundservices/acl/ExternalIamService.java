@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologicalAppointment.application.internal.outboundservices.acl;
+package com.bloomie.platform.dermatologicalappointment.application.internal.outboundservices.acl;
 
 /**
  * Outbound service interface used by this bounded context to query the IAM context.

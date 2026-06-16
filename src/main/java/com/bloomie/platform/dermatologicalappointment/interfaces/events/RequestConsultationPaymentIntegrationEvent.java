@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologicalAppointment.interfaces.events;
+package com.bloomie.platform.dermatologicalappointment.interfaces.events;
 
 /**
  * Integration event published when a new appointment is scheduled and the consultation payment

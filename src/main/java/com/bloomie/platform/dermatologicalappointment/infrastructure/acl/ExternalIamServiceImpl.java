@@ -1,6 +1,6 @@
-package com.bloomie.platform.dermatologicalAppointment.infrastructure.acl;
+package com.bloomie.platform.dermatologicalappointment.infrastructure.acl;
 
-import com.bloomie.platform.dermatologicalAppointment.application.internal.outboundservices.acl.ExternalIamService;
+import com.bloomie.platform.dermatologicalappointment.application.internal.outboundservices.acl.ExternalIamService;
 import com.bloomie.platform.iam.interfaces.acl.IamContextFacade;
 import org.springframework.stereotype.Service;
 

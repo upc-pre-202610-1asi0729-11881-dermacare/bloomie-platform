@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologicalAppointment.infrastructure.persistence.jpa.assemblers;
+package com.bloomie.platform.dermatologicalappointment.infrastructure.persistence.jpa.assemblers;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.aggregates.Appointment;
-import com.bloomie.platform.dermatologicalAppointment.infrastructure.persistence.jpa.entities.AppointmentPersistenceEntity;
+import com.bloomie.platform.dermatologicalappointment.domain.model.aggregates.Appointment;
+import com.bloomie.platform.dermatologicalappointment.infrastructure.persistence.jpa.entities.AppointmentPersistenceEntity;
 
 /**
  * Static utility that converts between {@link Appointment} domain aggregates and

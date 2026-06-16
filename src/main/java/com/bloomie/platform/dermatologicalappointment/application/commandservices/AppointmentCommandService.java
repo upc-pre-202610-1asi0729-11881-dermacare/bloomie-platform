@@ -1,13 +1,13 @@
-package com.bloomie.platform.dermatologicalAppointment.application.commandservices;
+package com.bloomie.platform.dermatologicalappointment.application.commandservices;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.aggregates.Appointment;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.CancelAppointmentCommand;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.CompleteAppointmentCommand;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.ConfirmAppointmentCommand;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.MarkAppointmentInProgressCommand;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.ReprogramAppointmentCommand;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.RequestReprogramAppointmentCommand;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.ScheduleDermatologyAppointmentCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.aggregates.Appointment;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.CancelAppointmentCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.CompleteAppointmentCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.ConfirmAppointmentCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.MarkAppointmentInProgressCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.ReprogramAppointmentCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.RequestReprogramAppointmentCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.ScheduleDermatologyAppointmentCommand;
 import com.bloomie.platform.shared.application.result.ApplicationError;
 import com.bloomie.platform.shared.application.result.Result;
 

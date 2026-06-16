@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologyCare.domain.model.queries;
+package com.bloomie.platform.dermatologycare.domain.model.queries;
 
 public record GetAllDermatologistProfilesQuery() {
 }

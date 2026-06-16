@@ -1,9 +1,9 @@
-package com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.assemblers;
+package com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.assemblers;
 
-import com.bloomie.platform.dermatologyCare.domain.model.aggregates.DermatologistProfile;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.PersonName;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.embeddables.PersonNamePersistenceEmbeddable;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.entities.DermatologistProfilePersistenceEntity;
+import com.bloomie.platform.dermatologycare.domain.model.aggregates.DermatologistProfile;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.PersonName;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.embeddables.PersonNamePersistenceEmbeddable;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.entities.DermatologistProfilePersistenceEntity;
 
 /**
  * Stateless assembler that converts between the {@link DermatologistProfile} domain aggregate

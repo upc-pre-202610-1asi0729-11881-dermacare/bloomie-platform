@@ -1,9 +1,9 @@
-package com.bloomie.platform.dermatologicalAppointment.application.internal.eventhandlers;
+package com.bloomie.platform.dermatologicalappointment.application.internal.eventhandlers;
 
-import com.bloomie.platform.dermatologicalAppointment.application.queryservices.AppointmentQueryService;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.events.AppointmentCancelledEvent;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.queries.GetAppointmentByIdQuery;
-import com.bloomie.platform.dermatologicalAppointment.interfaces.events.ProcessRefundIntegrationEvent;
+import com.bloomie.platform.dermatologicalappointment.application.queryservices.AppointmentQueryService;
+import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentCancelledEvent;
+import com.bloomie.platform.dermatologicalappointment.domain.model.queries.GetAppointmentByIdQuery;
+import com.bloomie.platform.dermatologicalappointment.interfaces.events.ProcessRefundIntegrationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;

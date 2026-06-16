@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologicalAppointment.domain.model.queries;
+package com.bloomie.platform.dermatologicalappointment.domain.model.queries;
 
 /**
  * Query to retrieve a single consultation by its persistence id.

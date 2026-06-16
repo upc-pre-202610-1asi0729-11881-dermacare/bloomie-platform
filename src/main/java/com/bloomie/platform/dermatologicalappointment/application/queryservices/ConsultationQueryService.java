@@ -1,8 +1,8 @@
-package com.bloomie.platform.dermatologicalAppointment.application.queryservices;
+package com.bloomie.platform.dermatologicalappointment.application.queryservices;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.aggregates.Consultation;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.queries.GetConsultationByAppointmentIdQuery;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.queries.GetConsultationByIdQuery;
+import com.bloomie.platform.dermatologicalappointment.domain.model.aggregates.Consultation;
+import com.bloomie.platform.dermatologicalappointment.domain.model.queries.GetConsultationByAppointmentIdQuery;
+import com.bloomie.platform.dermatologicalappointment.domain.model.queries.GetConsultationByIdQuery;
 
 import java.util.Optional;
 

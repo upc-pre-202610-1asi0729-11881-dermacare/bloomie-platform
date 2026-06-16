@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologyCare.domain.repositories;
+package com.bloomie.platform.dermatologycare.domain.repositories;
 
-import com.bloomie.platform.dermatologyCare.domain.model.aggregates.Availability;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologycare.domain.model.aggregates.Availability;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.DermatologistId;
 
 import java.time.DayOfWeek;
 import java.util.List;

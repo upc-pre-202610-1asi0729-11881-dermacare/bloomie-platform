@@ -1,9 +1,9 @@
 // AvailabilityPersistenceEntity.java
-package com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.entities;
+package com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.entities;
 
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.DermatologistId;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.converters.DermatologistIdPersistenceConverter;
-import com.bloomie.platform.dermatologyCare.infrastructure.persistence.jpa.embeddables.TimeSlotPersistenceEmbeddable;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.converters.DermatologistIdPersistenceConverter;
+import com.bloomie.platform.dermatologycare.infrastructure.persistence.jpa.embeddables.TimeSlotPersistenceEmbeddable;
 import com.bloomie.platform.shared.infrastructure.persistence.jpa.entities.AuditableAbstractPersistenceEntity;
 import jakarta.persistence.*;
 

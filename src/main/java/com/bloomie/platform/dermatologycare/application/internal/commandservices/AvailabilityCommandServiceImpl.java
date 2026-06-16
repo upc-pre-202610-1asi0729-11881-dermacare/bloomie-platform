@@ -1,10 +1,10 @@
-package com.bloomie.platform.dermatologyCare.application.internal.commandservices;
+package com.bloomie.platform.dermatologycare.application.internal.commandservices;
 
-import com.bloomie.platform.dermatologyCare.application.commandservices.AvailabilityCommandService;
-import com.bloomie.platform.dermatologyCare.domain.model.aggregates.Availability;
-import com.bloomie.platform.dermatologyCare.domain.model.commands.DefineAvailabilityCommand;
-import com.bloomie.platform.dermatologyCare.domain.model.commands.UpdateAvailabilityCommand;
-import com.bloomie.platform.dermatologyCare.domain.repositories.AvailabilityRepository;
+import com.bloomie.platform.dermatologycare.application.commandservices.AvailabilityCommandService;
+import com.bloomie.platform.dermatologycare.domain.model.aggregates.Availability;
+import com.bloomie.platform.dermatologycare.domain.model.commands.DefineAvailabilityCommand;
+import com.bloomie.platform.dermatologycare.domain.model.commands.UpdateAvailabilityCommand;
+import com.bloomie.platform.dermatologycare.domain.repositories.AvailabilityRepository;
 import com.bloomie.platform.shared.application.result.ApplicationError;
 import com.bloomie.platform.shared.application.result.Result;
 import org.springframework.stereotype.Service;

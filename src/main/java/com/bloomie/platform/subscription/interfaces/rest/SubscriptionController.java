@@ -1,6 +1,6 @@
 package com.bloomie.platform.subscription.interfaces.rest;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.queries.GetAppointmentsByPatientIdQuery;
+import com.bloomie.platform.dermatologicalappointment.domain.model.queries.GetAppointmentsByPatientIdQuery;
 import com.bloomie.platform.shared.application.result.ApplicationError;
 import com.bloomie.platform.shared.application.result.Result;
 import com.bloomie.platform.shared.interfaces.rest.transform.ResponseEntityAssembler;

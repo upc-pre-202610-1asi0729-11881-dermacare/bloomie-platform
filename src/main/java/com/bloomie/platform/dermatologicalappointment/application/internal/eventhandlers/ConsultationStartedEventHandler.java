@@ -1,8 +1,8 @@
-package com.bloomie.platform.dermatologicalAppointment.application.internal.eventhandlers;
+package com.bloomie.platform.dermatologicalappointment.application.internal.eventhandlers;
 
-import com.bloomie.platform.dermatologicalAppointment.application.commandservices.AppointmentCommandService;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.MarkAppointmentInProgressCommand;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.events.ConsultationStartedEvent;
+import com.bloomie.platform.dermatologicalappointment.application.commandservices.AppointmentCommandService;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.MarkAppointmentInProgressCommand;
+import com.bloomie.platform.dermatologicalappointment.domain.model.events.ConsultationStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 

@@ -1,11 +1,11 @@
-package com.bloomie.platform.dermatologyCare.domain.model.aggregates;
+package com.bloomie.platform.dermatologycare.domain.model.aggregates;
 
-import com.bloomie.platform.dermatologyCare.domain.model.commands.DefineAvailabilityCommand;
-import com.bloomie.platform.dermatologyCare.domain.model.commands.UpdateAvailabilityCommand;
-import com.bloomie.platform.dermatologyCare.domain.model.events.AvailabilityDefinedEvent;
-import com.bloomie.platform.dermatologyCare.domain.model.events.AvailabilityUpdatedEvent;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.DermatologistId;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.TimeSlot;
+import com.bloomie.platform.dermatologycare.domain.model.commands.DefineAvailabilityCommand;
+import com.bloomie.platform.dermatologycare.domain.model.commands.UpdateAvailabilityCommand;
+import com.bloomie.platform.dermatologycare.domain.model.events.AvailabilityDefinedEvent;
+import com.bloomie.platform.dermatologycare.domain.model.events.AvailabilityUpdatedEvent;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.TimeSlot;
 import com.bloomie.platform.shared.domain.model.aggregates.AbstractDomainAggregateRoot;
 import lombok.Getter;
 import lombok.Setter;

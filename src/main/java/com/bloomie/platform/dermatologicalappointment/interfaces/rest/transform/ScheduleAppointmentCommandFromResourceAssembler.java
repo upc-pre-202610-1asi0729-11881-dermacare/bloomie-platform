@@ -1,7 +1,7 @@
-package com.bloomie.platform.dermatologicalAppointment.interfaces.rest.transform;
+package com.bloomie.platform.dermatologicalappointment.interfaces.rest.transform;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.commands.ScheduleDermatologyAppointmentCommand;
-import com.bloomie.platform.dermatologicalAppointment.interfaces.rest.resources.ScheduleAppointmentResource;
+import com.bloomie.platform.dermatologicalappointment.domain.model.commands.ScheduleDermatologyAppointmentCommand;
+import com.bloomie.platform.dermatologicalappointment.interfaces.rest.resources.ScheduleAppointmentResource;
 
 public final class ScheduleAppointmentCommandFromResourceAssembler {
 

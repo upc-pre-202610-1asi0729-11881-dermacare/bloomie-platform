@@ -1,12 +1,12 @@
-package com.bloomie.platform.dermatologicalAppointment.infrastructure.persistence.jpa.entities;
+package com.bloomie.platform.dermatologicalappointment.infrastructure.persistence.jpa.entities;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.ClinicalNotes;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.ConsultationStatus;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.DermatologistId;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.PatientId;
-import com.bloomie.platform.dermatologicalAppointment.infrastructure.persistence.jpa.converters.ClinicalNotesPersistenceConverter;
-import com.bloomie.platform.dermatologicalAppointment.infrastructure.persistence.jpa.converters.DermatologistIdPersistenceConverter;
-import com.bloomie.platform.dermatologicalAppointment.infrastructure.persistence.jpa.converters.PatientIdPersistenceConverter;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.ClinicalNotes;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.ConsultationStatus;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.PatientId;
+import com.bloomie.platform.dermatologicalappointment.infrastructure.persistence.jpa.converters.ClinicalNotesPersistenceConverter;
+import com.bloomie.platform.dermatologicalappointment.infrastructure.persistence.jpa.converters.DermatologistIdPersistenceConverter;
+import com.bloomie.platform.dermatologicalappointment.infrastructure.persistence.jpa.converters.PatientIdPersistenceConverter;
 import com.bloomie.platform.shared.infrastructure.persistence.jpa.entities.AuditableAbstractPersistenceEntity;
 import jakarta.persistence.*;
 

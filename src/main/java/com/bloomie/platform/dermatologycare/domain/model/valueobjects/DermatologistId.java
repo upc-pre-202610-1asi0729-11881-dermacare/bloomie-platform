@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologyCare.domain.model.valueobjects;
+package com.bloomie.platform.dermatologycare.domain.model.valueobjects;
 
 public record DermatologistId(Long dermatologistId) {
     private static final String DERMATOLOGIST_ID_BLANK_KEY = "dermatology.id.blank";

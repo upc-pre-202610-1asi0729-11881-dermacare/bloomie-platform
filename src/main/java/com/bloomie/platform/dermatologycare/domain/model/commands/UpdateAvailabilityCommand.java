@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologyCare.domain.model.commands;
+package com.bloomie.platform.dermatologycare.domain.model.commands;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;

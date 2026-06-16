@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologyCare.interfaces.rest.resources;
+package com.bloomie.platform.dermatologycare.interfaces.rest.resources;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

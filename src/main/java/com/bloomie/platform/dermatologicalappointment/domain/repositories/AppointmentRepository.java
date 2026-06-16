@@ -1,9 +1,9 @@
-package com.bloomie.platform.dermatologicalAppointment.domain.repositories;
+package com.bloomie.platform.dermatologicalappointment.domain.repositories;
 
-import com.bloomie.platform.dermatologicalAppointment.domain.model.aggregates.Appointment;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.AppointmentDateTime;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.DermatologistId;
-import com.bloomie.platform.dermatologicalAppointment.domain.model.valueobjects.PatientId;
+import com.bloomie.platform.dermatologicalappointment.domain.model.aggregates.Appointment;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.AppointmentDateTime;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologicalappointment.domain.model.valueobjects.PatientId;
 
 import java.util.List;
 import java.util.Optional;

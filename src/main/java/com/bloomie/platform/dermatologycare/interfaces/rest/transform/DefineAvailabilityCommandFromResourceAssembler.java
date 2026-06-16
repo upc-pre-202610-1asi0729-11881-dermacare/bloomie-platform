@@ -1,8 +1,8 @@
-package com.bloomie.platform.dermatologyCare.interfaces.rest.transform;
+package com.bloomie.platform.dermatologycare.interfaces.rest.transform;
 
-import com.bloomie.platform.dermatologyCare.domain.model.commands.DefineAvailabilityCommand;
-import com.bloomie.platform.dermatologyCare.domain.model.valueobjects.DermatologistId;
-import com.bloomie.platform.dermatologyCare.interfaces.rest.resources.DefineAvailabilityResource;
+import com.bloomie.platform.dermatologycare.domain.model.commands.DefineAvailabilityCommand;
+import com.bloomie.platform.dermatologycare.domain.model.valueobjects.DermatologistId;
+import com.bloomie.platform.dermatologycare.interfaces.rest.resources.DefineAvailabilityResource;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;

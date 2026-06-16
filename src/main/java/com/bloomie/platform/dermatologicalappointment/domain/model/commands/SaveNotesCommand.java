@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologicalAppointment.domain.model.commands;
+package com.bloomie.platform.dermatologicalappointment.domain.model.commands;
 
 /**
  * Command to progressively save the dermatologist's clinical notes during an ongoing consultation.

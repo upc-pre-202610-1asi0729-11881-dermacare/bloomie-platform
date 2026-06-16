@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologicalAppointment.interfaces.rest.resources;
+package com.bloomie.platform.dermatologicalappointment.interfaces.rest.resources;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

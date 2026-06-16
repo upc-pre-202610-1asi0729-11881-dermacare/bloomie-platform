@@ -1,4 +1,4 @@
-package com.bloomie.platform.dermatologyCare.domain.model.commands;
+package com.bloomie.platform.dermatologycare.domain.model.commands;
 
 /**
  * Command to update an existing {@code DermatologistProfile}'s professional details.
