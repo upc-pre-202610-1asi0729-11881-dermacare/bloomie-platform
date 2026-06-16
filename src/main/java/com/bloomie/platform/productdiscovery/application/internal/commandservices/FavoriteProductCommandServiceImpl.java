@@ -44,4 +44,23 @@ public class FavoriteProductCommandServiceImpl implements FavoriteProductCommand
             return Result.failure(ApplicationError.unexpected("save-product-as-favorite", e.getMessage()));
         }
     }
+
+    @Override
+    public Result<FavoriteProduct, ApplicationError> handle(RemoveProductFromFavoritesCommand command) {
+        var existing = favoriteProductRepository.findById(command.favoriteProductId());
+        if (existing.isEmpty()) {
+            return Result.failure(ApplicationError.notFound(
+                    "FavoriteProduct",
+                    command.favoriteProductId().toString()
+            ));
+        }
+        try {
+            var favoriteProduct = existing.get();
+            favoriteProduct.removeFromFavorites();
+            favoriteProductRepository.delete(favoriteProduct);
+            return Result.success(favoriteProduct);
+        } catch (Exception e) {
+            return Result.failure(ApplicationError.unexpected("remove-product-from-favorites", e.getMessage()));
+        }
+    }
 }
