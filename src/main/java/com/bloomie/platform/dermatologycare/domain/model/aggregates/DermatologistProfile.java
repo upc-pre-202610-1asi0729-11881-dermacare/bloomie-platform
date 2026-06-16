@@ -17,8 +17,8 @@ import lombok.Setter;
  * Aggregate root for a dermatologist's professional profile.
  *
  * <p>Created automatically when IAM emits a {@code DermatologistRegisteredIntegrationEvent}.
- * Specialty, license number, and contact phone are optional at creation and filled in
- * via {@link UpdateDermatologistProfileCommand}.</p>
+ * Specialty, license number, contact phone, and consultation fee are optional at creation
+ * and filled in via {@link UpdateDermatologistProfileCommand}.</p>
  */
 public class DermatologistProfile extends AbstractDomainAggregateRoot<DermatologistProfile> {
 
@@ -32,17 +32,19 @@ public class DermatologistProfile extends AbstractDomainAggregateRoot<Dermatolog
     private LicenseNumber licenseNumber;
     private ContactPhone contactPhone;
     private String biography;
+    private Double consultationFee;
 
-    /** Creates a minimal profile from the IAM integration event payload. */
+    /** Creates a minimal profile from the IAM integration event payload. Fee defaults to 0.0 until set by the dermatologist. */
     public DermatologistProfile(RegisterDermatologistProfileCommand command) {
         this.dermatologistId = command.dermatologistId();
         this.name = new PersonName(command.firstName(), command.lastName());
+        this.consultationFee = 0.0;
     }
 
     /** Full reconstitution constructor used by the persistence assembler. */
     public DermatologistProfile(Long id, DermatologistId dermatologistId, PersonName personName,
                                 SpecialtyName specialtyName, LicenseNumber licenseNumber,
-                                ContactPhone contactPhone, String biography) {
+                                ContactPhone contactPhone, String biography, Double consultationFee) {
         this.id = id;
         this.dermatologistId = dermatologistId;
         this.name = personName;
@@ -50,6 +52,7 @@ public class DermatologistProfile extends AbstractDomainAggregateRoot<Dermatolog
         this.licenseNumber = licenseNumber;
         this.contactPhone = contactPhone;
         this.biography = biography;
+        this.consultationFee = consultationFee;
     }
 
     /** Updates all editable fields. All VO fields are required for an update. */
@@ -59,6 +62,7 @@ public class DermatologistProfile extends AbstractDomainAggregateRoot<Dermatolog
         this.licenseNumber = new LicenseNumber(command.licenseNumber());
         this.contactPhone = new ContactPhone(command.phone());
         this.biography = command.biography();
+        this.consultationFee = command.consultationFee();
     }
 
     /** Registers a {@link DermatologistProfileRegisteredEvent} after a new profile is persisted. */
@@ -79,4 +83,5 @@ public class DermatologistProfile extends AbstractDomainAggregateRoot<Dermatolog
     public LicenseNumber getLicenseNumber() { return licenseNumber; }
     public ContactPhone getContactPhone() { return contactPhone; }
     public String getBiography() { return biography; }
+    public Double getConsultationFee() { return consultationFee; }
 }
