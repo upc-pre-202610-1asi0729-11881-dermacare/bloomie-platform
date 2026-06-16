@@ -4,6 +4,7 @@ import com.bloomie.platform.iam.domain.model.aggregates.User;
 import com.bloomie.platform.iam.domain.model.commands.ChangePasswordCommand;
 import com.bloomie.platform.iam.domain.model.commands.RegisterDermatologistCommand;
 import com.bloomie.platform.iam.domain.model.commands.RegisterUserCommand;
+import com.bloomie.platform.iam.domain.model.commands.UpdateUserPhotoCommand;
 import com.bloomie.platform.iam.domain.model.commands.UpdateUserProfileCommand;
 import com.bloomie.platform.shared.application.result.ApplicationError;
 import com.bloomie.platform.shared.application.result.Result;
@@ -23,6 +24,9 @@ public interface UserCommandService {
 
     /** Updates the profile (name and email) of an existing user. */
     Result<User, ApplicationError> handle(UpdateUserProfileCommand command);
+
+    /** Updates the profile photo URL of an existing user. */
+    Result<User, ApplicationError> handle(UpdateUserPhotoCommand command);
 
     /** Changes the password of an existing user after verifying the current one. */
     Result<Void, ApplicationError> handle(ChangePasswordCommand command);

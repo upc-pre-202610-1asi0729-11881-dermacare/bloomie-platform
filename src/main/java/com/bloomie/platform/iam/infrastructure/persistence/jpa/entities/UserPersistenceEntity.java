@@ -32,6 +32,9 @@ public class UserPersistenceEntity extends AuditableAbstractPersistenceEntity {
     @Column(name = "hashed_password", nullable = false)
     private HashedPassword hashedPassword;
 
+    @Column(name = "photo_url", nullable = true)
+    private String photoUrl;
+
     // Relación muchos a muchos con roles — tabla intermedia user_roles
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -65,6 +68,14 @@ public class UserPersistenceEntity extends AuditableAbstractPersistenceEntity {
 
     public void setHashedPassword(HashedPassword hashedPassword) {
         this.hashedPassword = hashedPassword;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public Set<RolePersistenceEntity> getRoles() {

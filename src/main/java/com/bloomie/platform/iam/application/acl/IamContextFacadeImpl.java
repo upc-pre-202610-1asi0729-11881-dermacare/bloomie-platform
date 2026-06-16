@@ -1,6 +1,7 @@
 package com.bloomie.platform.iam.application.acl;
 
 import com.bloomie.platform.iam.application.queryservices.UserQueryService;
+import com.bloomie.platform.iam.domain.model.aggregates.User;
 import com.bloomie.platform.iam.domain.model.queries.GetUserByEmailQuery;
 import com.bloomie.platform.iam.domain.model.queries.GetUserByIdQuery;
 import com.bloomie.platform.iam.interfaces.acl.IamContextFacade;
@@ -38,5 +39,12 @@ public class IamContextFacadeImpl implements IamContextFacade {
     public boolean existsUserById(Long userId) {
         var query = new GetUserByIdQuery(userId);
         return userQueryService.handle(query).isPresent();
+    }
+
+    @Override
+    public String fetchUserPhotoUrl(Long userId) {
+        var query = new GetUserByIdQuery(userId);
+        var user = userQueryService.handle(query);
+        return user.isEmpty() ? null : user.get().getPhotoUrl();
     }
 }
