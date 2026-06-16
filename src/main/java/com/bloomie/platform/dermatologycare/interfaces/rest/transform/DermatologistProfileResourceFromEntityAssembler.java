@@ -20,6 +20,7 @@ public final class DermatologistProfileResourceFromEntityAssembler {
                 profile.getSpecialty() != null ? profile.getSpecialty().specialtyName() : null,
                 profile.getLicenseNumber() != null ? profile.getLicenseNumber().licenseNumber() : null,
                 profile.getContactPhone() != null ? profile.getContactPhone().contactPhone() : null,
-                profile.getBiography());
+                profile.getBiography(),
+                profile.getConsultationFee());
     }
 }

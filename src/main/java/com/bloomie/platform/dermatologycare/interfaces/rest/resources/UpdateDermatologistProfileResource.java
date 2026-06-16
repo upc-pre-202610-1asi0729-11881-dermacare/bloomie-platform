@@ -1,7 +1,9 @@
 package com.bloomie.platform.dermatologycare.interfaces.rest.resources;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Request DTO for updating a {@code DermatologistProfile}.
@@ -29,5 +31,10 @@ public record UpdateDermatologistProfileResource(
         String phone,
 
         @Schema(description = "Professional biography")
-        String biography) {
+        String biography,
+
+        @NotNull(message = "{validation.not-blank}")
+        @DecimalMin(value = "0.0", message = "{dermatology.consultation.fee.negative}")
+        @Schema(description = "Consultation fee; must not be negative", example = "150.0")
+        Double consultationFee) {
 }
