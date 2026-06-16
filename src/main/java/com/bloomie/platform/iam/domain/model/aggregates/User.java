@@ -3,9 +3,11 @@ package com.bloomie.platform.iam.domain.model.aggregates;
 import com.bloomie.platform.iam.domain.model.commands.ChangePasswordCommand;
 import com.bloomie.platform.iam.domain.model.commands.RegisterDermatologistCommand;
 import com.bloomie.platform.iam.domain.model.commands.RegisterUserCommand;
+import com.bloomie.platform.iam.domain.model.commands.UpdateUserPhotoCommand;
 import com.bloomie.platform.iam.domain.model.commands.UpdateUserProfileCommand;
 import com.bloomie.platform.iam.domain.model.events.DermatologistRegisteredEvent;
 import com.bloomie.platform.iam.domain.model.events.PasswordChangedEvent;
+import com.bloomie.platform.iam.domain.model.events.UserPhotoUpdatedEvent;
 import com.bloomie.platform.iam.domain.model.events.UserProfileUpdatedEvent;
 import com.bloomie.platform.iam.domain.model.events.UserRegisteredEvent;
 import com.bloomie.platform.iam.domain.model.valueobjects.UserRole;
@@ -38,19 +40,29 @@ public class User extends AbstractDomainAggregateRoot<User>{
     private PersonName name;
     private EmailAddress emailAddress;
     private HashedPassword hashedPassword;
+    private String photoUrl;
 
     private Set<Role> roles;
 
     /**
      * Full reconstitution constructor — used by the persistence assembler to rebuild
-     * a user from stored data.
+     * a user from stored data, including the optional photo URL.
      */
-    public User(Long id, PersonName name, EmailAddress email, HashedPassword hashedPassword, Set<Role> roles){
+    public User(Long id, PersonName name, EmailAddress email, HashedPassword hashedPassword, Set<Role> roles, String photoUrl){
         this.id = id;
         this.name = name;
         this.emailAddress = email;
         this.hashedPassword = hashedPassword;
         this.roles = roles != null? roles : new HashSet<>();
+        this.photoUrl = photoUrl;
+    }
+
+    /**
+     * Reconstitution constructor without photo URL — delegates to the full constructor
+     * with a {@code null} photo URL.
+     */
+    public User(Long id, PersonName name, EmailAddress email, HashedPassword hashedPassword, Set<Role> roles){
+        this(id, name, email, hashedPassword, roles, null);
     }
 
     /** Convenience constructor for a new user that does not yet have a persistence id. */
@@ -119,6 +131,16 @@ public class User extends AbstractDomainAggregateRoot<User>{
         registerDomainEvent(UserProfileUpdatedEvent.from(this));
     }
 
+    /** Replaces the user's profile photo URL with the value from the command. */
+    public void updatePhoto(UpdateUserPhotoCommand command) {
+        this.photoUrl = command.photoUrl();
+    }
+
+    /** Registers and publishes a {@link UserPhotoUpdatedEvent} after a photo update. */
+    public void onPhotoUpdated() {
+        registerDomainEvent(UserPhotoUpdatedEvent.from(this));
+    }
+
     /**
      * Replaces the stored hash with the pre-hashed new password from the command.
      * The caller is responsible for verifying the current password and hashing the
@@ -148,6 +170,7 @@ public class User extends AbstractDomainAggregateRoot<User>{
     public PersonName getName() {return name;}
     public EmailAddress getEmailAddressValue() {return emailAddress;}
     public HashedPassword getHashedPassword() {return hashedPassword;}
+    public String getPhotoUrl() {return photoUrl;}
     public Set<Role> getRoles() {return roles;}
 
     public String getFullName() {return name.getFullName();}
