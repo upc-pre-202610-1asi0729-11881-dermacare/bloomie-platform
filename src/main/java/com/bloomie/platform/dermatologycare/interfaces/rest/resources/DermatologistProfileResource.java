@@ -14,5 +14,6 @@ public record DermatologistProfileResource(
         @Schema(description = "Medical specialty") String specialtyName,
         @Schema(description = "License number") String licenseNumber,
         @Schema(description = "Contact phone") String contactPhone,
-        @Schema(description = "Professional biography") String biography) {
+        @Schema(description = "Professional biography") String biography,
+        @Schema(description = "Consultation fee", example = "0.0") Double consultationFee) {
 }
