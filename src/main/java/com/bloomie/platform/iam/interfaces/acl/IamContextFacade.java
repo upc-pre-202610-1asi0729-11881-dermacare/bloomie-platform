@@ -30,4 +30,13 @@ public interface IamContextFacade {
      * @param userId the numeric user id to check
      */
     boolean existsUserById(Long userId);
+
+    /**
+     * Returns the profile photo URL of the user with the given id,
+     * or {@code null} if the user does not exist or has no photo set.
+     *
+     * @param userId the numeric user id to look up
+     * @return the user's photo URL, or {@code null} if not available
+     */
+    String fetchUserPhotoUrl(Long userId);
 }
