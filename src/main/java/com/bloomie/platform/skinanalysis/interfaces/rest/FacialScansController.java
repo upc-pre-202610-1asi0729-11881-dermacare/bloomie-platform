@@ -9,8 +9,10 @@ import com.bloomie.platform.skinanalysis.domain.model.queries.GetFacialScanByIdQ
 import com.bloomie.platform.skinanalysis.domain.model.queries.GetFacialScansByPatientIdQuery;
 import com.bloomie.platform.skinanalysis.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.skinanalysis.interfaces.rest.resources.StartFacialScanResource;
+import com.bloomie.platform.skinanalysis.interfaces.rest.resources.SubmitFacialScanResource;
 import com.bloomie.platform.skinanalysis.interfaces.rest.transform.FacialScanResourceFromEntityAssembler;
 import com.bloomie.platform.skinanalysis.interfaces.rest.transform.StartFacialScanCommandFromResourceAssembler;
+import com.bloomie.platform.skinanalysis.interfaces.rest.transform.SubmitFacialScanCommandFromResourceAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -51,6 +53,24 @@ public class FacialScansController {
                 id -> FacialScanResourceFromEntityAssembler.toResourceFromEntity(
                         queryService.handle(new GetFacialScanByIdQuery(id)).orElseThrow()),
                 HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{facialScanId}/submit")
+    @Operation(summary = "Submit a facial scan with a photo URL")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Facial scan submitted successfully."),
+            @ApiResponse(responseCode = "400", description = "Invalid input data."),
+            @ApiResponse(responseCode = "404", description = "Facial scan not found."),
+            @ApiResponse(responseCode = "409", description = "Facial scan has already been submitted.")})
+    public ResponseEntity<?> submitFacialScan(@PathVariable Long facialScanId,
+                                              @Valid @RequestBody SubmitFacialScanResource resource) {
+        var command = SubmitFacialScanCommandFromResourceAssembler.toCommandFromResource(facialScanId, resource);
+        var result = commandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                id -> FacialScanResourceFromEntityAssembler.toResourceFromEntity(
+                        queryService.handle(new GetFacialScanByIdQuery(id)).orElseThrow()),
+                HttpStatus.OK);
     }
 
     @GetMapping("/{facialScanId}")
