@@ -1,8 +1,11 @@
-package com.bloomie.platform.skinAnalysis.interfaces.rest.transform;
+package com.bloomie.platform.skinanalysis.interfaces.rest.transform;
 
-import com.bloomie.platform.skinAnalysis.domain.model.aggregates.SkinProfile;
-import com.bloomie.platform.skinAnalysis.interfaces.rest.resources.SkinProfileResource;
+import com.bloomie.platform.skinanalysis.domain.model.aggregates.SkinProfile;
+import com.bloomie.platform.skinanalysis.interfaces.rest.resources.SkinProfileResource;
 
+/**
+ * Converts a {@link SkinProfile} aggregate into a {@link SkinProfileResource} response.
+ */
 public final class SkinProfileResourceFromEntityAssembler {
 
     private SkinProfileResourceFromEntityAssembler() {}
@@ -10,10 +13,12 @@ public final class SkinProfileResourceFromEntityAssembler {
     public static SkinProfileResource toResourceFromEntity(SkinProfile skinProfile) {
         return new SkinProfileResource(
                 skinProfile.getId(),
-                skinProfile.getPatientId().patient_id(),
+                skinProfile.getPatientId().patientId(),
                 skinProfile.getSkinType().name(),
-                skinProfile.getSkinTone().name(),
-                skinProfile.getSkinConcerns().concerns(),
+                skinProfile.getSensitivity().name(),
+                skinProfile.getWaterIntake(),
+                skinProfile.getSunExposure(),
+                skinProfile.getSleepHours(),
                 skinProfile.getStatus().name());
     }
 }
