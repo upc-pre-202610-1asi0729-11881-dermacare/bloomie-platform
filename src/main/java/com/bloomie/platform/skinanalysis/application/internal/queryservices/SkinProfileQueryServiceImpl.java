@@ -1,11 +1,10 @@
-package com.bloomie.platform.skinAnalysis.application.internal.queryservices;
+package com.bloomie.platform.skinanalysis.application.internal.queryservices;
 
-import com.bloomie.platform.skinAnalysis.application.queryservices.SkinProfileQueryService;
-import com.bloomie.platform.skinAnalysis.domain.model.aggregates.SkinProfile;
-import com.bloomie.platform.skinAnalysis.domain.model.queries.GetSkinProfileByIdQuery;
-import com.bloomie.platform.skinAnalysis.domain.model.queries.GetSkinProfileByPatientIdQuery;
-import com.bloomie.platform.skinAnalysis.domain.model.valueobjects.PatientId;
-import com.bloomie.platform.skinAnalysis.domain.repositories.SkinProfileRepository;
+import com.bloomie.platform.skinanalysis.application.queryservices.SkinProfileQueryService;
+import com.bloomie.platform.skinanalysis.domain.model.aggregates.SkinProfile;
+import com.bloomie.platform.skinanalysis.domain.model.queries.GetSkinProfileByIdQuery;
+import com.bloomie.platform.skinanalysis.domain.model.queries.GetSkinProfileByPatientIdQuery;
+import com.bloomie.platform.skinanalysis.domain.repositories.SkinProfileRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -27,11 +26,11 @@ public class SkinProfileQueryServiceImpl implements SkinProfileQueryService {
 
     @Override
     public Optional<SkinProfile> handle(GetSkinProfileByIdQuery query) {
-        return skinProfileRepository.findById(query.skin_profile_id());
+        return skinProfileRepository.findById(query.skinProfileId());
     }
 
     @Override
     public Optional<SkinProfile> handle(GetSkinProfileByPatientIdQuery query) {
-        return skinProfileRepository.findByPatientId(new PatientId(query.patient_id()));
+        return skinProfileRepository.findByPatientId(query.patientId());
     }
 }
