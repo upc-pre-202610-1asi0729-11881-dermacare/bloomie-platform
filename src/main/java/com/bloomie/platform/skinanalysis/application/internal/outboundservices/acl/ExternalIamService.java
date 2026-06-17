@@ -1,4 +1,9 @@
-package com.bloomie.platform.skinAnalysis.application.internal.outboundservices.acl;
+package com.bloomie.platform.skinanalysis.application.internal.outboundservices.acl;
+
+import com.bloomie.platform.skinanalysis.domain.model.valueobjects.PatientId;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * Outbound service interface used by the Skin Analysis context to query the IAM context.
@@ -10,9 +15,10 @@ package com.bloomie.platform.skinAnalysis.application.internal.outboundservices.
 public interface ExternalIamService {
 
     /**
-     * Returns {@code true} if a user with the given id is registered in the IAM context.
+     * Returns the {@link PatientId} for the given user id if the user exists in IAM.
      *
-     * @param user_id the IAM user id to check
+     * @param patientId the IAM user id to check
+     * @return an Optional containing the PatientId, or empty if not found
      */
-    boolean existsUserById(Long user_id);
+    Optional<PatientId> fetchPatientById(Long patientId);
 }
