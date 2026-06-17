@@ -1,17 +1,22 @@
-package com.bloomie.platform.skinAnalysis.interfaces.rest.transform;
+package com.bloomie.platform.skinanalysis.interfaces.rest.transform;
 
-import com.bloomie.platform.skinAnalysis.domain.model.commands.CompleteSkinProfileCommand;
-import com.bloomie.platform.skinAnalysis.interfaces.rest.resources.CompleteSkinProfileResource;
+import com.bloomie.platform.skinanalysis.domain.model.commands.CompleteSkinProfileCommand;
+import com.bloomie.platform.skinanalysis.interfaces.rest.resources.CompleteSkinProfileResource;
 
+/**
+ * Converts a {@link CompleteSkinProfileResource} request body into a {@link CompleteSkinProfileCommand}.
+ */
 public final class CompleteSkinProfileCommandFromResourceAssembler {
 
     private CompleteSkinProfileCommandFromResourceAssembler() {}
 
     public static CompleteSkinProfileCommand toCommandFromResource(CompleteSkinProfileResource resource) {
         return new CompleteSkinProfileCommand(
-                resource.patient_id(),
-                resource.skin_type(),
-                resource.skin_tone(),
-                resource.concerns());
+                resource.patientId(),
+                resource.skinType(),
+                resource.sensitivity(),
+                resource.waterIntake(),
+                resource.sunExposure(),
+                resource.sleepHours());
     }
 }
