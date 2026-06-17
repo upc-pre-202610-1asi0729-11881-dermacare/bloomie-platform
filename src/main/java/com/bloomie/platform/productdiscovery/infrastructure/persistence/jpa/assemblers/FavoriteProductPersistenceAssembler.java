@@ -17,6 +17,7 @@ public final class FavoriteProductPersistenceAssembler {
         favoriteProduct.setId(entity.getId());
         favoriteProduct.setProductId(entity.getProductId());
         favoriteProduct.setUserId(entity.getUserId());
+        favoriteProduct.setSavedAt(entity.getCreatedAt());
         return favoriteProduct;
     }
 

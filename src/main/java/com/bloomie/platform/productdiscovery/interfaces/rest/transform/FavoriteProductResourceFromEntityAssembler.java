@@ -12,10 +12,14 @@ public final class FavoriteProductResourceFromEntityAssembler {
     }
 
     public static FavoriteProductResource toResourceFromEntity(FavoriteProduct favoriteProduct) {
+        var savedAt = favoriteProduct.getSavedAt() != null
+                ? favoriteProduct.getSavedAt().toInstant().toString()
+                : null;
         return new FavoriteProductResource(
                 favoriteProduct.getId(),
                 favoriteProduct.getProductIdValue(),
-                favoriteProduct.getUserIdValue()
+                favoriteProduct.getUserIdValue(),
+                savedAt
         );
     }
 }

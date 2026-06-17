@@ -2,9 +2,13 @@ package com.bloomie.platform.productdiscovery.interfaces.rest;
 
 import com.bloomie.platform.productdiscovery.application.queryservices.ProductQueryService;
 import com.bloomie.platform.productdiscovery.domain.model.queries.GetAllProductsQuery;
+import com.bloomie.platform.productdiscovery.domain.model.queries.GetProductByIdQuery;
 import com.bloomie.platform.productdiscovery.interfaces.rest.resources.ProductResource;
 import com.bloomie.platform.productdiscovery.interfaces.rest.transform.ProductResourceFromEntityAssembler;
+import com.bloomie.platform.shared.application.result.ApplicationError;
+import com.bloomie.platform.shared.interfaces.rest.transform.ErrorResponseAssembler;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,9 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -62,5 +64,39 @@ public class ProductController {
                 .map(ProductResourceFromEntityAssembler::toResourceFromEntity)
                 .toList();
         return ResponseEntity.ok(resources);
+    }
+
+    /**
+     * Get a product by its unique identifier.
+     *
+     * @param productId the product identifier
+     * @return the matching product resource
+     */
+    @GetMapping("/{productId}")
+    @Operation(
+            summary = "Get product by ID",
+            description = "Retrieves a specific skincare product by its unique identifier."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Product found",
+                    content = @Content(schema = @Schema(implementation = ProductResource.class))
+            ),
+            @ApiResponse(responseCode = "404", description = "Product not found")
+    })
+    public ResponseEntity<?> getProductById(
+            @PathVariable
+            @Parameter(description = "Product unique identifier", example = "1", required = true)
+            Long productId
+    ) {
+        var query = new GetProductByIdQuery(productId);
+        var product = productQueryService.handle(query);
+        if (product.isEmpty()) {
+            var error = ApplicationError.notFound("Product", productId.toString());
+            return ErrorResponseAssembler.toErrorResponseFromApplicationError(error);
+        }
+        var resource = ProductResourceFromEntityAssembler.toResourceFromEntity(product.get());
+        return ResponseEntity.ok(resource);
     }
 }

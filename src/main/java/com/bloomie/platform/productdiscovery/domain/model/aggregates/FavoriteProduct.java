@@ -8,6 +8,8 @@ import com.bloomie.platform.shared.domain.model.aggregates.AbstractDomainAggrega
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 /**
  * FavoriteProduct aggregate root.
  *
@@ -36,6 +38,12 @@ public class FavoriteProduct extends AbstractDomainAggregateRoot<FavoriteProduct
      */
     @Setter
     private UserId userId;
+
+    /**
+     * The date and time when the product was saved as a favorite.
+     */
+    @Setter
+    private Date savedAt;
 
     /**
      * Default constructor for FavoriteProduct.
