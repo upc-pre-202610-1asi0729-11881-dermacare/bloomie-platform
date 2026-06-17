@@ -1,15 +1,12 @@
-package com.bloomie.platform.skinAnalysis.infrastructure.persistence.jpa.entities;
+package com.bloomie.platform.skinanalysis.infrastructure.persistence.jpa.entities;
 
 import com.bloomie.platform.shared.infrastructure.persistence.jpa.entities.AuditableAbstractPersistenceEntity;
-import com.bloomie.platform.skinAnalysis.domain.model.valueobjects.PatientId;
-import com.bloomie.platform.skinAnalysis.domain.model.valueobjects.SkinProfileStatus;
-import com.bloomie.platform.skinAnalysis.domain.model.valueobjects.SkinTone;
-import com.bloomie.platform.skinAnalysis.domain.model.valueobjects.SkinType;
-import com.bloomie.platform.skinAnalysis.infrastructure.persistence.jpa.converters.PatientIdPersistenceConverter;
-import com.bloomie.platform.skinAnalysis.infrastructure.persistence.jpa.converters.SkinConcernsPersistenceConverter;
+import com.bloomie.platform.skinanalysis.domain.model.valueobjects.PatientId;
+import com.bloomie.platform.skinanalysis.domain.model.valueobjects.Sensitivity;
+import com.bloomie.platform.skinanalysis.domain.model.valueobjects.SkinProfileStatus;
+import com.bloomie.platform.skinanalysis.domain.model.valueobjects.SkinType;
+import com.bloomie.platform.skinanalysis.infrastructure.persistence.jpa.converters.PatientIdPersistenceConverter;
 import jakarta.persistence.*;
-
-import java.util.List;
 
 @Entity
 @Table(name = "skin_profiles")
@@ -24,12 +21,17 @@ public class SkinProfilePersistenceEntity extends AuditableAbstractPersistenceEn
     private SkinType skinType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "skin_tone", nullable = false)
-    private SkinTone skinTone;
+    @Column(name = "sensitivity", nullable = false)
+    private Sensitivity sensitivity;
 
-    @Convert(converter = SkinConcernsPersistenceConverter.class)
-    @Column(name = "concerns", nullable = false, columnDefinition = "TEXT")
-    private List<String> concerns;
+    @Column(name = "water_intake", nullable = false)
+    private String waterIntake;
+
+    @Column(name = "sun_exposure", nullable = false)
+    private String sunExposure;
+
+    @Column(name = "sleep_hours", nullable = false)
+    private String sleepHours;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -43,11 +45,17 @@ public class SkinProfilePersistenceEntity extends AuditableAbstractPersistenceEn
     public SkinType getSkinType() { return skinType; }
     public void setSkinType(SkinType skinType) { this.skinType = skinType; }
 
-    public SkinTone getSkinTone() { return skinTone; }
-    public void setSkinTone(SkinTone skinTone) { this.skinTone = skinTone; }
+    public Sensitivity getSensitivity() { return sensitivity; }
+    public void setSensitivity(Sensitivity sensitivity) { this.sensitivity = sensitivity; }
 
-    public List<String> getConcerns() { return concerns; }
-    public void setConcerns(List<String> concerns) { this.concerns = concerns; }
+    public String getWaterIntake() { return waterIntake; }
+    public void setWaterIntake(String waterIntake) { this.waterIntake = waterIntake; }
+
+    public String getSunExposure() { return sunExposure; }
+    public void setSunExposure(String sunExposure) { this.sunExposure = sunExposure; }
+
+    public String getSleepHours() { return sleepHours; }
+    public void setSleepHours(String sleepHours) { this.sleepHours = sleepHours; }
 
     public SkinProfileStatus getStatus() { return status; }
     public void setStatus(SkinProfileStatus status) { this.status = status; }
