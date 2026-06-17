@@ -65,4 +65,38 @@ public class ProductController {
                 .toList();
         return ResponseEntity.ok(resources);
     }
+
+    /**
+     * Get a product by its unique identifier.
+     *
+     * @param productId the product identifier
+     * @return the matching product resource
+     */
+    @GetMapping("/{productId}")
+    @Operation(
+            summary = "Get product by ID",
+            description = "Retrieves a specific skincare product by its unique identifier."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Product found",
+                    content = @Content(schema = @Schema(implementation = ProductResource.class))
+            ),
+            @ApiResponse(responseCode = "404", description = "Product not found")
+    })
+    public ResponseEntity<?> getProductById(
+            @PathVariable
+            @Parameter(description = "Product unique identifier", example = "1", required = true)
+            Long productId
+    ) {
+        var query = new GetProductByIdQuery(productId);
+        var product = productQueryService.handle(query);
+        if (product.isEmpty()) {
+            var error = ApplicationError.notFound("Product", productId.toString());
+            return ErrorResponseAssembler.toErrorResponseFromApplicationError(error);
+        }
+        var resource = ProductResourceFromEntityAssembler.toResourceFromEntity(product.get());
+        return ResponseEntity.ok(resource);
+    }
 }
