@@ -3,10 +3,12 @@ package com.bloomie.platform.routinemanagement.application.internal.queryservice
 import com.bloomie.platform.routinemanagement.application.queryservices.RoutineQueryService;
 import com.bloomie.platform.routinemanagement.domain.model.aggregates.Routine;
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetAllRoutinesQuery;
+import com.bloomie.platform.routinemanagement.domain.model.queries.GetRoutineByIdQuery;
 import com.bloomie.platform.routinemanagement.domain.repositories.RoutineRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Application service that resolves routine read queries.
@@ -23,5 +25,10 @@ public class RoutineQueryServiceImpl implements RoutineQueryService {
     @Override
     public List<Routine> handle(GetAllRoutinesQuery query) {
         return routineRepository.findAll();
+    }
+
+    @Override
+    public Optional<Routine> handle(GetRoutineByIdQuery query) {
+        return routineRepository.findById(query.routineId());
     }
 }
