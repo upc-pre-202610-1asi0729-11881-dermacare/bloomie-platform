@@ -1,10 +1,10 @@
-package com.bloomie.platform.skinAnalysis.infrastructure.persistence.jpa.adapters;
+package com.bloomie.platform.skinanalysis.infrastructure.persistence.jpa.adapters;
 
-import com.bloomie.platform.skinAnalysis.domain.model.aggregates.SkinProfile;
-import com.bloomie.platform.skinAnalysis.domain.model.valueobjects.PatientId;
-import com.bloomie.platform.skinAnalysis.domain.repositories.SkinProfileRepository;
-import com.bloomie.platform.skinAnalysis.infrastructure.persistence.jpa.assemblers.SkinProfilePersistenceAssembler;
-import com.bloomie.platform.skinAnalysis.infrastructure.persistence.jpa.repositories.SkinProfilePersistenceRepository;
+import com.bloomie.platform.skinanalysis.domain.model.aggregates.SkinProfile;
+import com.bloomie.platform.skinanalysis.domain.model.valueobjects.PatientId;
+import com.bloomie.platform.skinanalysis.domain.repositories.SkinProfileRepository;
+import com.bloomie.platform.skinanalysis.infrastructure.persistence.jpa.assemblers.SkinProfilePersistenceAssembler;
+import com.bloomie.platform.skinanalysis.infrastructure.persistence.jpa.repositories.SkinProfilePersistenceRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +13,10 @@ import java.util.Optional;
 /**
  * JPA adapter for the {@link SkinProfileRepository} domain port.
  *
- * <p>For <em>new</em> aggregates ({@code id == null}): sets the generated id on the original
- * domain object, calls {@code onCompleted()}, publishes events from the original, clears them,
- * then returns a clean reconstruction from the saved entity.</p>
+ * <p>For <em>new</em> aggregates ({@code id == null}): saves the entity, then calls
+ * {@code onCompleted()} on the reconstructed aggregate, publishes events and clears them.
+ * For <em>updates</em>: calls {@code onUpdated()} on the reconstructed aggregate,
+ * publishes events and clears them.</p>
  */
 @Repository
 public class SkinProfileRepositoryImpl implements SkinProfileRepository {
@@ -48,15 +49,17 @@ public class SkinProfileRepositoryImpl implements SkinProfileRepository {
 
     @Override
     public SkinProfile save(SkinProfile skinProfile) {
-        boolean is_new = skinProfile.getId() == null;
-        var saved_entity = persistenceRepository.save(
+        boolean isNew = skinProfile.getId() == null;
+        var savedEntity = persistenceRepository.save(
                 SkinProfilePersistenceAssembler.toPersistenceFromDomain(skinProfile));
-        if (is_new) {
-            skinProfile.setId(saved_entity.getId());
-            skinProfile.onCompleted();
+        var savedProfile = SkinProfilePersistenceAssembler.toDomainFromPersistence(savedEntity);
+        if (isNew) {
+            savedProfile.onCompleted();
+        } else {
+            savedProfile.onUpdated();
         }
-        skinProfile.domainEvents().forEach(eventPublisher::publishEvent);
-        skinProfile.clearDomainEvents();
-        return SkinProfilePersistenceAssembler.toDomainFromPersistence(saved_entity);
+        savedProfile.domainEvents().forEach(eventPublisher::publishEvent);
+        savedProfile.clearDomainEvents();
+        return savedProfile;
     }
 }
