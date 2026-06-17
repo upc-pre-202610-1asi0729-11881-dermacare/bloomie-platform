@@ -35,6 +35,6 @@ public class RoutineItemPersistenceEntity extends AuditableAbstractPersistenceEn
     @Column(nullable = false)
     private RoutineItemStatus status;
 
-    @Column(name = "`order`", nullable = false)
+    @Column(name = "item_order", nullable = false)
     private Integer order;
 }
