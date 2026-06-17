@@ -1,34 +1,27 @@
-package com.bloomie.platform.skinAnalysis.domain.model.events;
+package com.bloomie.platform.skinanalysis.domain.model.events;
 
-import com.bloomie.platform.skinAnalysis.domain.model.aggregates.SkinProfile;
-
-import java.util.List;
+import com.bloomie.platform.skinanalysis.domain.model.aggregates.SkinProfile;
 
 /**
  * Domain event raised when a patient's skin profile has been successfully completed.
  *
- * <p>Can be consumed by downstream policies (e.g. product-recommendation engine)
- * that react to newly available profile data.</p>
+ * <p>Consumed by {@code SkinProfileCompletedEventHandler}, which re-publishes it as a
+ * {@link com.bloomie.platform.skinAnalysis.interfaces.events.SkinProfileCompletedIntegrationEvent}.</p>
  *
- * @param skin_profile_id the id of the completed skin profile
- * @param patient_id      the IAM user id of the patient
- * @param skin_type       the reported skin type label
- * @param skin_tone       the reported skin tone label
- * @param concerns        the list of skin concerns
+ * @param skinProfileId the id of the completed skin profile
+ * @param patientId     the IAM user id of the patient
+ * @param skinType      the reported skin type label
  */
 public record SkinProfileCompletedEvent(
-        Long skin_profile_id,
-        Long patient_id,
-        String skin_type,
-        String skin_tone,
-        List<String> concerns) {
+        Long skinProfileId,
+        Long patientId,
+        String skinType) {
 
+    /** Factory method to build the event from the saved aggregate. */
     public static SkinProfileCompletedEvent from(SkinProfile skinProfile) {
         return new SkinProfileCompletedEvent(
                 skinProfile.getId(),
-                skinProfile.getPatientId().patient_id(),
-                skinProfile.getSkinType().name(),
-                skinProfile.getSkinTone().name(),
-                skinProfile.getSkinConcerns().concerns());
+                skinProfile.getPatientId().patientId(),
+                skinProfile.getSkinType().name());
     }
 }
