@@ -26,15 +26,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/api/v1/skin-profiles", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Skin Profiles", description = "Skin Analysis — Skin Profile Endpoints")
-public class SkinProfileController {
+public class SkinProfilesController {
 
     private static final String PROFILE_NOT_FOUND = "skin.profile.not.found";
 
     private final SkinProfileCommandService commandService;
     private final SkinProfileQueryService queryService;
 
-    public SkinProfileController(SkinProfileCommandService commandService,
-                                 SkinProfileQueryService queryService) {
+    public SkinProfilesController(SkinProfileCommandService commandService,
+                                  SkinProfileQueryService queryService) {
         this.commandService = commandService;
         this.queryService = queryService;
     }
