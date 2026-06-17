@@ -1,6 +1,7 @@
 package com.bloomie.platform.skinanalysis.infrastructure.persistence.jpa.adapters;
 
 import com.bloomie.platform.skinanalysis.domain.model.aggregates.FacialScan;
+import com.bloomie.platform.skinanalysis.domain.model.valueobjects.FacialScanStatus;
 import com.bloomie.platform.skinanalysis.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.skinanalysis.domain.repositories.FacialScanRepository;
 import com.bloomie.platform.skinanalysis.infrastructure.persistence.jpa.assemblers.FacialScanPersistenceAssembler;
@@ -16,6 +17,9 @@ import java.util.Optional;
  *
  * <p>For <em>new</em> aggregates ({@code id == null}): saves the entity, then calls
  * {@code onStarted()} on the reconstructed aggregate, publishes events and clears them.</p>
+ *
+ * <p>For <em>updated</em> aggregates: calls the appropriate lifecycle hook based on the
+ * resulting status (e.g. {@code onSubmitted()} when status is {@code SUBMITTED}).</p>
  */
 @Repository
 public class FacialScanRepositoryImpl implements FacialScanRepository {
@@ -50,6 +54,8 @@ public class FacialScanRepositoryImpl implements FacialScanRepository {
         var savedScan = FacialScanPersistenceAssembler.toDomainFromPersistence(savedEntity);
         if (isNew) {
             savedScan.onStarted();
+        } else if (savedScan.getStatus() == FacialScanStatus.SUBMITTED) {
+            savedScan.onSubmitted();
         }
         savedScan.domainEvents().forEach(eventPublisher::publishEvent);
         savedScan.clearDomainEvents();
