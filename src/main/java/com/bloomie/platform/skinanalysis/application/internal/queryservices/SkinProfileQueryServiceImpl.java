@@ -1,0 +1,36 @@
+package com.bloomie.platform.skinanalysis.application.internal.queryservices;
+
+import com.bloomie.platform.skinanalysis.application.queryservices.SkinProfileQueryService;
+import com.bloomie.platform.skinanalysis.domain.model.aggregates.SkinProfile;
+import com.bloomie.platform.skinanalysis.domain.model.queries.GetSkinProfileByIdQuery;
+import com.bloomie.platform.skinanalysis.domain.model.queries.GetSkinProfileByPatientIdQuery;
+import com.bloomie.platform.skinanalysis.domain.repositories.SkinProfileRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+/**
+ * Application service that handles all read operations on the {@link SkinProfile} aggregate.
+ *
+ * <p>Delegates directly to the {@link SkinProfileRepository} domain port without any
+ * mutation or event publication.</p>
+ */
+@Service
+public class SkinProfileQueryServiceImpl implements SkinProfileQueryService {
+
+    private final SkinProfileRepository skinProfileRepository;
+
+    public SkinProfileQueryServiceImpl(SkinProfileRepository skinProfileRepository) {
+        this.skinProfileRepository = skinProfileRepository;
+    }
+
+    @Override
+    public Optional<SkinProfile> handle(GetSkinProfileByIdQuery query) {
+        return skinProfileRepository.findById(query.skinProfileId());
+    }
+
+    @Override
+    public Optional<SkinProfile> handle(GetSkinProfileByPatientIdQuery query) {
+        return skinProfileRepository.findByPatientId(query.patientId());
+    }
+}
