@@ -1,6 +1,8 @@
 package com.bloomie.platform.skinanalysis.application.internal.eventhandlers;
 
+import com.bloomie.platform.skinanalysis.application.commandservices.SkinAnalysisCommandService;
 import com.bloomie.platform.skinanalysis.application.internal.outboundservices.acl.ExternalSkinProfileService;
+import com.bloomie.platform.skinanalysis.domain.model.commands.AnalyzeSkinScanCommand;
 import com.bloomie.platform.skinanalysis.interfaces.events.FacialScanSubmittedIntegrationEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +19,12 @@ public class FacialScanSubmittedAnalysisEventHandler {
     private static final Logger log = LoggerFactory.getLogger(FacialScanSubmittedAnalysisEventHandler.class);
 
     private final ExternalSkinProfileService externalSkinProfileService;
+    private final SkinAnalysisCommandService skinAnalysisCommandService;
 
-    public FacialScanSubmittedAnalysisEventHandler(ExternalSkinProfileService externalSkinProfileService) {
+    public FacialScanSubmittedAnalysisEventHandler(ExternalSkinProfileService externalSkinProfileService,
+                                                   SkinAnalysisCommandService skinAnalysisCommandService) {
         this.externalSkinProfileService = externalSkinProfileService;
+        this.skinAnalysisCommandService = skinAnalysisCommandService;
     }
 
     @EventListener
@@ -27,17 +32,21 @@ public class FacialScanSubmittedAnalysisEventHandler {
         var skinType    = externalSkinProfileService.fetchSkinTypeByPatientId(event.patientId());
         var sensitivity = externalSkinProfileService.fetchSensitivityByPatientId(event.patientId());
 
-        if (skinType.isEmpty()) {
-            log.warn("Skin type not found for patient {}. Analysis cannot proceed.", event.patientId());
+        if (skinType.isEmpty() || sensitivity.isEmpty()) {
+            log.warn("Skin profile not found for patient {}", event.patientId());
             return;
         }
 
-        if (sensitivity.isEmpty()) {
-            log.warn("Sensitivity not found for patient {}. Analysis cannot proceed.", event.patientId());
-            return;
-        }
+        var command = new AnalyzeSkinScanCommand(
+                event.facialScanId(),
+                event.patientId(),
+                skinType.get(),
+                sensitivity.get());
 
-        // TODO: dispatch AnalyzeSkinScanCommand when SkinAnalysis feature is implemented
-        log.info("Facial scan submitted for patient {}. Analysis pending.", event.patientId());
+        var result = skinAnalysisCommandService.handle(command);
+
+        if (result.isFailure()) {
+            log.warn("Failed to analyze skin scan {} for patient {}", event.facialScanId(), event.patientId());
+        }
     }
 }
