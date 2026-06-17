@@ -1,14 +1,17 @@
-package com.bloomie.platform.skinAnalysis.infrastructure.acl;
+package com.bloomie.platform.skinanalysis.infrastructure.acl;
 
 import com.bloomie.platform.iam.interfaces.acl.IamContextFacade;
-import com.bloomie.platform.skinAnalysis.application.internal.outboundservices.acl.ExternalIamService;
+import com.bloomie.platform.skinanalysis.application.internal.outboundservices.acl.ExternalIamService;
+import com.bloomie.platform.skinanalysis.domain.model.valueobjects.PatientId;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
- * Outbound ACL implementation that delegates to the IAM bounded context facade.
- * Only primitive types cross the boundary.
+ * Outbound ACL implementation that wraps {@link IamContextFacade} to provide
+ * IAM lookups in terms of Skin Analysis's own value objects.
  */
-@Service
+@Service("skinAnalysisExternalIamService")
 public class ExternalIamServiceImpl implements ExternalIamService {
 
     private final IamContextFacade iamContextFacade;
@@ -17,8 +20,16 @@ public class ExternalIamServiceImpl implements ExternalIamService {
         this.iamContextFacade = iamContextFacade;
     }
 
+    /**
+     * Returns the {@link PatientId} for the given user id if the user exists in IAM.
+     *
+     * @param patientId the IAM user id
+     * @return an Optional containing the PatientId, or empty if not found
+     */
     @Override
-    public boolean existsUserById(Long user_id) {
-        return iamContextFacade.existsUserById(user_id);
+    public Optional<PatientId> fetchPatientById(Long patientId) {
+        return iamContextFacade.existsUserById(patientId)
+                ? Optional.of(new PatientId(patientId))
+                : Optional.empty();
     }
 }
