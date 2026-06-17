@@ -1,22 +1,24 @@
-package com.bloomie.platform.skinAnalysis.domain.model.commands;
-
-import java.util.List;
+package com.bloomie.platform.skinanalysis.domain.model.commands;
 
 /**
  * Command to update the skin characteristics of an existing skin profile.
  *
  * <p>Issued by the patient from the Skin Profile Summary View.
- * On successful handling the skin profile characteristics are updated and
+ * On successful handling the characteristics are updated and
  * {@code SkinCharacteristicsUpdatedEvent} is raised.</p>
  *
- * @param skin_profile_id the id of the skin profile to update
- * @param skin_type       the new skin type (e.g. {@code OILY}, {@code DRY})
- * @param skin_tone       the new skin tone (e.g. {@code FAIR}, {@code MEDIUM})
- * @param concerns        the updated list of skin concerns
+ * @param skinProfileId the id of the skin profile to update
+ * @param skinType      the new skin type (e.g. {@code OILY}, {@code DRY})
+ * @param sensitivity   the new sensitivity level (e.g. {@code LOW}, {@code HIGH})
+ * @param waterIntake   updated daily water intake range
+ * @param sunExposure   updated daily sun exposure range
+ * @param sleepHours    updated daily sleep range
  */
 public record UpdateSkinCharacteristicsCommand(
-        Long skin_profile_id,
-        String skin_type,
-        String skin_tone,
-        List<String> concerns) {
+        Long skinProfileId,
+        String skinType,
+        String sensitivity,
+        String waterIntake,
+        String sunExposure,
+        String sleepHours) {
 }
