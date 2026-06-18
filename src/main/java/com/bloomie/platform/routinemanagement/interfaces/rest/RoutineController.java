@@ -4,9 +4,9 @@ import com.bloomie.platform.routinemanagement.application.commandservices.Routin
 import com.bloomie.platform.routinemanagement.application.queryservices.RoutineQueryService;
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetAllRoutinesQuery;
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetRoutineByIdQuery;
-import com.bloomie.platform.routinemanagement.interfaces.rest.resources.CreateRoutineResource;
+import com.bloomie.platform.routinemanagement.interfaces.rest.resources.GeneratePersonalizedRoutineResource;
 import com.bloomie.platform.routinemanagement.interfaces.rest.resources.RoutineResource;
-import com.bloomie.platform.routinemanagement.interfaces.rest.transform.CreateRoutineCommandFromResourceAssembler;
+import com.bloomie.platform.routinemanagement.interfaces.rest.transform.GeneratePersonalizedRoutineCommandFromResourceAssembler;
 import com.bloomie.platform.routinemanagement.interfaces.rest.transform.RoutineResourceFromEntityAssembler;
 import com.bloomie.platform.shared.application.result.ApplicationError;
 import com.bloomie.platform.shared.application.result.Result;
@@ -65,8 +65,8 @@ public class RoutineController {
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
             @ApiResponse(responseCode = "500", description = "Unexpected error")
     })
-    public ResponseEntity<?> createRoutine(@RequestBody CreateRoutineResource resource) {
-        var command = CreateRoutineCommandFromResourceAssembler.toCommandFromResource(resource);
+    public ResponseEntity<?> createRoutine(@RequestBody GeneratePersonalizedRoutineResource resource) {
+        var command = GeneratePersonalizedRoutineCommandFromResourceAssembler.toCommandFromResource(resource);
         var result = routineCommandService.handle(command)
                 .flatMap(routineId -> routineQueryService.handle(new GetRoutineByIdQuery(routineId))
                         .<Result<com.bloomie.platform.routinemanagement.domain.model.aggregates.Routine, ApplicationError>>map(Result::success)

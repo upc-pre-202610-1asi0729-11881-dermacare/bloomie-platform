@@ -1,6 +1,6 @@
 package com.bloomie.platform.routinemanagement.application.commandservices;
 
-import com.bloomie.platform.routinemanagement.domain.model.commands.CreateRoutineCommand;
+import com.bloomie.platform.routinemanagement.domain.model.commands.GeneratePersonalizedRoutineCommand;
 import com.bloomie.platform.shared.application.result.ApplicationError;
 import com.bloomie.platform.shared.application.result.Result;
 
@@ -15,5 +15,5 @@ public interface RoutineCommandService {
      * @param command command containing initial routine data
      * @return created routine identifier or an application error
      */
-    Result<Long, ApplicationError> handle(CreateRoutineCommand command);
+    Result<Long, ApplicationError> handle(GeneratePersonalizedRoutineCommand command);
 }

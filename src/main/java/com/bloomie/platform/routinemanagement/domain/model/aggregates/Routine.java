@@ -1,6 +1,6 @@
 package com.bloomie.platform.routinemanagement.domain.model.aggregates;
 
-import com.bloomie.platform.routinemanagement.domain.model.commands.CreateRoutineCommand;
+import com.bloomie.platform.routinemanagement.domain.model.commands.GeneratePersonalizedRoutineCommand;
 import com.bloomie.platform.routinemanagement.domain.model.valueobjects.RoutineStatus;
 import com.bloomie.platform.shared.domain.model.aggregates.AbstractDomainAggregateRoot;
 import lombok.Getter;
@@ -63,11 +63,11 @@ public class Routine extends AbstractDomainAggregateRoot<Routine> {
     }
 
     /**
-     * Constructor for Routine from a {@link CreateRoutineCommand}.
+     * Constructor for Routine from a {@link GeneratePersonalizedRoutineCommand}.
      *
      * @param command the command containing initial routine data
      */
-    public Routine(CreateRoutineCommand command) {
+    public Routine(GeneratePersonalizedRoutineCommand command) {
         this.userId = command.userId();
         this.skinProfileId = command.skinProfileId();
         this.facialScanId = command.facialScanId();
