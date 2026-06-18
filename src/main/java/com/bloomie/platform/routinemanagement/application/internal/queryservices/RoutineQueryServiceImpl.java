@@ -29,6 +29,6 @@ public class RoutineQueryServiceImpl implements RoutineQueryService {
 
     @Override
     public Optional<Routine> handle(GetRoutineByPatientIdQuery query) {
-        return routineRepository.findByPatientId(new PatientId(query.patientId()));
+        return routineRepository.findActiveByPatientId(new PatientId(query.patientId()));
     }
 }
