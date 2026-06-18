@@ -1,31 +1,31 @@
 package com.bloomie.platform.routinemanagement.infrastructure.persistence.jpa.adapters;
 
 import com.bloomie.platform.routinemanagement.domain.model.aggregates.Routine;
+import com.bloomie.platform.routinemanagement.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.routinemanagement.domain.repositories.RoutineRepository;
 import com.bloomie.platform.routinemanagement.infrastructure.persistence.jpa.assemblers.RoutinePersistenceAssembler;
 import com.bloomie.platform.routinemanagement.infrastructure.persistence.jpa.repositories.RoutinePersistenceRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
- * Repository adapter that bridges the routine domain repository port with Spring Data JPA.
+ * JPA adapter for the {@link RoutineRepository} domain port.
+ *
+ * <p>For <em>new</em> aggregates ({@code id == null}): saves the entity, then calls
+ * {@code onGenerated()} on the reconstructed aggregate, publishes events and clears them.</p>
  */
 @Repository
 public class RoutineRepositoryImpl implements RoutineRepository {
 
     private final RoutinePersistenceRepository routinePersistenceRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public RoutineRepositoryImpl(RoutinePersistenceRepository routinePersistenceRepository) {
+    public RoutineRepositoryImpl(RoutinePersistenceRepository routinePersistenceRepository,
+                                 ApplicationEventPublisher eventPublisher) {
         this.routinePersistenceRepository = routinePersistenceRepository;
-    }
-
-    @Override
-    public List<Routine> findAll() {
-        return routinePersistenceRepository.findAll().stream()
-                .map(RoutinePersistenceAssembler::toDomainFromPersistence)
-                .toList();
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -35,9 +35,27 @@ public class RoutineRepositoryImpl implements RoutineRepository {
     }
 
     @Override
+    public Optional<Routine> findByPatientId(PatientId patientId) {
+        return routinePersistenceRepository.findByPatientId(patientId)
+                .map(RoutinePersistenceAssembler::toDomainFromPersistence);
+    }
+
+    @Override
     public Routine save(Routine routine) {
+        boolean isNew = routine.getId() == null;
         var entity = RoutinePersistenceAssembler.toPersistenceFromDomain(routine);
-        var saved = routinePersistenceRepository.save(entity);
-        return RoutinePersistenceAssembler.toDomainFromPersistence(saved);
+        var savedEntity = routinePersistenceRepository.save(entity);
+        var savedRoutine = RoutinePersistenceAssembler.toDomainFromPersistence(savedEntity);
+        if (isNew) {
+            savedRoutine.onGenerated();
+        }
+        savedRoutine.domainEvents().forEach(eventPublisher::publishEvent);
+        savedRoutine.clearDomainEvents();
+        return savedRoutine;
+    }
+
+    @Override
+    public boolean existsByPatientId(PatientId patientId) {
+        return routinePersistenceRepository.existsByPatientId(patientId);
     }
 }
