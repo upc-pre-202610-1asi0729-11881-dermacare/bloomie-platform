@@ -33,4 +33,11 @@ public class RoutineRepositoryImpl implements RoutineRepository {
         return routinePersistenceRepository.findById(id)
                 .map(RoutinePersistenceAssembler::toDomainFromPersistence);
     }
+
+    @Override
+    public Routine save(Routine routine) {
+        var entity = RoutinePersistenceAssembler.toPersistenceFromDomain(routine);
+        var saved = routinePersistenceRepository.save(entity);
+        return RoutinePersistenceAssembler.toDomainFromPersistence(saved);
+    }
 }

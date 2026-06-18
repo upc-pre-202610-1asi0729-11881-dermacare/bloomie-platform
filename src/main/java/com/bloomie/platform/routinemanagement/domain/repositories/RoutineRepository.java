@@ -24,4 +24,12 @@ public interface RoutineRepository {
      * @return the matching routine, if found
      */
     Optional<Routine> findById(Long id);
+
+    /**
+     * Persists a routine (create or update).
+     *
+     * @param routine the routine to save
+     * @return the saved routine with its generated identifier
+     */
+    Routine save(Routine routine);
 }
