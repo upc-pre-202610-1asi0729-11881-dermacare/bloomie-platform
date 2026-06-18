@@ -1,37 +1,29 @@
 package com.bloomie.platform.routinemanagement.domain.model.entities;
 
-import com.bloomie.platform.routinemanagement.domain.model.valueobjects.RoutineItemStatus;
-import com.bloomie.platform.routinemanagement.domain.model.valueobjects.RoutineStep;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
- * Represents a single product step within a skincare routine.
+ * Entity representing a single product step within a personalized skincare routine.
+ * This is not an aggregate — it lives inside the Routine aggregate boundary.
  */
 @Getter
 public class RoutineItem {
 
-    @Setter
     private Long id;
-
-    @Setter
-    private Long routineId;
-
-    @Setter
-    private Long productId;
-
-    @Setter
-    private RoutineStep step;
-
-    @Setter
-    private String scheduledTime;
-
-    @Setter
-    private RoutineItemStatus status;
-
-    @Setter
+    private String step;
     private Integer order;
+    private String scheduledTime;
+    private String productRecommendation;
 
-    public RoutineItem() {
+    public RoutineItem(Long id, String step, Integer order, String scheduledTime, String productRecommendation) {
+        this.id = id;
+        this.step = step;
+        this.order = order;
+        this.scheduledTime = scheduledTime;
+        this.productRecommendation = productRecommendation;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
