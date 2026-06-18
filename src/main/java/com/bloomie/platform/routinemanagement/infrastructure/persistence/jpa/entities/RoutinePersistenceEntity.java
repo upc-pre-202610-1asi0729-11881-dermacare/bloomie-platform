@@ -1,11 +1,18 @@
 package com.bloomie.platform.routinemanagement.infrastructure.persistence.jpa.entities;
 
+import com.bloomie.platform.routinemanagement.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.routinemanagement.domain.model.valueobjects.RoutineStatus;
+import com.bloomie.platform.routinemanagement.domain.model.valueobjects.SkinAnalysisId;
+import com.bloomie.platform.routinemanagement.infrastructure.persistence.jpa.converters.PatientIdPersistenceConverter;
+import com.bloomie.platform.routinemanagement.infrastructure.persistence.jpa.converters.SkinAnalysisIdPersistenceConverter;
 import com.bloomie.platform.shared.infrastructure.persistence.jpa.entities.AuditableAbstractPersistenceEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * JPA persistence entity for routines.
@@ -17,16 +24,18 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RoutinePersistenceEntity extends AuditableAbstractPersistenceEntity {
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Convert(converter = PatientIdPersistenceConverter.class)
+    @Column(name = "patient_id", nullable = false)
+    private PatientId patientId;
 
-    @Column(name = "skin_profile_id", nullable = false)
-    private Long skinProfileId;
-
-    @Column(name = "facial_scan_id", nullable = false)
-    private Long facialScanId;
+    @Convert(converter = SkinAnalysisIdPersistenceConverter.class)
+    @Column(name = "skin_analysis_id", nullable = false)
+    private SkinAnalysisId skinAnalysisId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoutineStatus status;
+
+    @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<RoutineItemPersistenceEntity> items = new ArrayList<>();
 }
