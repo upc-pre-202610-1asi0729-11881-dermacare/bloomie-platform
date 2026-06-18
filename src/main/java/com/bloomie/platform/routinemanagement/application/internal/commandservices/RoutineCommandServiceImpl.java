@@ -24,19 +24,19 @@ public class RoutineCommandServiceImpl implements RoutineCommandService {
 
     @Override
     public Result<Long, ApplicationError> handle(GeneratePersonalizedRoutineCommand command) {
-        var patientId = new PatientId(command.patientId());
-
-        routineRepository.findByPatientId(patientId).ifPresent(existing -> {
-            existing.setStatus(RoutineStatus.INACTIVE);
-            routineRepository.save(existing);
-        });
-
-        var routine = new Routine(command);
         try {
+            var patientId = new PatientId(command.patientId());
+
+            routineRepository.findActiveByPatientId(patientId).ifPresent(existing -> {
+                existing.setStatus(RoutineStatus.INACTIVE);
+                routineRepository.save(existing);
+            });
+
+            var routine = new Routine(command);
             routine = routineRepository.save(routine);
+            return Result.success(routine.getId());
         } catch (Exception e) {
             return Result.failure(ApplicationError.unexpected("generate-routine", e.getMessage()));
         }
-        return Result.success(routine.getId());
     }
 }
