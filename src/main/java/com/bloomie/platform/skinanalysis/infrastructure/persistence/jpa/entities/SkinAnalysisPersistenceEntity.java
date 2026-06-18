@@ -22,6 +22,9 @@ public class SkinAnalysisPersistenceEntity extends AuditableAbstractPersistenceE
     @Column(name = "facial_scan_id", nullable = false, unique = true)
     private FacialScanId facialScanId;
 
+    @Column(name = "skin_type", nullable = false)
+    private String skinType;
+
     @Column(name = "overall_score", nullable = false)
     private Double overallScore;
 
@@ -51,6 +54,9 @@ public class SkinAnalysisPersistenceEntity extends AuditableAbstractPersistenceE
 
     public FacialScanId getFacialScanId() { return facialScanId; }
     public void setFacialScanId(FacialScanId facialScanId) { this.facialScanId = facialScanId; }
+
+    public String getSkinType() { return skinType; }
+    public void setSkinType(String skinType) { this.skinType = skinType; }
 
     public Double getOverallScore() { return overallScore; }
     public void setOverallScore(Double overallScore) { this.overallScore = overallScore; }
