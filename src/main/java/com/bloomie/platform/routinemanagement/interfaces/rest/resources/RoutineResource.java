@@ -1,21 +1,23 @@
 package com.bloomie.platform.routinemanagement.interfaces.rest.resources;
 
+import java.util.List;
+
 /**
  * Resource representing a routine in REST responses.
  *
- * @param id            the unique identifier of the routine
- * @param userId        the identifier of the user who owns the routine
- * @param skinProfileId the identifier of the associated skin profile
- * @param facialScanId  the identifier of the associated facial scan
- * @param status        the current lifecycle status of the routine
- * @param createdAt     the ISO 8601 date-time string for when the routine was created
+ * @param id             the unique identifier of the routine
+ * @param patientId      the identifier of the patient who owns the routine
+ * @param skinAnalysisId the identifier of the skin analysis that generated this routine
+ * @param status         the current lifecycle status of the routine
+ * @param createdAt      the ISO 8601 date-time string for when the routine was created
+ * @param items          the list of routine items (steps)
  */
 public record RoutineResource(
         Long id,
-        Long userId,
-        Long skinProfileId,
-        Long facialScanId,
+        Long patientId,
+        Long skinAnalysisId,
         String status,
-        String createdAt
+        String createdAt,
+        List<RoutineItemResource> items
 ) {
 }
