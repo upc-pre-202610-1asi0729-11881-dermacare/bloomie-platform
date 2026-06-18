@@ -21,10 +21,13 @@ public interface RoutineRepository {
     /**
      * Retrieves the active routine for a given patient.
      *
+     * <p>Only returns a routine whose status is {@code ACTIVE}. A patient may have
+     * multiple historical (inactive) routines; this method always returns at most one.</p>
+     *
      * @param patientId the patient value object
-     * @return the matching routine, if found
+     * @return the active routine, if one exists
      */
-    Optional<Routine> findByPatientId(PatientId patientId);
+    Optional<Routine> findActiveByPatientId(PatientId patientId);
 
     /**
      * Persists a routine (create or update).

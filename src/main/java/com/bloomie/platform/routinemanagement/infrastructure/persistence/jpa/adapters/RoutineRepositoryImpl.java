@@ -2,6 +2,7 @@ package com.bloomie.platform.routinemanagement.infrastructure.persistence.jpa.ad
 
 import com.bloomie.platform.routinemanagement.domain.model.aggregates.Routine;
 import com.bloomie.platform.routinemanagement.domain.model.valueobjects.PatientId;
+import com.bloomie.platform.routinemanagement.domain.model.valueobjects.RoutineStatus;
 import com.bloomie.platform.routinemanagement.domain.repositories.RoutineRepository;
 import com.bloomie.platform.routinemanagement.infrastructure.persistence.jpa.assemblers.RoutinePersistenceAssembler;
 import com.bloomie.platform.routinemanagement.infrastructure.persistence.jpa.repositories.RoutinePersistenceRepository;
@@ -35,8 +36,8 @@ public class RoutineRepositoryImpl implements RoutineRepository {
     }
 
     @Override
-    public Optional<Routine> findByPatientId(PatientId patientId) {
-        return routinePersistenceRepository.findByPatientId(patientId)
+    public Optional<Routine> findActiveByPatientId(PatientId patientId) {
+        return routinePersistenceRepository.findByPatientIdAndStatus(patientId, RoutineStatus.ACTIVE)
                 .map(RoutinePersistenceAssembler::toDomainFromPersistence);
     }
 

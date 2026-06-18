@@ -17,6 +17,7 @@ public final class SkinAnalysisPersistenceAssembler {
                 entity.getId(),
                 entity.getPatientId(),
                 entity.getFacialScanId(),
+                entity.getSkinType(),
                 entity.getOverallScore(),
                 entity.getHydrationScore(),
                 entity.getTextureScore(),
@@ -32,6 +33,7 @@ public final class SkinAnalysisPersistenceAssembler {
         entity.setId(skinAnalysis.getId());
         entity.setPatientId(skinAnalysis.getPatientIdValue());
         entity.setFacialScanId(skinAnalysis.getFacialScanIdValue());
+        entity.setSkinType(skinAnalysis.getSkinType());
         entity.setOverallScore(skinAnalysis.getOverallScore());
         entity.setHydrationScore(skinAnalysis.getHydrationScore());
         entity.setTextureScore(skinAnalysis.getTextureScore());

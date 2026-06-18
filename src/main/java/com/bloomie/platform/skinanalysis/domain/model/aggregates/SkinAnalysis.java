@@ -31,6 +31,9 @@ public class SkinAnalysis extends AbstractDomainAggregateRoot<SkinAnalysis> {
     private FacialScanId facialScanId;
 
     @Getter
+    private String skinType;
+
+    @Getter
     private Double overallScore;
 
     @Getter
@@ -55,6 +58,7 @@ public class SkinAnalysis extends AbstractDomainAggregateRoot<SkinAnalysis> {
     public SkinAnalysis(AnalyzeSkinScanCommand command) {
         this.patientId    = new PatientId(command.patientId());
         this.facialScanId = new FacialScanId(command.facialScanId());
+        this.skinType     = command.skinType();
         this.status       = SkinAnalysisStatus.COMPLETED;
         this.analyzedAt   = LocalDateTime.now();
 
@@ -77,12 +81,14 @@ public class SkinAnalysis extends AbstractDomainAggregateRoot<SkinAnalysis> {
 
     /** Reconstitution constructor — used by the persistence assembler; skips business validation. */
     public SkinAnalysis(Long id, PatientId patientId, FacialScanId facialScanId,
+                        String skinType,
                         Double overallScore, Double hydrationScore, Double textureScore,
                         Double sensitivityScore, Double brightnessScore,
                         SkinAnalysisStatus status, LocalDateTime analyzedAt) {
         this.id               = id;
         this.patientId        = patientId;
         this.facialScanId     = facialScanId;
+        this.skinType         = skinType;
         this.overallScore     = overallScore;
         this.hydrationScore   = hydrationScore;
         this.textureScore     = textureScore;
