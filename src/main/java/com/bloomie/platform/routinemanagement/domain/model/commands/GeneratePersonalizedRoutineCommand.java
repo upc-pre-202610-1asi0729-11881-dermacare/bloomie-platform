@@ -1,14 +1,11 @@
 package com.bloomie.platform.routinemanagement.domain.model.commands;
 
-import com.bloomie.platform.routinemanagement.domain.model.valueobjects.RoutineStatus;
-
 /**
- * Command to generate a new personalized skincare routine.
+ * Command to generate a new personalized skincare routine based on a patient's skin analysis.
  *
- * @param userId        the identifier of the user who owns the routine
- * @param skinProfileId the identifier of the associated skin profile
- * @param facialScanId  the identifier of the facial scan that generated this routine
- * @param status        the initial lifecycle status of the routine
+ * @param patientId      the identifier of the patient
+ * @param skinAnalysisId the identifier of the skin analysis that triggered this routine
+ * @param skinType       the patient's skin type (OILY, DRY, SENSITIVE, COMBINATION, NORMAL)
  */
-public record GeneratePersonalizedRoutineCommand(Long userId, Long skinProfileId, Long facialScanId, RoutineStatus status) {
+public record GeneratePersonalizedRoutineCommand(Long patientId, Long skinAnalysisId, String skinType) {
 }
