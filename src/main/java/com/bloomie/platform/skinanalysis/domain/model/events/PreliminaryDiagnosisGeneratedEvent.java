@@ -12,17 +12,20 @@ import com.bloomie.platform.skinanalysis.domain.model.aggregates.SkinAnalysis;
  * @param skinAnalysisId the id of the completed skin analysis
  * @param patientId      the IAM user id of the patient
  * @param overallScore   the computed overall skin score
+ * @param skinType       the patient's skin type used for the analysis
  */
 public record PreliminaryDiagnosisGeneratedEvent(
         Long skinAnalysisId,
         Long patientId,
-        Double overallScore) {
+        Double overallScore,
+        String skinType) {
 
     /** Factory method to build the event from the saved aggregate. */
     public static PreliminaryDiagnosisGeneratedEvent from(SkinAnalysis skinAnalysis) {
         return new PreliminaryDiagnosisGeneratedEvent(
                 skinAnalysis.getId(),
                 skinAnalysis.getPatientId(),
-                skinAnalysis.getOverallScore());
+                skinAnalysis.getOverallScore(),
+                skinAnalysis.getSkinType());
     }
 }
