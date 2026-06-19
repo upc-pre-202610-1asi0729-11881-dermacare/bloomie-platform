@@ -49,9 +49,12 @@ public class RoutineRepositoryImpl implements RoutineRepository {
         var savedRoutine = RoutinePersistenceAssembler.toDomainFromPersistence(savedEntity);
         if (isNew) {
             savedRoutine.onGenerated();
+            savedRoutine.domainEvents().forEach(eventPublisher::publishEvent);
+            savedRoutine.clearDomainEvents();
+        } else {
+            routine.domainEvents().forEach(eventPublisher::publishEvent);
+            routine.clearDomainEvents();
         }
-        savedRoutine.domainEvents().forEach(eventPublisher::publishEvent);
-        savedRoutine.clearDomainEvents();
         return savedRoutine;
     }
 

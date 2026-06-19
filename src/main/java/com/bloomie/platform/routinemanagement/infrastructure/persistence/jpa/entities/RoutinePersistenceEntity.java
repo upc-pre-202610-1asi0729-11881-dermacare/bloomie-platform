@@ -36,6 +36,9 @@ public class RoutinePersistenceEntity extends AuditableAbstractPersistenceEntity
     @Column(nullable = false)
     private RoutineStatus status;
 
+    @Column(name = "skin_type", nullable = false)
+    private String skinType;
+
     @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<RoutineItemPersistenceEntity> items = new ArrayList<>();
 }

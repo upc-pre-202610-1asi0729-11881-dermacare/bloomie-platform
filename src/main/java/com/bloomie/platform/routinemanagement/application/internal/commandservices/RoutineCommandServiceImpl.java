@@ -1,8 +1,12 @@
 package com.bloomie.platform.routinemanagement.application.internal.commandservices;
 
 import com.bloomie.platform.routinemanagement.application.commandservices.RoutineCommandService;
+import com.bloomie.platform.routinemanagement.application.queryservices.RoutineQueryService;
 import com.bloomie.platform.routinemanagement.domain.model.aggregates.Routine;
 import com.bloomie.platform.routinemanagement.domain.model.commands.GeneratePersonalizedRoutineCommand;
+import com.bloomie.platform.routinemanagement.domain.model.commands.ReplaceProductInRoutineCommand;
+import com.bloomie.platform.routinemanagement.domain.model.queries.GetRecommendedProductsForRoutineItemQuery;
+import com.bloomie.platform.routinemanagement.domain.model.queries.GetRoutineByIdQuery;
 import com.bloomie.platform.routinemanagement.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.routinemanagement.domain.model.valueobjects.RoutineStatus;
 import com.bloomie.platform.routinemanagement.domain.repositories.RoutineRepository;
@@ -18,8 +22,11 @@ public class RoutineCommandServiceImpl implements RoutineCommandService {
 
     private final RoutineRepository routineRepository;
 
-    public RoutineCommandServiceImpl(RoutineRepository routineRepository) {
+    private final RoutineQueryService routineQueryService;
+
+    public RoutineCommandServiceImpl(RoutineRepository routineRepository, RoutineQueryService routineQueryService) {
         this.routineRepository = routineRepository;
+        this.routineQueryService = routineQueryService;
     }
 
     @Override
@@ -37,6 +44,36 @@ public class RoutineCommandServiceImpl implements RoutineCommandService {
             return Result.success(routine.getId());
         } catch (Exception e) {
             return Result.failure(ApplicationError.unexpected("generate-routine", e.getMessage()));
+        }
+    }
+
+    @Override
+    public Result<Routine, ApplicationError> handle(ReplaceProductInRoutineCommand command) {
+        var routine = routineRepository.findById(command.routineId());
+        if (routine.isEmpty())
+            return Result.failure(ApplicationError.notFound("Routine",
+                    command.routineId().toString()));
+
+        var validOptions = routineQueryService.handle(
+                new GetRecommendedProductsForRoutineItemQuery(
+                        command.routineId(),
+                        command.routineItemId()));
+
+        if (!validOptions.contains(command.newProductRecommendation()))
+            return Result.failure(ApplicationError.businessRuleViolation(
+                    "replace-product",
+                    "routine.product.not.recommended"));
+
+        try {
+            routine.get().replaceProduct(command);
+            var saved = routineRepository.save(routine.get());
+            return Result.success(saved);
+        } catch (IllegalArgumentException e) {
+            return Result.failure(ApplicationError.businessRuleViolation(
+                    "replace-product", e.getMessage()));
+        } catch (Exception e) {
+            return Result.failure(ApplicationError.unexpected(
+                    "replace-product", e.getMessage()));
         }
     }
 }

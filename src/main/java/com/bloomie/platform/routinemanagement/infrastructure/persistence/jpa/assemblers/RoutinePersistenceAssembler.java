@@ -24,6 +24,7 @@ public final class RoutinePersistenceAssembler {
         routine.setPatientId(entity.getPatientId());
         routine.setSkinAnalysisId(entity.getSkinAnalysisId());
         routine.setStatus(entity.getStatus());
+        routine.setSkinType(entity.getSkinType());
         if (entity.getCreatedAt() != null) {
             routine.setCreatedAt(entity.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         }
@@ -38,6 +39,7 @@ public final class RoutinePersistenceAssembler {
         entity.setPatientId(routine.getPatientIdValue());
         entity.setSkinAnalysisId(routine.getSkinAnalysisIdValue());
         entity.setStatus(routine.getStatus());
+        entity.setSkinType(routine.getSkinType());
         if (routine.getItems() != null) {
             List<RoutineItemPersistenceEntity> itemEntities = new ArrayList<>();
             for (RoutineItem item : routine.getItems()) {

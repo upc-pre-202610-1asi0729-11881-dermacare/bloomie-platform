@@ -26,4 +26,8 @@ public class RoutineItem {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public void updateProductRecommendation(String newProductRecommendation) {
+        this.productRecommendation = newProductRecommendation;
+    }
 }

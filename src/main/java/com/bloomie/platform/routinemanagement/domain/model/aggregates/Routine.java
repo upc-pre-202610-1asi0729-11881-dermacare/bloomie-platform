@@ -1,8 +1,10 @@
 package com.bloomie.platform.routinemanagement.domain.model.aggregates;
 
 import com.bloomie.platform.routinemanagement.domain.model.commands.GeneratePersonalizedRoutineCommand;
+import com.bloomie.platform.routinemanagement.domain.model.commands.ReplaceProductInRoutineCommand;
 import com.bloomie.platform.routinemanagement.domain.model.entities.RoutineItem;
 import com.bloomie.platform.routinemanagement.domain.model.events.PersonalizedRoutineGeneratedEvent;
+import com.bloomie.platform.routinemanagement.domain.model.events.ProductReplacedInRoutineEvent;
 import com.bloomie.platform.routinemanagement.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.routinemanagement.domain.model.valueobjects.RoutineStatus;
 import com.bloomie.platform.routinemanagement.domain.model.valueobjects.SkinAnalysisId;
@@ -25,6 +27,7 @@ public class Routine extends AbstractDomainAggregateRoot<Routine> {
     private PatientId patientId;
     private SkinAnalysisId skinAnalysisId;
     private RoutineStatus status;
+    private String skinType;
     private List<RoutineItem> items;
     private LocalDateTime createdAt;
 
@@ -37,6 +40,7 @@ public class Routine extends AbstractDomainAggregateRoot<Routine> {
         this.patientId = new PatientId(command.patientId());
         this.skinAnalysisId = new SkinAnalysisId(command.skinAnalysisId());
         this.status = RoutineStatus.ACTIVE;
+        this.skinType = command.skinType();
         this.createdAt = LocalDateTime.now();
         this.items = generateItemsForSkinType(command.skinType());
     }
@@ -80,6 +84,22 @@ public class Routine extends AbstractDomainAggregateRoot<Routine> {
         registerDomainEvent(PersonalizedRoutineGeneratedEvent.from(this));
     }
 
+    public void replaceProduct(ReplaceProductInRoutineCommand command) {
+        var item = this.items.stream()
+                .filter(i -> i.getId().equals(command.routineItemId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("routine.item.not.found"));
+
+        var previousProduct = item.getProductRecommendation();
+        item.updateProductRecommendation(command.newProductRecommendation());
+
+        registerDomainEvent(ProductReplacedInRoutineEvent.from(
+                this,
+                command.routineItemId(),
+                previousProduct,
+                command.newProductRecommendation()));
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -94,6 +114,10 @@ public class Routine extends AbstractDomainAggregateRoot<Routine> {
 
     public void setStatus(RoutineStatus status) {
         this.status = status;
+    }
+
+    public void setSkinType(String skinType) {
+        this.skinType = skinType;
     }
 
     public void setItems(List<RoutineItem> items) {

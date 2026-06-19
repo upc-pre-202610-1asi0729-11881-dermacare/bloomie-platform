@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+
 /**
  * Repository adapter that bridges the product domain repository port with Spring Data JPA.
  */
@@ -32,5 +33,18 @@ public class ProductRepositoryImpl implements ProductRepository {
     public Optional<Product> findById(Long id) {
         return productPersistenceRepository.findById(id)
                 .map(ProductPersistenceAssembler::toDomainFromPersistence);
+    }
+
+    @Override
+    public long count() {
+        return productPersistenceRepository.count();
+    }
+
+    @Override
+    public void saveAll(List<Product> products) {
+        var entities = products.stream()
+                .map(ProductPersistenceAssembler::toPersistenceFromDomain)
+                .toList();
+        productPersistenceRepository.saveAll(entities);
     }
 }
