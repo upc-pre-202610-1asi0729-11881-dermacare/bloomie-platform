@@ -17,11 +17,15 @@ import java.util.List;
 /**
  * JPA persistence entity for routines.
  */
-@Entity
 @Table(name = "routines")
 @Getter
 @Setter
 @NoArgsConstructor
+@NamedEntityGraph(
+        name = "Routine.withItems",
+        attributeNodes = @NamedAttributeNode("items")
+)
+@Entity
 public class RoutinePersistenceEntity extends AuditableAbstractPersistenceEntity {
 
     @Convert(converter = PatientIdPersistenceConverter.class)
