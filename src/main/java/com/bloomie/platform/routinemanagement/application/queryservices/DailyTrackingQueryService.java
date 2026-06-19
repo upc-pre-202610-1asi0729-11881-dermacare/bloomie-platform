@@ -5,6 +5,8 @@ import com.bloomie.platform.routinemanagement.domain.model.queries.GetAllDailyTr
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetDailyTrackingByPatientIdAndDateQuery;
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetDailyTrackingsByPatientIdQuery;
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetDailyTrackingsByRoutineIdQuery;
+import com.bloomie.platform.routinemanagement.domain.model.queries.GetWeeklySummaryByPatientIdQuery;
+import com.bloomie.platform.routinemanagement.interfaces.rest.resources.WeeklySummaryResource;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,4 +51,16 @@ public interface DailyTrackingQueryService {
      * @see GetDailyTrackingsByRoutineIdQuery
      */
     List<DailyTracking> handle(GetDailyTrackingsByRoutineIdQuery query);
+
+    /**
+     * Handles retrieval of the weekly routine completion summary for a patient.
+     *
+     * <p>The summary covers the current week from Monday to Sunday and includes
+     * the number of completed days, missed days, and the overall completion rate.</p>
+     *
+     * @param query query containing the patient value object
+     * @return a {@link WeeklySummaryResource} with the calculated weekly progress
+     * @see GetWeeklySummaryByPatientIdQuery
+     */
+    WeeklySummaryResource handle(GetWeeklySummaryByPatientIdQuery query);
 }
