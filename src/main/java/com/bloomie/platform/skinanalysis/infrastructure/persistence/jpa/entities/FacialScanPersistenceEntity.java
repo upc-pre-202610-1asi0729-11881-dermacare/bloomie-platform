@@ -20,7 +20,7 @@ public class FacialScanPersistenceEntity extends AuditableAbstractPersistenceEnt
     @Column(name = "status", nullable = false)
     private FacialScanStatus status;
 
-    @Column(name = "photo_url")
+    @Column(name = "photo_url", columnDefinition = "LONGTEXT")
     private String photoUrl;
 
     @Column(name = "scanned_at", nullable = false)

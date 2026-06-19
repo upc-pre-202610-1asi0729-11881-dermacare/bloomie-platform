@@ -36,7 +36,12 @@ public class RoutineQueryServiceImpl implements RoutineQueryService {
             Map.entry("COMBINATION_CLEANSER",   List.of("Balancing cleanser", "Gentle foam cleanser", "pH-balanced cleanser", "Dual-action cleanser")),
             Map.entry("COMBINATION_TONER",      List.of("Pore-minimizing toner", "Balancing toner", "Witch hazel toner", "Niacinamide toner")),
             Map.entry("COMBINATION_MOISTURIZER",List.of("Lightweight moisturizer", "Balancing gel-cream", "Zone control moisturizer", "Hybrid moisturizer")),
-            Map.entry("COMBINATION_SUNSCREEN",  List.of("SPF 50 sunscreen", "Lightweight SPF 50", "SPF 50 gel", "Balancing SPF 50"))
+            Map.entry("COMBINATION_SUNSCREEN",  List.of("SPF 50 sunscreen", "Lightweight SPF 50", "SPF 50 gel", "Balancing SPF 50")),
+            Map.entry("NORMAL_CLEANSER",        List.of("Gentle cleanser", "Foam cleanser", "Gel cleanser", "Cream cleanser")),
+            Map.entry("NORMAL_MOISTURIZER",     List.of("Daily moisturizer", "Gel moisturizer", "Lightweight lotion", "Balancing cream")),
+            Map.entry("NORMAL_SUNSCREEN",       List.of("SPF 30 sunscreen", "SPF 50 sunscreen", "Tinted SPF 30", "Mineral SPF 30")),
+            Map.entry("NORMAL_TONER",           List.of("Balancing toner", "Hydrating toner", "Rose water toner", "Essence toner")),
+            Map.entry("NORMAL_SERUM",           List.of("Vitamin C serum", "Niacinamide serum", "Hyaluronic acid serum", "Peptide serum"))
     );
 
     private final RoutineRepository routineRepository;

@@ -3,6 +3,7 @@ package com.bloomie.platform.routinemanagement.infrastructure.persistence.jpa.re
 import com.bloomie.platform.routinemanagement.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.routinemanagement.domain.model.valueobjects.RoutineStatus;
 import com.bloomie.platform.routinemanagement.infrastructure.persistence.jpa.entities.RoutinePersistenceEntity;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,8 @@ public interface RoutinePersistenceRepository extends JpaRepository<RoutinePersi
     Optional<RoutinePersistenceEntity> findByPatientIdAndStatus(PatientId patientId, RoutineStatus status);
 
     boolean existsByPatientId(PatientId patientId);
+
+    @EntityGraph(value = "Routine.withItems")
+    @Override
+    Optional<RoutinePersistenceEntity> findById(Long id);
 }
