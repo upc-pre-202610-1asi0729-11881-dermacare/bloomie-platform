@@ -11,16 +11,21 @@ public final class DailyTrackingResourceFromEntityAssembler {
     private DailyTrackingResourceFromEntityAssembler() {
     }
 
+    /**
+     * Converts a daily tracking aggregate into its REST resource representation.
+     *
+     * @param tracking the domain aggregate to convert
+     * @return the {@link DailyTrackingResource} for the REST response
+     */
     public static DailyTrackingResource toResourceFromEntity(DailyTracking tracking) {
-        var date = tracking.getDate() != null
-                ? tracking.getDate().toString()
-                : null;
+        var date = tracking.getDate() != null ? tracking.getDate().toString() : null;
+        var completedAt = tracking.getCompletedAt() != null ? tracking.getCompletedAt().toString() : null;
         return new DailyTrackingResource(
                 tracking.getId(),
-                tracking.getRoutineId(),
-                tracking.getUserId(),
+                tracking.getPatientId().patientId(),
+                tracking.getRoutineId().routineId(),
                 date,
-                tracking.getStatus().name()
-        );
+                tracking.isCompleted(),
+                completedAt);
     }
 }
