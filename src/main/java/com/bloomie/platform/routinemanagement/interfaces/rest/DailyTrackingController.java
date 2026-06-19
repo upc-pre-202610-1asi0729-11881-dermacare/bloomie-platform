@@ -5,8 +5,11 @@ import com.bloomie.platform.routinemanagement.application.queryservices.DailyTra
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetAllDailyTrackingsQuery;
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetDailyTrackingsByPatientIdQuery;
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetDailyTrackingsByRoutineIdQuery;
+import com.bloomie.platform.routinemanagement.domain.model.queries.GetWeeklySummaryByPatientIdQuery;
+import com.bloomie.platform.routinemanagement.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.routinemanagement.interfaces.rest.resources.DailyTrackingResource;
 import com.bloomie.platform.routinemanagement.interfaces.rest.resources.MarkRoutineAsCompletedResource;
+import com.bloomie.platform.routinemanagement.interfaces.rest.resources.WeeklySummaryResource;
 import com.bloomie.platform.routinemanagement.interfaces.rest.transform.DailyTrackingResourceFromEntityAssembler;
 import com.bloomie.platform.routinemanagement.interfaces.rest.transform.MarkRoutineAsCompletedCommandFromResourceAssembler;
 import com.bloomie.platform.shared.interfaces.rest.transform.ResponseEntityAssembler;
@@ -142,6 +145,34 @@ public class DailyTrackingController {
                 .map(DailyTrackingResourceFromEntityAssembler::toResourceFromEntity)
                 .toList();
         return ResponseEntity.ok(resources);
+    }
+
+    /**
+     * Get the weekly routine completion summary for a patient.
+     *
+     * @param patientId the patient unique identifier
+     * @return the {@link WeeklySummaryResource} with the calculated weekly progress
+     */
+    @GetMapping("/patient/{patientId}/weekly-summary")
+    @Operation(
+            summary = "Get weekly routine completion summary",
+            description = "Returns the number of completed days, missed days and the completion rate " +
+                    "for the current week (Monday to Sunday) for a specific patient."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Weekly summary retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = WeeklySummaryResource.class))
+            )
+    })
+    public ResponseEntity<WeeklySummaryResource> getWeeklySummary(
+            @PathVariable
+            @Parameter(description = "Patient unique identifier", example = "1", required = true)
+            Long patientId
+    ) {
+        var query = new GetWeeklySummaryByPatientIdQuery(new PatientId(patientId));
+        return ResponseEntity.ok(dailyTrackingQueryService.handle(query));
     }
 
     /**
