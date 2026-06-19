@@ -2,6 +2,7 @@ package com.bloomie.platform.routinemanagement.interfaces.rest;
 
 import com.bloomie.platform.routinemanagement.application.commandservices.RoutineCommandService;
 import com.bloomie.platform.routinemanagement.application.queryservices.RoutineQueryService;
+import com.bloomie.platform.routinemanagement.domain.model.commands.RemoveProductFromRoutineCommand;
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetRecommendedProductsForRoutineItemQuery;
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetRoutineByIdQuery;
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetRoutineByPatientIdQuery;
@@ -118,6 +119,39 @@ public class RoutineController {
         var query = new GetRecommendedProductsForRoutineItemQuery(routineId, routineItemId);
         var options = routineQueryService.handle(query);
         return ResponseEntity.ok(options);
+    }
+
+    @DeleteMapping("/{routineId}/items/{routineItemId}")
+    @Operation(
+            summary = "Remove a product step from a routine",
+            description = "Removes an optional product step from the patient's active routine. " +
+                    "Mandatory steps (CLEANSER, MOISTURIZER, SUNSCREEN) cannot be removed " +
+                    "and the routine must retain at least 2 steps."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Product step removed successfully",
+                    content = @Content(schema = @Schema(implementation = RoutineResource.class))
+            ),
+            @ApiResponse(responseCode = "404", description = "Routine not found"),
+            @ApiResponse(responseCode = "422", description = "Step is mandatory, minimum items reached, or item not found")
+    })
+    public ResponseEntity<?> removeProductFromRoutineItem(
+            @PathVariable
+            @Parameter(description = "Routine unique identifier", example = "1", required = true)
+            Long routineId,
+            @PathVariable
+            @Parameter(description = "Routine item unique identifier", example = "1", required = true)
+            Long routineItemId
+    ) {
+        var command = new RemoveProductFromRoutineCommand(routineId, routineItemId);
+        var result = routineCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                RoutineResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.OK
+        );
     }
 
     @PutMapping("/{routineId}/items/{routineItemId}/replace")

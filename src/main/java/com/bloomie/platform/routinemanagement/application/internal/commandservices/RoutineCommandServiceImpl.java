@@ -4,6 +4,7 @@ import com.bloomie.platform.routinemanagement.application.commandservices.Routin
 import com.bloomie.platform.routinemanagement.application.queryservices.RoutineQueryService;
 import com.bloomie.platform.routinemanagement.domain.model.aggregates.Routine;
 import com.bloomie.platform.routinemanagement.domain.model.commands.GeneratePersonalizedRoutineCommand;
+import com.bloomie.platform.routinemanagement.domain.model.commands.RemoveProductFromRoutineCommand;
 import com.bloomie.platform.routinemanagement.domain.model.commands.ReplaceProductInRoutineCommand;
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetRecommendedProductsForRoutineItemQuery;
 import com.bloomie.platform.routinemanagement.domain.model.queries.GetRoutineByIdQuery;
@@ -44,6 +45,26 @@ public class RoutineCommandServiceImpl implements RoutineCommandService {
             return Result.success(routine.getId());
         } catch (Exception e) {
             return Result.failure(ApplicationError.unexpected("generate-routine", e.getMessage()));
+        }
+    }
+
+    @Override
+    public Result<Routine, ApplicationError> handle(RemoveProductFromRoutineCommand command) {
+        var routine = routineRepository.findById(command.routineId());
+        if (routine.isEmpty())
+            return Result.failure(ApplicationError.notFound("Routine",
+                    command.routineId().toString()));
+
+        try {
+            routine.get().removeItem(command);
+            var saved = routineRepository.save(routine.get());
+            return Result.success(saved);
+        } catch (IllegalArgumentException e) {
+            return Result.failure(ApplicationError.businessRuleViolation(
+                    "remove-product", e.getMessage()));
+        } catch (Exception e) {
+            return Result.failure(ApplicationError.unexpected(
+                    "remove-product", e.getMessage()));
         }
     }
 
