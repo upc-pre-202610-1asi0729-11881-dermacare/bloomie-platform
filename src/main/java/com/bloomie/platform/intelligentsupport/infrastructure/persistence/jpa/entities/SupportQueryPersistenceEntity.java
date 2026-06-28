@@ -20,11 +20,11 @@ import java.time.LocalDateTime;
 @Table(name = "support_queries")
 public class SupportQueryPersistenceEntity extends AuditableAbstractPersistenceEntity {
     @Convert(converter = PatientIdPersistenceConverter.class)
-    @Column(name = "patient_id", nullable = false, unique = true)
+    @Column(name = "patient_id", nullable = false)
     private PatientId patientId;
 
     @Convert(converter = SkinProfileIdPersistenceConverter.class)
-    @Column(name = "skin_profile_id", nullable = false, unique = true)
+    @Column(name = "skin_profile_id", nullable = false)
     private SkinProfileId skinProfileId;
 
     @Enumerated(EnumType.STRING)
