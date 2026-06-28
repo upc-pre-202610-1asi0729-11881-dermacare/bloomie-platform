@@ -31,8 +31,15 @@ public class ChatMessageRepositoryImpl implements ChatMessageRepository {
 
     @Override
     public ChatMessage save(ChatMessage chatMessage) {
+        boolean isNew = chatMessage.getId() == null;
         var savedEntity = persistenceRepository.save(
                 ChatMessagePersistenceAssembler.toPersistenceFromDomain(chatMessage));
-        return ChatMessagePersistenceAssembler.toDomainFromPersistence(savedEntity);
+        var savedMessage = ChatMessagePersistenceAssembler.toDomainFromPersistence(savedEntity);
+        if (isNew) {
+            savedMessage.onCreated();
+        }
+        savedMessage.domainEvents().forEach(eventPublisher::publishEvent);
+        savedMessage.clearDomainEvents();
+        return savedMessage;
     }
 }

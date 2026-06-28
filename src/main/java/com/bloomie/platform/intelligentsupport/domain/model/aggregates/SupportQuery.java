@@ -2,6 +2,7 @@ package com.bloomie.platform.intelligentsupport.domain.model.aggregates;
 
 import com.bloomie.platform.intelligentsupport.domain.model.commands.CreateSupportQueryCommand;
 import com.bloomie.platform.intelligentsupport.domain.model.events.SupportQueryCreatedEvent;
+import com.bloomie.platform.intelligentsupport.domain.model.events.SupportQueryStatusUpdatedEvent;
 import com.bloomie.platform.intelligentsupport.domain.model.valueobjects.*;
 import com.bloomie.platform.shared.domain.model.aggregates.AbstractDomainAggregateRoot;
 import lombok.Getter;
@@ -48,5 +49,13 @@ public class SupportQuery extends AbstractDomainAggregateRoot<SupportQuery> {
 
     public void onCreated() {
         registerDomainEvent(SupportQueryCreatedEvent.from(this));
+    }
+
+    public void updateStatus(String status) {
+        this.status = SupportQueryStatus.valueOf(status);
+    }
+
+    public void onStatusUpdated() {
+        registerDomainEvent(SupportQueryStatusUpdatedEvent.from(this));
     }
 }

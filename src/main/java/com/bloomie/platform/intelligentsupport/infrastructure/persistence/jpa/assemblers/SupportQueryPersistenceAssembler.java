@@ -4,6 +4,7 @@ import com.bloomie.platform.intelligentsupport.application.commandservices.Suppo
 import com.bloomie.platform.intelligentsupport.domain.model.aggregates.SupportQuery;
 import com.bloomie.platform.intelligentsupport.infrastructure.persistence.jpa.entities.SupportQueryPersistenceEntity;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 public final class SupportQueryPersistenceAssembler {
@@ -11,16 +12,17 @@ public final class SupportQueryPersistenceAssembler {
     }
 
     public static SupportQuery toDomainFromPersistence(SupportQueryPersistenceEntity entity) {
+        var createdAt = entity.getCreatedAt() != null
+                ? entity.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+                : LocalDateTime.now();
+
         return new SupportQuery(
                 entity.getId(),
                 entity.getPatientId(),
                 entity.getSkinProfileId(),
                 entity.getStatus(),
                 entity.getSuggestedAction(),
-                entity.getCreatedAt()
-                        .toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime()
+                createdAt
         );
     }
 

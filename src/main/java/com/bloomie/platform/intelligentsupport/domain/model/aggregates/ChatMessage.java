@@ -1,6 +1,7 @@
 package com.bloomie.platform.intelligentsupport.domain.model.aggregates;
 
 import com.bloomie.platform.intelligentsupport.domain.model.commands.SendChatMessageCommand;
+import com.bloomie.platform.intelligentsupport.domain.model.events.ChatMessageSentEvent;
 import com.bloomie.platform.intelligentsupport.domain.model.valueobjects.MessageType;
 import com.bloomie.platform.intelligentsupport.domain.model.valueobjects.SupportQueryId;
 import com.bloomie.platform.shared.domain.model.aggregates.AbstractDomainAggregateRoot;
@@ -44,4 +45,9 @@ public class ChatMessage extends AbstractDomainAggregateRoot<ChatMessage> {
 
     public Long getSupportQueryId() { return supportQueryId.supportQueryId(); }
     public SupportQueryId getSupportQueryIdValue() { return supportQueryId; }
+
+    public void onCreated() {
+        registerDomainEvent(ChatMessageSentEvent.from(this));
+    }
+
 }

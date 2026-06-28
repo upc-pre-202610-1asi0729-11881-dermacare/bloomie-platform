@@ -3,6 +3,7 @@ package com.bloomie.platform.intelligentsupport.application.internal.commandserv
 import com.bloomie.platform.intelligentsupport.application.commandservices.SupportQueryCommandService;
 import com.bloomie.platform.intelligentsupport.domain.model.aggregates.SupportQuery;
 import com.bloomie.platform.intelligentsupport.domain.model.commands.CreateSupportQueryCommand;
+import com.bloomie.platform.intelligentsupport.domain.model.commands.UpdateSupportQueryStatusCommand;
 import com.bloomie.platform.intelligentsupport.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.intelligentsupport.domain.model.valueobjects.SupportQueryStatus;
 import com.bloomie.platform.intelligentsupport.domain.repositories.SupportQueryRepository;
@@ -37,6 +38,26 @@ public class SupportQueryCommandServiceImpl implements SupportQueryCommandServic
             return Result.failure(ApplicationError.unexpected(
                     "Support query creation",
                     e.getMessage()));
+        }
+    }
+
+    @Override
+    public Result<SupportQuery, ApplicationError> handle(UpdateSupportQueryStatusCommand command) {
+        try {
+            var existing = supportQueryRepository.findById(command.supportQueryId());
+            if (existing.isEmpty()) {
+                return Result.failure(ApplicationError.notFound(
+                        "support-query", "intelligent.support.query.not.found"));
+            }
+            var supportQuery = existing.get();
+            supportQuery.updateStatus(command.status());
+            var saved = supportQueryRepository.save(supportQuery);
+            return Result.success(saved);
+        } catch (IllegalArgumentException e) {
+            return Result.failure(ApplicationError.validationError("Support Query", e.getMessage()));
+        } catch (Exception e) {
+            return Result.failure(ApplicationError.unexpected(
+                    "Support query status update", e.getMessage()));
         }
     }
 }
