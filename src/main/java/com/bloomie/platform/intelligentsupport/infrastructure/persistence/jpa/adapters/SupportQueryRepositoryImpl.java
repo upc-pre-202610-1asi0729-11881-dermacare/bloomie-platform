@@ -5,6 +5,7 @@ import com.bloomie.platform.intelligentsupport.domain.model.valueobjects.Patient
 import com.bloomie.platform.intelligentsupport.domain.model.valueobjects.SupportQueryStatus;
 import com.bloomie.platform.intelligentsupport.domain.repositories.SupportQueryRepository;
 import com.bloomie.platform.intelligentsupport.infrastructure.persistence.jpa.assemblers.SupportQueryPersistenceAssembler;
+import com.bloomie.platform.intelligentsupport.infrastructure.persistence.jpa.entities.SupportQueryPersistenceEntity;
 import com.bloomie.platform.intelligentsupport.infrastructure.persistence.jpa.repositories.SupportQueryPersistenceRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Repository;
@@ -46,11 +47,23 @@ public class SupportQueryRepositoryImpl implements SupportQueryRepository {
     @Override
     public SupportQuery save(SupportQuery supportQuery) {
         boolean isNew = supportQuery.getId() == null;
-        var savedEntity = persistenceRepository.save(
-                SupportQueryPersistenceAssembler.toPersistenceFromDomain(supportQuery));
+
+        SupportQueryPersistenceEntity entity;
+        if (isNew) {
+            entity = SupportQueryPersistenceAssembler.toPersistenceFromDomain(supportQuery);
+        } else {
+            entity = persistenceRepository.findById(supportQuery.getId())
+                    .orElseThrow();
+            entity.setStatus(supportQuery.getStatus());
+            entity.setSuggestedAction(supportQuery.getSuggestedAction());
+        }
+
+        var savedEntity = persistenceRepository.save(entity);
         var savedQuery = SupportQueryPersistenceAssembler.toDomainFromPersistence(savedEntity);
         if (isNew) {
             savedQuery.onCreated();
+        } else {
+            savedQuery.onStatusUpdated();
         }
         savedQuery.domainEvents().forEach(eventPublisher::publishEvent);
         savedQuery.clearDomainEvents();
