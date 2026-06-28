@@ -7,6 +7,7 @@ import com.bloomie.platform.dermatologicalappointment.infrastructure.persistence
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -53,5 +54,12 @@ public class ConsultationRepositoryImpl implements ConsultationRepository {
         consultation.domainEvents().forEach(eventPublisher::publishEvent);
         consultation.clearDomainEvents();
         return ConsultationPersistenceAssembler.toDomainFromPersistence(savedEntity);
+    }
+
+    @Override
+    public List<Consultation> findAll() {
+        return persistenceRepository.findAll().stream()
+                .map(ConsultationPersistenceAssembler::toDomainFromPersistence)
+                .toList();
     }
 }

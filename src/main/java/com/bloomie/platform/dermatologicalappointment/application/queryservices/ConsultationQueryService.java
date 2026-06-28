@@ -4,6 +4,7 @@ import com.bloomie.platform.dermatologicalappointment.domain.model.aggregates.Co
 import com.bloomie.platform.dermatologicalappointment.domain.model.queries.GetConsultationByAppointmentIdQuery;
 import com.bloomie.platform.dermatologicalappointment.domain.model.queries.GetConsultationByIdQuery;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -29,4 +30,6 @@ public interface ConsultationQueryService {
      * @return an optional containing the consultation
      */
     Optional<Consultation> handle(GetConsultationByAppointmentIdQuery query);
+
+    List<Consultation> handleGetAll();
 }
