@@ -3,6 +3,7 @@ package com.bloomie.platform.intelligentsupport.interfaces.rest;
 import com.bloomie.platform.intelligentsupport.application.commandservices.SupportQueryCommandService;
 import com.bloomie.platform.intelligentsupport.application.queryservices.SupportQueryQueryService;
 import com.bloomie.platform.intelligentsupport.domain.model.queries.GetSupportQueryByIdQuery;
+import com.bloomie.platform.intelligentsupport.domain.model.queries.GetSupportQueryByPatientIdAndStatusQuery;
 import com.bloomie.platform.intelligentsupport.interfaces.rest.resources.CreateSupportQueryResource;
 import com.bloomie.platform.intelligentsupport.interfaces.rest.resources.SupportQueryResource;
 import com.bloomie.platform.intelligentsupport.interfaces.rest.resources.UpdateSupportQueryStatusResource;
@@ -80,6 +81,23 @@ public class SupportQueriesController {
     public ResponseEntity<?> getSupportQueryById(
             @PathVariable Long supportQueryId) {
         var query = new GetSupportQueryByIdQuery(supportQueryId);
+        var result = supportQueryQueryService.handle(query);
+        if (result.isEmpty()) {
+            return ErrorResponseAssembler.toErrorResponseFromApplicationError(
+                    ApplicationError.notFound("support-query", "intelligent.support.query.not.found"));
+        }
+        return ResponseEntity.ok(
+                SupportQueryResourceFromEntityAssembler.toResourceFromEntity(result.get()));
+    }
+
+    @GetMapping("/patient/{patientId}/active")
+    @Operation(summary = "Get the active support query session for a patient")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Active support query session found."),
+            @ApiResponse(responseCode = "404", description = "No active support query session found for this patient.")})
+    public ResponseEntity<?> getActiveSupportQueryByPatientId(
+            @PathVariable Long patientId) {
+        var query = new GetSupportQueryByPatientIdAndStatusQuery(patientId, "IN_PROGRESS");
         var result = supportQueryQueryService.handle(query);
         if (result.isEmpty()) {
             return ErrorResponseAssembler.toErrorResponseFromApplicationError(
