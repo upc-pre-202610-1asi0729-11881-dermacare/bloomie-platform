@@ -2,8 +2,10 @@ package com.bloomie.platform.intelligentsupport.interfaces.rest;
 
 import com.bloomie.platform.intelligentsupport.application.commandservices.SupportQueryCommandService;
 import com.bloomie.platform.intelligentsupport.interfaces.rest.resources.CreateSupportQueryResource;
+import com.bloomie.platform.intelligentsupport.interfaces.rest.resources.UpdateSupportQueryStatusResource;
 import com.bloomie.platform.intelligentsupport.interfaces.rest.transform.CreateSupportQueryCommandFromResourceAssembler;
 import com.bloomie.platform.intelligentsupport.interfaces.rest.transform.SupportQueryResourceFromEntityAssembler;
+import com.bloomie.platform.intelligentsupport.interfaces.rest.transform.UpdateSupportQueryStatusCommandFromResourceAssembler;
 import com.bloomie.platform.shared.interfaces.rest.transform.ResponseEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,5 +41,23 @@ public class SupportQueriesController {
                 result,
                 SupportQueryResourceFromEntityAssembler::toResourceFromEntity,
                 HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{supportQueryId}")
+    @Operation(summary = "Update the status of a support query")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Support query status updated successfully."),
+            @ApiResponse(responseCode = "400", description = "Invalid status value."),
+            @ApiResponse(responseCode = "404", description = "Support query not found.")})
+    public ResponseEntity<?> updateSupportQueryStatus(
+            @PathVariable Long supportQueryId,
+            @Valid @RequestBody UpdateSupportQueryStatusResource resource) {
+        var command = UpdateSupportQueryStatusCommandFromResourceAssembler
+                .toCommandFromResource(supportQueryId, resource);
+        var result = commandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                SupportQueryResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.OK);
     }
 }
