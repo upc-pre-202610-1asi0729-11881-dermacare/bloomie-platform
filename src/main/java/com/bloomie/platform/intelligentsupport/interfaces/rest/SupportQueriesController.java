@@ -1,13 +1,21 @@
 package com.bloomie.platform.intelligentsupport.interfaces.rest;
 
 import com.bloomie.platform.intelligentsupport.application.commandservices.SupportQueryCommandService;
+import com.bloomie.platform.intelligentsupport.application.queryservices.SupportQueryQueryService;
+import com.bloomie.platform.intelligentsupport.domain.model.queries.GetSupportQueryByIdQuery;
 import com.bloomie.platform.intelligentsupport.interfaces.rest.resources.CreateSupportQueryResource;
+import com.bloomie.platform.intelligentsupport.interfaces.rest.resources.SupportQueryResource;
 import com.bloomie.platform.intelligentsupport.interfaces.rest.resources.UpdateSupportQueryStatusResource;
 import com.bloomie.platform.intelligentsupport.interfaces.rest.transform.CreateSupportQueryCommandFromResourceAssembler;
 import com.bloomie.platform.intelligentsupport.interfaces.rest.transform.SupportQueryResourceFromEntityAssembler;
 import com.bloomie.platform.intelligentsupport.interfaces.rest.transform.UpdateSupportQueryStatusCommandFromResourceAssembler;
+import com.bloomie.platform.shared.application.result.ApplicationError;
+import com.bloomie.platform.shared.interfaces.rest.transform.ErrorResponseAssembler;
 import com.bloomie.platform.shared.interfaces.rest.transform.ResponseEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,9 +31,12 @@ import org.springframework.web.bind.annotation.*;
 public class SupportQueriesController {
 
     private final SupportQueryCommandService commandService;
+    private final SupportQueryQueryService supportQueryQueryService;
 
-    public SupportQueriesController(SupportQueryCommandService commandService) {
+
+    public SupportQueriesController(SupportQueryCommandService commandService, SupportQueryQueryService supportQueryQueryService) {
         this.commandService = commandService;
+        this.supportQueryQueryService = supportQueryQueryService;
     }
 
     @PostMapping
@@ -59,5 +70,22 @@ public class SupportQueriesController {
                 result,
                 SupportQueryResourceFromEntityAssembler::toResourceFromEntity,
                 HttpStatus.OK);
+    }
+
+    @GetMapping("/{supportQueryId}")
+    @Operation(summary = "Get a support query by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Support query found."),
+            @ApiResponse(responseCode = "404", description = "Support query not found.")})
+    public ResponseEntity<?> getSupportQueryById(
+            @PathVariable Long supportQueryId) {
+        var query = new GetSupportQueryByIdQuery(supportQueryId);
+        var result = supportQueryQueryService.handle(query);
+        if (result.isEmpty()) {
+            return ErrorResponseAssembler.toErrorResponseFromApplicationError(
+                    ApplicationError.notFound("support-query", "intelligent.support.query.not.found"));
+        }
+        return ResponseEntity.ok(
+                SupportQueryResourceFromEntityAssembler.toResourceFromEntity(result.get()));
     }
 }
