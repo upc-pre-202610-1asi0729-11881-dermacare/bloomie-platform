@@ -5,10 +5,12 @@ import com.bloomie.platform.shared.application.result.Result;
 import com.bloomie.platform.subscription.application.commandservices.SubscriptionCommandService;
 import com.bloomie.platform.subscription.application.internal.outboundservices.acl.ExternalIamService;
 import com.bloomie.platform.subscription.domain.model.aggregates.Subscription;
+import com.bloomie.platform.subscription.domain.model.commands.ActivateSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.CancelSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.ExpireSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.RenewSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.SelectSubscriptionPlanCommand;
+import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PlanId;
 import com.bloomie.platform.subscription.domain.model.valueobjects.SubscriptionStatus;
 import com.bloomie.platform.subscription.domain.repositories.SubscriptionRepository;
@@ -19,6 +21,7 @@ public class SubscriptionCommandServiceImpl implements SubscriptionCommandServic
 
     private static final String PATIENT_NOT_FOUND = "subscription.patient.not.found";
     private static final String SUBSCRIPTION_NOT_FOUND = "subscription.not.found";
+    private static final String SUBSCRIPTION_CANNOT_ACTIVATE = "subscription.cannot.activate";
     private static final String SUBSCRIPTION_CANNOT_CANCEL = "subscription.cannot.cancel";
     private static final String SUBSCRIPTION_CANNOT_RENEW = "subscription.cannot.renew";
     private static final String SUBSCRIPTION_CANNOT_EXPIRE = "subscription.cannot.expire";
@@ -60,6 +63,33 @@ public class SubscriptionCommandServiceImpl implements SubscriptionCommandServic
             return Result.success(saved.getId());
         } catch (Exception e) {
             return Result.failure(ApplicationError.unexpected("select-subscription-plan", e.getMessage()));
+        }
+    }
+
+    @Override
+    public Result<Subscription, ApplicationError> handle(ActivateSubscriptionCommand command) {
+        var patientId = new PatientId(command.patientId());
+        var subscription = subscriptionRepository.findByPatientId(patientId).orElse(null);
+        if (subscription == null) {
+            return Result.failure(ApplicationError.notFound("Subscription", SUBSCRIPTION_NOT_FOUND));
+        }
+
+        // Only PENDING subscriptions can be activated; any other status is a logic error
+        if (subscription.getStatus() != SubscriptionStatus.PENDING) {
+            return Result.failure(ApplicationError.businessRuleViolation("activate-subscription", SUBSCRIPTION_CANNOT_ACTIVATE));
+        }
+
+        var plan = subscriptionRepository.findPlanById(subscription.getPlanIdValue()).orElse(null);
+        if (plan == null) {
+            return Result.failure(ApplicationError.notFound("Plan", subscription.getPlanId().toString()));
+        }
+
+        subscription.activate(plan.getDurationDays());
+        try {
+            var saved = subscriptionRepository.save(subscription);
+            return Result.success(saved);
+        } catch (Exception e) {
+            return Result.failure(ApplicationError.unexpected("activate-subscription", e.getMessage()));
         }
     }
 

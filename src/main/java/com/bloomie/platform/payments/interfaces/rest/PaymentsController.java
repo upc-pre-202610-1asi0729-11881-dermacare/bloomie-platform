@@ -6,7 +6,10 @@ import com.bloomie.platform.payments.domain.model.queries.GetPaymentByIdQuery;
 import com.bloomie.platform.payments.domain.model.queries.GetPaymentsByPatientIdQuery;
 import com.bloomie.platform.payments.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.payments.interfaces.rest.resources.PaymentResource;
+import com.bloomie.platform.payments.interfaces.rest.resources.ProcessRenewalPaymentResource;
 import com.bloomie.platform.payments.interfaces.rest.transform.PaymentResourceFromEntityAssembler;
+import com.bloomie.platform.payments.interfaces.rest.transform.ProcessRenewalPaymentCommandFromResourceAssembler;
+import com.bloomie.platform.shared.interfaces.rest.transform.ResponseEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,11 +17,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
@@ -104,5 +105,36 @@ public class PaymentsController {
         var payments = paymentQueryService.handle(getPaymentByPatientIdQuery);
         if (payments.isEmpty()) return ResponseEntity.ok(Collections.emptyList());
         return ResponseEntity.ok(payments.stream().map(PaymentResourceFromEntityAssembler::toResourceFromEntity).toList());
+    }
+
+    /**
+     * Process a renewal payment for an existing active subscription.
+     *
+     * @param resource the renewal payment request payload
+     * @return the created renewal {@link PaymentResource} on success, or an error response
+     */
+    @PostMapping("/renewal")
+    @Operation(
+            summary = "Process renewal payment",
+            description = "Charges the patient for a subscription renewal. On success, the Subscription BC extends the billing period automatically."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Renewal payment processed successfully",
+                    content = @Content(schema = @Schema(implementation = PaymentResource.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - JWT token required"),
+            @ApiResponse(responseCode = "404", description = "Plan not found")
+    })
+    public ResponseEntity<?> processRenewalPayment(@RequestBody ProcessRenewalPaymentResource resource) {
+        var command = ProcessRenewalPaymentCommandFromResourceAssembler.toCommandFromResource(resource);
+        var result = paymentCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                PaymentResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.CREATED
+        );
     }
 }

@@ -2,6 +2,7 @@
 package com.bloomie.platform.subscription.domain.model.aggregates;
 
 import com.bloomie.platform.subscription.domain.model.commands.SelectSubscriptionPlanCommand;
+import com.bloomie.platform.subscription.domain.model.events.SubscriptionActivatedEvent;
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionCancelledEvent;
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionExpiredEvent;
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionPlanSelectedEvent;
@@ -35,8 +36,10 @@ public class Subscription extends AbstractDomainAggregateRoot<Subscription> {
     @Setter
     private LocalDateTime endDate;
 
-    // Transient flag — not persisted. Lets the repository detect a renewal transition
-    // (ACTIVE → ACTIVE) which cannot be inferred from status alone.
+    // Transient flags — not persisted. Let the repository detect state transitions
+    // that cannot be inferred from status alone (e.g. PENDING→ACTIVE vs ACTIVE→ACTIVE).
+    @Getter
+    private boolean activating = false;
     @Getter
     private boolean renewing = false;
 
@@ -61,6 +64,27 @@ public class Subscription extends AbstractDomainAggregateRoot<Subscription> {
 
     public void onPlanSelected() {
         registerDomainEvent(SubscriptionPlanSelectedEvent.from(this));
+    }
+
+    /**
+     * Transitions this subscription from PENDING to {@link SubscriptionStatus#ACTIVE},
+     * setting the billing period based on the plan's duration.
+     *
+     * @param durationDays number of days in the plan's billing cycle
+     */
+    public void activate(int durationDays) {
+        this.status = SubscriptionStatus.ACTIVE;
+        this.startDate = LocalDateTime.now();
+        this.endDate = this.startDate.plusDays(durationDays);
+        this.activating = true;
+    }
+
+    /**
+     * Registers the {@link SubscriptionActivatedEvent} domain event so the repository
+     * can publish it after persisting the updated aggregate.
+     */
+    public void onActivated() {
+        registerDomainEvent(SubscriptionActivatedEvent.from(this));
     }
 
     /**

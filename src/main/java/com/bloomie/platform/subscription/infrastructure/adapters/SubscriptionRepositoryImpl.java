@@ -46,16 +46,19 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
     @Override
     public Subscription save(Subscription subscription) {
         boolean isNew = subscription.getId() == null;
+        // Transient flags are read from the original aggregate BEFORE it is replaced
+        // by the reconstructed savedSubscription, which always starts with all flags false.
+        boolean isActivating = !isNew && subscription.isActivating();
         boolean isCancelling = !isNew && subscription.getStatus() == SubscriptionStatus.CANCELLED;
-        boolean isExpiring = !isNew && subscription.getStatus() == SubscriptionStatus.EXPIRED;
-        // isRenewing is read from the original aggregate before it is replaced by the
-        // reconstructed savedSubscription (which always has renewing = false).
-        boolean isRenewing = !isNew && subscription.isRenewing();
+        boolean isExpiring  = !isNew && subscription.getStatus() == SubscriptionStatus.EXPIRED;
+        boolean isRenewing  = !isNew && subscription.isRenewing();
         var savedEntity = subscriptionPersistenceRepository.save(
                 SubscriptionPersistenceAssembler.toPersistenceFromDomain(subscription));
         var savedSubscription = SubscriptionPersistenceAssembler.toDomainFromPersistence(savedEntity);
         if (isNew) {
             savedSubscription.onPlanSelected();
+        } else if (isActivating) {
+            savedSubscription.onActivated();
         } else if (isCancelling) {
             savedSubscription.onCancelled();
         } else if (isExpiring) {

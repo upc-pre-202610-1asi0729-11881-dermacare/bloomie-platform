@@ -3,6 +3,7 @@ package com.bloomie.platform.payments.infrastructure.persistence.jpa.adapters;
 import com.bloomie.platform.payments.domain.model.aggregates.Payment;
 import com.bloomie.platform.payments.domain.model.events.SubscriptionPaymentProcessedEvent;
 import com.bloomie.platform.payments.domain.model.valueobjects.PatientId;
+import com.bloomie.platform.payments.domain.model.valueobjects.PaymentType;
 import com.bloomie.platform.payments.domain.model.valueobjects.SubscriptionId;
 import com.bloomie.platform.payments.domain.repositories.PaymentRepository;
 import com.bloomie.platform.payments.infrastructure.persistence.jpa.assemblers.PaymentPersistenceAssembler;
@@ -41,7 +42,13 @@ public class PaymentRepositoryImpl implements PaymentRepository {
         var savedEntity = paymentPersistenceRepository.save(PaymentPersistenceAssembler.toPersistenceFromDomain(payment));
         var savedPayment = PaymentPersistenceAssembler.toDomainFromPersistence(savedEntity);
         if (isNew) {
-            savedPayment.onProcessSubscriptionPayment();
+            // Each payment type fires a different domain event so consumers can
+            // react appropriately (activate vs. renew the subscription).
+            if (savedPayment.getType() == PaymentType.RENEWAL) {
+                savedPayment.onProcessRenewalPayment();
+            } else {
+                savedPayment.onProcessSubscriptionPayment();
+            }
             savedPayment.domainEvents().forEach(eventPublisher::publishEvent);
             savedPayment.clearDomainEvents();
         }
