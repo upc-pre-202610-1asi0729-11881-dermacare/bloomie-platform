@@ -1,7 +1,9 @@
 package com.bloomie.platform.payments.domain.model.aggregates;
 
+import com.bloomie.platform.payments.domain.model.commands.ProcessRenewalPaymentCommand;
 import com.bloomie.platform.payments.domain.model.commands.ProcessSubscriptionPaymentCommand;
 import com.bloomie.platform.payments.domain.model.events.SubscriptionPaymentProcessedEvent;
+import com.bloomie.platform.payments.domain.model.events.SubscriptionRenewalPaymentProcessedEvent;
 import com.bloomie.platform.payments.domain.model.valueobjects.*;
 import com.bloomie.platform.shared.domain.model.aggregates.AbstractDomainAggregateRoot;
 import com.bloomie.platform.payments.domain.model.valueobjects.PlanId;
@@ -66,14 +68,33 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
     }
 
     /**
-     * Signals that this payment has just been processed and persisted.
+     * Creates a renewal payment from the provided {@link ProcessRenewalPaymentCommand}.
      *
-     * <p>Called by the repository adapter after the JPA identity has been assigned.
-     * Registers a {@link SubscriptionPaymentProcessedEvent} so the infrastructure can publish it
-     * to interested subscribers in other bounded contexts.</p>
+     * @param command The {@link ProcessRenewalPaymentCommand} command
+     */
+    public Payment(ProcessRenewalPaymentCommand command) {
+        this.patientId = new PatientId(command.patientId());
+        this.planId = new PlanId(command.planId());
+        this.subscriptionId = new SubscriptionId(command.subscriptionId());
+        this.amount = new PaymentAmount(command.amount());
+        this.type = PaymentType.RENEWAL;
+        this.status = PaymentStatus.PENDING;
+    }
+
+    /**
+     * Signals that this initial subscription payment has been processed and persisted.
+     * Registers a {@link SubscriptionPaymentProcessedEvent} for publication.
      */
     public void onProcessSubscriptionPayment() {
         registerDomainEvent(SubscriptionPaymentProcessedEvent.from(this));
+    }
+
+    /**
+     * Signals that this renewal payment has been processed and persisted.
+     * Registers a {@link SubscriptionRenewalPaymentProcessedEvent} for publication.
+     */
+    public void onProcessRenewalPayment() {
+        registerDomainEvent(SubscriptionRenewalPaymentProcessedEvent.from(this));
     }
 
     /**
