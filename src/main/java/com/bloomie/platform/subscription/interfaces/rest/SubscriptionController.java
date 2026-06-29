@@ -9,6 +9,7 @@ import com.bloomie.platform.subscription.application.queryservices.SubscriptionQ
 import com.bloomie.platform.subscription.domain.model.queries.GetSubscriptionByIdQuery;
 import com.bloomie.platform.subscription.domain.model.queries.GetSubscriptionByPatientIdQuery;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
+import com.bloomie.platform.subscription.domain.model.commands.CancelSubscriptionCommand;
 import com.bloomie.platform.subscription.interfaces.rest.resources.SelectSubscriptionPlanResource;
 import com.bloomie.platform.subscription.interfaces.rest.resources.SubscriptionResource;
 import com.bloomie.platform.subscription.interfaces.rest.transform.SelectSubscriptionPlanCommandFromResourceAssembler;
@@ -111,5 +112,31 @@ public class SubscriptionController {
         var subscriptionEntity = subscription.get();
         var subscriptionResource = SubscriptionResourceFromEntityAssembler.toResourceFromEntity(subscriptionEntity);
         return ResponseEntity.ok(subscriptionResource);
+    }
+
+    @DeleteMapping("/{subscriptionId}")
+    @Operation(summary = "Cancel subscription", description = "Cancels an active or pending subscription by its unique identifier.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Subscription cancelled successfully",
+                    content = @Content(schema = @Schema(implementation = SubscriptionResource.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Subscription cannot be cancelled in its current status"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - JWT token required"),
+            @ApiResponse(responseCode = "404", description = "Subscription not found")
+    })
+    public ResponseEntity<?> cancelSubscription(
+            @PathVariable
+            @Parameter(description = "Unique subscription identifier", example = "1", required = true)
+            Long subscriptionId
+    ) {
+        var command = new CancelSubscriptionCommand(subscriptionId);
+        var result = subscriptionCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                SubscriptionResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.OK
+        );
     }
 }

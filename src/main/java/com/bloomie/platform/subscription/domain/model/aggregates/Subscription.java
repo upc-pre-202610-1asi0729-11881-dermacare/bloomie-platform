@@ -2,6 +2,7 @@
 package com.bloomie.platform.subscription.domain.model.aggregates;
 
 import com.bloomie.platform.subscription.domain.model.commands.SelectSubscriptionPlanCommand;
+import com.bloomie.platform.subscription.domain.model.events.SubscriptionCancelledEvent;
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionPlanSelectedEvent;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PlanId;
@@ -53,6 +54,23 @@ public class Subscription extends AbstractDomainAggregateRoot<Subscription> {
 
     public void onPlanSelected() {
         registerDomainEvent(SubscriptionPlanSelectedEvent.from(this));
+    }
+
+    /**
+     * Transitions this subscription to {@link SubscriptionStatus#CANCELLED}.
+     * The caller is responsible for verifying the subscription is in a cancellable state
+     * before invoking this method.
+     */
+    public void cancel() {
+        this.status = SubscriptionStatus.CANCELLED;
+    }
+
+    /**
+     * Registers the {@link SubscriptionCancelledEvent} domain event so the repository
+     * can publish it after persisting the updated aggregate.
+     */
+    public void onCancelled() {
+        registerDomainEvent(SubscriptionCancelledEvent.from(this));
     }
 
     public Long getPatientId() { return patientId.patientId(); }
