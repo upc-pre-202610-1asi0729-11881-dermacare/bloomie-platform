@@ -47,4 +47,11 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .toList();
         productPersistenceRepository.saveAll(entities);
     }
+
+    @Override
+    public Product save(Product product) {
+        var entity = ProductPersistenceAssembler.toPersistenceFromDomain(product);
+        var saved  = productPersistenceRepository.save(entity);
+        return ProductPersistenceAssembler.toDomainFromPersistence(saved);
+    }
 }
