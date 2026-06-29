@@ -40,4 +40,7 @@ public class ProductPersistenceEntity extends AuditableAbstractPersistenceEntity
 
     @Column(name = "ai_recommended", nullable = false)
     private boolean aiRecommended;
+
+    @Column(name = "image_url", columnDefinition = "TEXT")
+    private String imageUrl;
 }

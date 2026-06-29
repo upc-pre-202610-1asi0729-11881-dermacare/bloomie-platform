@@ -20,6 +20,6 @@ public record ProductResource(
         String category,
         String description,
         List<String> benefits,
-        boolean aiRecommended
-) {
-}
+        boolean aiRecommended,
+        String imageUrl
+) {}

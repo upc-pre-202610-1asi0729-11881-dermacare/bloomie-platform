@@ -39,4 +39,13 @@ public interface ProductRepository {
      * @param products the products to save
      */
     void saveAll(List<Product> products);
+
+
+    /**
+     * Persists a single product (for image enrichment updates).
+     *
+     * @param product the product to save
+     * @return the saved product
+     */
+    Product save(Product product);
 }

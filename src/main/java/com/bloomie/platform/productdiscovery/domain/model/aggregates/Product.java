@@ -60,11 +60,14 @@ public class Product extends AbstractDomainAggregateRoot<Product> {
     @Setter
     private boolean aiRecommended;
 
+    @Setter
+    private String imageUrl;
+
     /**
      * Default constructor for Product.
      * Required for reconstruction from persistence.
      */
     public Product() {
         this.benefits = new ArrayList<>();
-    }
-}
+        this.imageUrl = "";
+    }}
