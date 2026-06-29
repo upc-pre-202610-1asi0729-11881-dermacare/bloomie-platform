@@ -3,6 +3,7 @@ package com.bloomie.platform.subscription.domain.model.aggregates;
 
 import com.bloomie.platform.subscription.domain.model.commands.SelectSubscriptionPlanCommand;
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionCancelledEvent;
+import com.bloomie.platform.subscription.domain.model.events.SubscriptionExpiredEvent;
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionPlanSelectedEvent;
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionRenewedEvent;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
@@ -102,6 +103,23 @@ public class Subscription extends AbstractDomainAggregateRoot<Subscription> {
      */
     public void onRenewed() {
         registerDomainEvent(SubscriptionRenewedEvent.from(this));
+    }
+
+    /**
+     * Transitions this subscription to {@link SubscriptionStatus#EXPIRED}.
+     * The caller is responsible for verifying the subscription is in an expirable state
+     * before invoking this method.
+     */
+    public void expire() {
+        this.status = SubscriptionStatus.EXPIRED;
+    }
+
+    /**
+     * Registers the {@link SubscriptionExpiredEvent} domain event so the repository
+     * can publish it after persisting the updated aggregate.
+     */
+    public void onExpired() {
+        registerDomainEvent(SubscriptionExpiredEvent.from(this));
     }
 
     public Long getPatientId() { return patientId.patientId(); }
