@@ -2,6 +2,7 @@ package com.bloomie.platform.payments.domain.model.aggregates;
 
 import com.bloomie.platform.payments.domain.model.commands.ProcessRenewalPaymentCommand;
 import com.bloomie.platform.payments.domain.model.commands.ProcessSubscriptionPaymentCommand;
+import com.bloomie.platform.payments.domain.model.events.PaymentRefundedEvent;
 import com.bloomie.platform.payments.domain.model.events.SubscriptionPaymentProcessedEvent;
 import com.bloomie.platform.payments.domain.model.events.SubscriptionRenewalPaymentProcessedEvent;
 import com.bloomie.platform.payments.domain.model.valueobjects.*;
@@ -39,6 +40,11 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
 
     @Setter
     PaymentStatus status;
+
+    // Transient flag — not persisted. Lets the repository detect a refund transition
+    // (status change to REFUNDED) without relying on status comparison alone.
+    @Getter
+    private boolean refunding = false;
 
     /**
      * Creates a payment from the provided domain values.
@@ -95,6 +101,23 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
      */
     public void onProcessRenewalPayment() {
         registerDomainEvent(SubscriptionRenewalPaymentProcessedEvent.from(this));
+    }
+
+    /**
+     * Transitions this payment to {@link PaymentStatus#REFUNDED}.
+     * The caller is responsible for verifying the payment is in a refundable state.
+     */
+    public void refund() {
+        this.status = PaymentStatus.REFUNDED;
+        this.refunding = true;
+    }
+
+    /**
+     * Registers the {@link PaymentRefundedEvent} domain event so the repository
+     * can publish it after persisting the updated aggregate.
+     */
+    public void onRefunded() {
+        registerDomainEvent(PaymentRefundedEvent.from(this));
     }
 
     /**
