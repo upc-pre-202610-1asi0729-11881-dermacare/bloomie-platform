@@ -47,6 +47,7 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
     public Subscription save(Subscription subscription) {
         boolean isNew = subscription.getId() == null;
         boolean isCancelling = !isNew && subscription.getStatus() == SubscriptionStatus.CANCELLED;
+        boolean isExpiring = !isNew && subscription.getStatus() == SubscriptionStatus.EXPIRED;
         // isRenewing is read from the original aggregate before it is replaced by the
         // reconstructed savedSubscription (which always has renewing = false).
         boolean isRenewing = !isNew && subscription.isRenewing();
@@ -57,6 +58,8 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
             savedSubscription.onPlanSelected();
         } else if (isCancelling) {
             savedSubscription.onCancelled();
+        } else if (isExpiring) {
+            savedSubscription.onExpired();
         } else if (isRenewing) {
             savedSubscription.onRenewed();
         }
