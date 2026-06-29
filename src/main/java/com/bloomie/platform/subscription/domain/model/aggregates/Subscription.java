@@ -4,6 +4,7 @@ package com.bloomie.platform.subscription.domain.model.aggregates;
 import com.bloomie.platform.subscription.domain.model.commands.SelectSubscriptionPlanCommand;
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionCancelledEvent;
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionPlanSelectedEvent;
+import com.bloomie.platform.subscription.domain.model.events.SubscriptionRenewedEvent;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PlanId;
 import com.bloomie.platform.subscription.domain.model.valueobjects.SubscriptionStatus;
@@ -32,6 +33,11 @@ public class Subscription extends AbstractDomainAggregateRoot<Subscription> {
 
     @Setter
     private LocalDateTime endDate;
+
+    // Transient flag — not persisted. Lets the repository detect a renewal transition
+    // (ACTIVE → ACTIVE) which cannot be inferred from status alone.
+    @Getter
+    private boolean renewing = false;
 
     public Subscription(Long id, PatientId patientId, PlanId planId,
                         SubscriptionStatus status, LocalDateTime startDate,
@@ -71,6 +77,31 @@ public class Subscription extends AbstractDomainAggregateRoot<Subscription> {
      */
     public void onCancelled() {
         registerDomainEvent(SubscriptionCancelledEvent.from(this));
+    }
+
+    /**
+     * Extends this subscription's end date by {@code durationDays}.
+     *
+     * <p>If the current {@code endDate} is in the past (or null), the new period starts
+     * from now. Otherwise it extends from the current {@code endDate}, so consecutive
+     * renewals stack correctly.</p>
+     *
+     * @param durationDays number of days to add, obtained from the associated {@link com.bloomie.platform.subscription.domain.model.entities.Plan}
+     */
+    public void renew(int durationDays) {
+        LocalDateTime base = (this.endDate == null || LocalDateTime.now().isAfter(this.endDate))
+                ? LocalDateTime.now()
+                : this.endDate;
+        this.endDate = base.plusDays(durationDays);
+        this.renewing = true;
+    }
+
+    /**
+     * Registers the {@link SubscriptionRenewedEvent} domain event so the repository
+     * can publish it after persisting the updated aggregate.
+     */
+    public void onRenewed() {
+        registerDomainEvent(SubscriptionRenewedEvent.from(this));
     }
 
     public Long getPatientId() { return patientId.patientId(); }

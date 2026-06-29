@@ -10,6 +10,7 @@ import com.bloomie.platform.subscription.domain.model.queries.GetSubscriptionByI
 import com.bloomie.platform.subscription.domain.model.queries.GetSubscriptionByPatientIdQuery;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.subscription.domain.model.commands.CancelSubscriptionCommand;
+import com.bloomie.platform.subscription.domain.model.commands.RenewSubscriptionCommand;
 import com.bloomie.platform.subscription.interfaces.rest.resources.SelectSubscriptionPlanResource;
 import com.bloomie.platform.subscription.interfaces.rest.resources.SubscriptionResource;
 import com.bloomie.platform.subscription.interfaces.rest.transform.SelectSubscriptionPlanCommandFromResourceAssembler;
@@ -132,6 +133,32 @@ public class SubscriptionController {
             Long subscriptionId
     ) {
         var command = new CancelSubscriptionCommand(subscriptionId);
+        var result = subscriptionCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                SubscriptionResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.OK
+        );
+    }
+
+    @PatchMapping("/{subscriptionId}/renew")
+    @Operation(summary = "Renew subscription", description = "Renews an active subscription by extending its end date according to the plan duration.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Subscription renewed successfully",
+                    content = @Content(schema = @Schema(implementation = SubscriptionResource.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Subscription cannot be renewed in its current status"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - JWT token required"),
+            @ApiResponse(responseCode = "404", description = "Subscription not found")
+    })
+    public ResponseEntity<?> renewSubscription(
+            @PathVariable
+            @Parameter(description = "Unique subscription identifier", example = "1", required = true)
+            Long subscriptionId
+    ) {
+        var command = new RenewSubscriptionCommand(subscriptionId);
         var result = subscriptionCommandService.handle(command);
         return ResponseEntityAssembler.toResponseEntityFromResult(
                 result,

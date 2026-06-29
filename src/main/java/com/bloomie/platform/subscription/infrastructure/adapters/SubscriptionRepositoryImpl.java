@@ -47,6 +47,9 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
     public Subscription save(Subscription subscription) {
         boolean isNew = subscription.getId() == null;
         boolean isCancelling = !isNew && subscription.getStatus() == SubscriptionStatus.CANCELLED;
+        // isRenewing is read from the original aggregate before it is replaced by the
+        // reconstructed savedSubscription (which always has renewing = false).
+        boolean isRenewing = !isNew && subscription.isRenewing();
         var savedEntity = subscriptionPersistenceRepository.save(
                 SubscriptionPersistenceAssembler.toPersistenceFromDomain(subscription));
         var savedSubscription = SubscriptionPersistenceAssembler.toDomainFromPersistence(savedEntity);
@@ -54,6 +57,8 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
             savedSubscription.onPlanSelected();
         } else if (isCancelling) {
             savedSubscription.onCancelled();
+        } else if (isRenewing) {
+            savedSubscription.onRenewed();
         }
         savedSubscription.domainEvents().forEach(eventPublisher::publishEvent);
         savedSubscription.clearDomainEvents();

@@ -6,6 +6,7 @@ import com.bloomie.platform.subscription.application.commandservices.Subscriptio
 import com.bloomie.platform.subscription.application.internal.outboundservices.acl.ExternalIamService;
 import com.bloomie.platform.subscription.domain.model.aggregates.Subscription;
 import com.bloomie.platform.subscription.domain.model.commands.CancelSubscriptionCommand;
+import com.bloomie.platform.subscription.domain.model.commands.RenewSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.SelectSubscriptionPlanCommand;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PlanId;
 import com.bloomie.platform.subscription.domain.model.valueobjects.SubscriptionStatus;
@@ -18,6 +19,7 @@ public class SubscriptionCommandServiceImpl implements SubscriptionCommandServic
     private static final String PATIENT_NOT_FOUND = "subscription.patient.not.found";
     private static final String SUBSCRIPTION_NOT_FOUND = "subscription.not.found";
     private static final String SUBSCRIPTION_CANNOT_CANCEL = "subscription.cannot.cancel";
+    private static final String SUBSCRIPTION_CANNOT_RENEW = "subscription.cannot.renew";
 
     private final SubscriptionRepository subscriptionRepository;
     private final ExternalIamService externalIamService;
@@ -77,6 +79,31 @@ public class SubscriptionCommandServiceImpl implements SubscriptionCommandServic
             return Result.success(saved);
         } catch (Exception e) {
             return Result.failure(ApplicationError.unexpected("cancel-subscription", e.getMessage()));
+        }
+    }
+
+    @Override
+    public Result<Subscription, ApplicationError> handle(RenewSubscriptionCommand command) {
+        var subscription = subscriptionRepository.findById(command.subscriptionId()).orElse(null);
+        if (subscription == null) {
+            return Result.failure(ApplicationError.notFound("Subscription", SUBSCRIPTION_NOT_FOUND));
+        }
+
+        if (subscription.getStatus() != SubscriptionStatus.ACTIVE) {
+            return Result.failure(ApplicationError.businessRuleViolation("renew-subscription", SUBSCRIPTION_CANNOT_RENEW));
+        }
+
+        var plan = subscriptionRepository.findPlanById(subscription.getPlanIdValue()).orElse(null);
+        if (plan == null) {
+            return Result.failure(ApplicationError.notFound("Plan", subscription.getPlanId().toString()));
+        }
+
+        subscription.renew(plan.getDurationDays());
+        try {
+            var saved = subscriptionRepository.save(subscription);
+            return Result.success(saved);
+        } catch (Exception e) {
+            return Result.failure(ApplicationError.unexpected("renew-subscription", e.getMessage()));
         }
     }
 }
