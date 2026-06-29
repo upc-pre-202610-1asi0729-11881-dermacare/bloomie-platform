@@ -66,19 +66,19 @@ public class OpenApiConfiguration {
                         .description("Current environment")
         ));
 
-        // Add a security scheme
-      /*final String securitySchemeName = "bearerAuth";
+        // Register the Bearer JWT security scheme so Swagger UI shows the "Authorize" button
+        final String securitySchemeName = "bearerAuth";
 
-      openApi.addSecurityItem(new SecurityRequirement()
-                      .addList(securitySchemeName))
-              .components(new Components()
-                      .addSecuritySchemes(securitySchemeName,
-                              new SecurityScheme()
-                                      .name(securitySchemeName)
-                                      .type(SecurityScheme.Type.HTTP)
-                                      .scheme("bearer")
-                                      .bearerFormat("JWT")
-                                      .description("JWT Bearer token for API authentication")));*/
+        openApi.addSecurityItem(new SecurityRequirement()
+                        .addList(securitySchemeName))
+                .components(new Components()
+                        .addSecuritySchemes(securitySchemeName,
+                                new SecurityScheme()
+                                        .name(securitySchemeName)
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")
+                                        .description("JWT Bearer token. Obtain it from POST /api/v1/authentication/sign-in and paste it here.")));
 
         return openApi;
     }

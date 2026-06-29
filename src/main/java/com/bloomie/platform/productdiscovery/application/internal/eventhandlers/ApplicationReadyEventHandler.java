@@ -12,7 +12,8 @@ import java.sql.Timestamp;
 /**
  * Application lifecycle handler that ensures the product catalog is seeded when the application is ready.
  */
-@Service
+// Explicit name avoids conflict with other ApplicationReadyEventHandler beans in sibling bounded contexts
+@Service("productDiscoveryApplicationReadyEventHandler")
 @Slf4j
 public class ApplicationReadyEventHandler {
 
