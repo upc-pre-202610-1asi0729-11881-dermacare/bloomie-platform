@@ -4,6 +4,7 @@ import com.bloomie.platform.subscription.domain.model.aggregates.Subscription;
 import com.bloomie.platform.subscription.domain.model.entities.Plan;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PlanId;
+import com.bloomie.platform.subscription.domain.model.valueobjects.SubscriptionStatus;
 import com.bloomie.platform.subscription.domain.repositories.SubscriptionRepository;
 import com.bloomie.platform.subscription.infrastructure.assemblers.PlanPersistenceAssembler;
 import com.bloomie.platform.subscription.infrastructure.assemblers.SubscriptionPersistenceAssembler;
@@ -45,11 +46,14 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
     @Override
     public Subscription save(Subscription subscription) {
         boolean isNew = subscription.getId() == null;
+        boolean isCancelling = !isNew && subscription.getStatus() == SubscriptionStatus.CANCELLED;
         var savedEntity = subscriptionPersistenceRepository.save(
                 SubscriptionPersistenceAssembler.toPersistenceFromDomain(subscription));
         var savedSubscription = SubscriptionPersistenceAssembler.toDomainFromPersistence(savedEntity);
         if (isNew) {
             savedSubscription.onPlanSelected();
+        } else if (isCancelling) {
+            savedSubscription.onCancelled();
         }
         savedSubscription.domainEvents().forEach(eventPublisher::publishEvent);
         savedSubscription.clearDomainEvents();
