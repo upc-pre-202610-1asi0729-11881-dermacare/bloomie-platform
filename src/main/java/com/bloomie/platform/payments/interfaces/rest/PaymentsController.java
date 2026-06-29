@@ -5,6 +5,7 @@ import com.bloomie.platform.payments.application.queryservices.PaymentQueryServi
 import com.bloomie.platform.payments.domain.model.queries.GetPaymentByIdQuery;
 import com.bloomie.platform.payments.domain.model.queries.GetPaymentsByPatientIdQuery;
 import com.bloomie.platform.payments.domain.model.valueobjects.PatientId;
+import com.bloomie.platform.payments.domain.model.commands.RefundPaymentCommand;
 import com.bloomie.platform.payments.interfaces.rest.resources.PaymentResource;
 import com.bloomie.platform.payments.interfaces.rest.resources.ProcessRenewalPaymentResource;
 import com.bloomie.platform.payments.interfaces.rest.transform.PaymentResourceFromEntityAssembler;
@@ -105,6 +106,40 @@ public class PaymentsController {
         var payments = paymentQueryService.handle(getPaymentByPatientIdQuery);
         if (payments.isEmpty()) return ResponseEntity.ok(Collections.emptyList());
         return ResponseEntity.ok(payments.stream().map(PaymentResourceFromEntityAssembler::toResourceFromEntity).toList());
+    }
+
+    /**
+     * Refund a processed payment.
+     *
+     * @param paymentId the identifier of the payment to refund
+     * @return the updated {@link PaymentResource} with status REFUNDED, or an error response
+     */
+    @PatchMapping("/{paymentId}/refund")
+    @Operation(
+            summary = "Refund payment",
+            description = "Refunds a processed payment. Only payments in PROCESSED status are eligible."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Payment refunded successfully",
+                    content = @Content(schema = @Schema(implementation = PaymentResource.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Payment cannot be refunded in its current status"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - JWT token required"),
+            @ApiResponse(responseCode = "404", description = "Payment not found")
+    })
+    public ResponseEntity<?> refundPayment(
+            @PathVariable
+            @Parameter(description = "Unique payment identifier", example = "1", required = true)
+            Long paymentId) {
+        var command = new RefundPaymentCommand(paymentId);
+        var result = paymentCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                PaymentResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.OK
+        );
     }
 
     /**
