@@ -39,6 +39,9 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     @Override
     public Payment save(Payment payment) {
         boolean isNew = payment.getId() == null;
+        // isRefunding is read from the original aggregate before it is replaced by
+        // the reconstructed savedPayment, which always starts with refunding = false.
+        boolean isRefunding = !isNew && payment.isRefunding();
         var savedEntity = paymentPersistenceRepository.save(PaymentPersistenceAssembler.toPersistenceFromDomain(payment));
         var savedPayment = PaymentPersistenceAssembler.toDomainFromPersistence(savedEntity);
         if (isNew) {
@@ -49,9 +52,11 @@ public class PaymentRepositoryImpl implements PaymentRepository {
             } else {
                 savedPayment.onProcessSubscriptionPayment();
             }
-            savedPayment.domainEvents().forEach(eventPublisher::publishEvent);
-            savedPayment.clearDomainEvents();
+        } else if (isRefunding) {
+            savedPayment.onRefunded();
         }
+        savedPayment.domainEvents().forEach(eventPublisher::publishEvent);
+        savedPayment.clearDomainEvents();
         return savedPayment;
     }
 
