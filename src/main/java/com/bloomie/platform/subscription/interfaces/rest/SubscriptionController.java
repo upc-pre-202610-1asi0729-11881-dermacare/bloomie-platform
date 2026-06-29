@@ -10,6 +10,7 @@ import com.bloomie.platform.subscription.domain.model.queries.GetSubscriptionByI
 import com.bloomie.platform.subscription.domain.model.queries.GetSubscriptionByPatientIdQuery;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.subscription.domain.model.commands.CancelSubscriptionCommand;
+import com.bloomie.platform.subscription.domain.model.commands.ExpireSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.RenewSubscriptionCommand;
 import com.bloomie.platform.subscription.interfaces.rest.resources.SelectSubscriptionPlanResource;
 import com.bloomie.platform.subscription.interfaces.rest.resources.SubscriptionResource;
@@ -159,6 +160,32 @@ public class SubscriptionController {
             Long subscriptionId
     ) {
         var command = new RenewSubscriptionCommand(subscriptionId);
+        var result = subscriptionCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                SubscriptionResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.OK
+        );
+    }
+
+    @PatchMapping("/{subscriptionId}/expire")
+    @Operation(summary = "Expire subscription", description = "Marks an active subscription as expired when the billing period ends and renewal payment could not be processed.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Subscription expired successfully",
+                    content = @Content(schema = @Schema(implementation = SubscriptionResource.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Subscription cannot be expired in its current status"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - JWT token required"),
+            @ApiResponse(responseCode = "404", description = "Subscription not found")
+    })
+    public ResponseEntity<?> expireSubscription(
+            @PathVariable
+            @Parameter(description = "Unique subscription identifier", example = "1", required = true)
+            Long subscriptionId
+    ) {
+        var command = new ExpireSubscriptionCommand(subscriptionId);
         var result = subscriptionCommandService.handle(command);
         return ResponseEntityAssembler.toResponseEntityFromResult(
                 result,

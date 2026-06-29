@@ -10,7 +10,6 @@ public final class SubscriptionPersistenceAssembler {
 
     private SubscriptionPersistenceAssembler() {}
 
-    // Persistence → Dominio: reconstruye el aggregate desde la BD
     public static Subscription toDomainFromPersistence(SubscriptionPersistenceEntity entity) {
         if (entity == null) return null;
         return new Subscription(
@@ -22,7 +21,6 @@ public final class SubscriptionPersistenceAssembler {
                 entity.getEndDate());
     }
 
-    // Dominio → Persistence: prepara la entity para guardar en BD
     public static SubscriptionPersistenceEntity toPersistenceFromDomain(Subscription subscription) {
         if (subscription == null) return null;
         var entity = new SubscriptionPersistenceEntity();
