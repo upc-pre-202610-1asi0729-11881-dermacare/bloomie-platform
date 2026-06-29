@@ -1,6 +1,7 @@
 package com.bloomie.platform.routinemanagement.application.internal.commandservices;
 
 import com.bloomie.platform.routinemanagement.application.commandservices.RoutineCommandService;
+import com.bloomie.platform.routinemanagement.application.internal.outboundservices.ai.RoutineAiService;
 import com.bloomie.platform.routinemanagement.application.queryservices.RoutineQueryService;
 import com.bloomie.platform.routinemanagement.domain.model.aggregates.Routine;
 import com.bloomie.platform.routinemanagement.domain.model.commands.GeneratePersonalizedRoutineCommand;
@@ -25,9 +26,13 @@ public class RoutineCommandServiceImpl implements RoutineCommandService {
 
     private final RoutineQueryService routineQueryService;
 
-    public RoutineCommandServiceImpl(RoutineRepository routineRepository, RoutineQueryService routineQueryService) {
+    private final RoutineAiService routineAiService;
+
+
+    public RoutineCommandServiceImpl(RoutineRepository routineRepository, RoutineQueryService routineQueryService, RoutineAiService routineAiService) {
         this.routineRepository = routineRepository;
         this.routineQueryService = routineQueryService;
+        this.routineAiService = routineAiService;
     }
 
     @Override
@@ -41,6 +46,18 @@ public class RoutineCommandServiceImpl implements RoutineCommandService {
             });
 
             var routine = new Routine(command);
+
+            var stepNames = routine.getItems().stream()
+                    .map(item -> item.getStep())
+                    .toList();
+            var aiProducts = routineAiService.selectProductsForRoutine(command.skinType(), stepNames);
+            routine.getItems().forEach(item -> {
+                var aiProduct = aiProducts.get(item.getStep());
+                if (aiProduct != null) {
+                    item.updateProductRecommendation(aiProduct);
+                }
+            });
+
             routine = routineRepository.save(routine);
             return Result.success(routine.getId());
         } catch (Exception e) {
@@ -97,4 +114,7 @@ public class RoutineCommandServiceImpl implements RoutineCommandService {
                     "replace-product", e.getMessage()));
         }
     }
+
+
+
 }
