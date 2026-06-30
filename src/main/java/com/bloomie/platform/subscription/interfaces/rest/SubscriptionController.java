@@ -6,6 +6,7 @@ import com.bloomie.platform.shared.application.result.Result;
 import com.bloomie.platform.shared.interfaces.rest.transform.ResponseEntityAssembler;
 import com.bloomie.platform.subscription.application.commandservices.SubscriptionCommandService;
 import com.bloomie.platform.subscription.application.queryservices.SubscriptionQueryService;
+import com.bloomie.platform.subscription.domain.model.commands.ActivateSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.queries.GetSubscriptionByIdQuery;
 import com.bloomie.platform.subscription.domain.model.queries.GetSubscriptionByPatientIdQuery;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
@@ -186,6 +187,27 @@ public class SubscriptionController {
             Long subscriptionId
     ) {
         var command = new ExpireSubscriptionCommand(subscriptionId);
+        var result = subscriptionCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                SubscriptionResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.OK
+        );
+    }
+
+    @PatchMapping("/{subscriptionId}/activate")
+    @Operation(summary = "Activate subscription")
+    public ResponseEntity<?> activateSubscription(
+            @PathVariable Long subscriptionId) {
+
+        var subscription = subscriptionQueryService
+                .handle(new GetSubscriptionByIdQuery(subscriptionId));
+        if (subscription.isEmpty()) return ResponseEntity.notFound().build();
+
+        var command = new ActivateSubscriptionCommand(
+                subscription.get().getPatientId(),
+                subscription.get().getPlanId()
+        );
         var result = subscriptionCommandService.handle(command);
         return ResponseEntityAssembler.toResponseEntityFromResult(
                 result,
