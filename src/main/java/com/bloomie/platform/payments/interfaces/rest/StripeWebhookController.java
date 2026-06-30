@@ -58,12 +58,18 @@ public class StripeWebhookController {
             var event = Webhook.constructEvent(payload, sigHeader, webhookSecret);
 
             if ("checkout.session.completed".equals(event.getType())) {
-                var deserializer = event.getDataObjectDeserializer();
-                if (deserializer.getObject().isPresent()) {
-                    var session   = (Session) deserializer.getObject().get();
-                    var patientId = Long.parseLong(session.getMetadata().get("patientId"));
-                    var planId    = Long.parseLong(session.getMetadata().get("planId"));
-                    var amount    = session.getAmountTotal() / 100.0;
+                try {
+                    var deserializer = event.getDataObjectDeserializer();
+                    var rawJson = deserializer.getRawJson();
+
+                    // Parsea directamente con Jackson en vez de Gson
+                    var mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+                    var sessionNode = mapper.readTree(rawJson);
+
+                    var metadata   = sessionNode.path("metadata");
+                    var patientId  = Long.parseLong(metadata.path("patientId").asText());
+                    var planId     = Long.parseLong(metadata.path("planId").asText());
+                    var amount     = sessionNode.path("amount_total").asLong(0) / 100.0;
 
                     log.info("Stripe payment completed — patientId={} planId={} amount={}",
                             patientId, planId, amount);
@@ -72,7 +78,7 @@ public class StripeWebhookController {
                             new SelectSubscriptionPlanCommand(patientId, planId));
 
                     if (selectResult.isSuccess()) {
-                        var subscriptionId = ((Result.Success<Long, ?>) selectResult).value();
+                        var subscriptionId = ((com.bloomie.platform.shared.application.result.Result.Success<Long, ?>) selectResult).value();
 
                         paymentCommandService.handle(new ProcessSubscriptionPaymentCommand(
                                 patientId, planId, subscriptionId, amount));
@@ -86,6 +92,9 @@ public class StripeWebhookController {
                         log.warn("Failed to select subscription plan — patientId={} planId={}",
                                 patientId, planId);
                     }
+
+                } catch (Exception e) {
+                    log.error("Error processing webhook: {}", e.getMessage());
                 }
             }
 
