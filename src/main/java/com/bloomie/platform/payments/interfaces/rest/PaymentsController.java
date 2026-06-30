@@ -8,8 +8,10 @@ import com.bloomie.platform.payments.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.payments.domain.model.commands.RefundPaymentCommand;
 import com.bloomie.platform.payments.interfaces.rest.resources.PaymentResource;
 import com.bloomie.platform.payments.interfaces.rest.resources.ProcessRenewalPaymentResource;
+import com.bloomie.platform.payments.interfaces.rest.resources.ProcessSubscriptionPaymentResource;
 import com.bloomie.platform.payments.interfaces.rest.transform.PaymentResourceFromEntityAssembler;
 import com.bloomie.platform.payments.interfaces.rest.transform.ProcessRenewalPaymentCommandFromResourceAssembler;
+import com.bloomie.platform.payments.interfaces.rest.transform.ProcessSubscriptionPaymentCommandFromResourceAssembler;
 import com.bloomie.platform.shared.interfaces.rest.transform.ResponseEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -165,6 +167,23 @@ public class PaymentsController {
     })
     public ResponseEntity<?> processRenewalPayment(@RequestBody ProcessRenewalPaymentResource resource) {
         var command = ProcessRenewalPaymentCommandFromResourceAssembler.toCommandFromResource(resource);
+        var result = paymentCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                PaymentResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.CREATED
+        );
+    }
+
+    @PostMapping
+    @Operation(summary = "Process subscription payment")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Payment processed successfully."),
+            @ApiResponse(responseCode = "404", description = "Plan not found.")})
+    public ResponseEntity<?> processSubscriptionPayment(
+            @RequestBody ProcessSubscriptionPaymentResource resource) {
+        var command = ProcessSubscriptionPaymentCommandFromResourceAssembler
+                .toCommandFromResource(resource);
         var result = paymentCommandService.handle(command);
         return ResponseEntityAssembler.toResponseEntityFromResult(
                 result,

@@ -140,6 +140,9 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/v1/authentication/**",
+                                "/api/v1/plans/**",
+                                "/api/v1/webhook/stripe",
+                                "/api/v1/payments/checkout",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
