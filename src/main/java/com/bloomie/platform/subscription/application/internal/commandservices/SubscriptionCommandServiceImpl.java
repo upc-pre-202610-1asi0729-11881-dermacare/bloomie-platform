@@ -7,6 +7,7 @@ import com.bloomie.platform.subscription.application.internal.outboundservices.a
 import com.bloomie.platform.subscription.domain.model.aggregates.Subscription;
 import com.bloomie.platform.subscription.domain.model.commands.ActivateSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.CancelSubscriptionCommand;
+import com.bloomie.platform.subscription.domain.model.commands.ChangeSubscriptionPlanCommand;
 import com.bloomie.platform.subscription.domain.model.commands.ExpireSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.RenewSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.SelectSubscriptionPlanCommand;
@@ -25,6 +26,7 @@ public class SubscriptionCommandServiceImpl implements SubscriptionCommandServic
     private static final String SUBSCRIPTION_CANNOT_CANCEL = "subscription.cannot.cancel";
     private static final String SUBSCRIPTION_CANNOT_RENEW = "subscription.cannot.renew";
     private static final String SUBSCRIPTION_CANNOT_EXPIRE = "subscription.cannot.expire";
+    private static final String SUBSCRIPTION_CANNOT_CHANGE_PLAN = "subscription.cannot.change.plan";
 
     private final SubscriptionRepository subscriptionRepository;
     private final ExternalIamService externalIamService;
@@ -156,6 +158,41 @@ public class SubscriptionCommandServiceImpl implements SubscriptionCommandServic
             return Result.success(saved);
         } catch (Exception e) {
             return Result.failure(ApplicationError.unexpected("expire-subscription", e.getMessage()));
+        }
+    }
+
+    @Override
+    public Result<Subscription, ApplicationError> handle(ChangeSubscriptionPlanCommand command) {
+        if (command.subscriptionId() == null || command.newPlanId() == null) {
+            return Result.failure(ApplicationError.validationError("change-subscription-plan", "subscription.plan.id.invalid"));
+        }
+
+        var subscription = subscriptionRepository.findById(command.subscriptionId()).orElse(null);
+        if (subscription == null) {
+            return Result.failure(ApplicationError.notFound("Subscription", SUBSCRIPTION_NOT_FOUND));
+        }
+
+        if (subscription.getStatus() == SubscriptionStatus.CANCELLED
+                || subscription.getStatus() == SubscriptionStatus.EXPIRED) {
+            return Result.failure(ApplicationError.businessRuleViolation("change-subscription-plan", SUBSCRIPTION_CANNOT_CHANGE_PLAN));
+        }
+
+        var newPlanId = new PlanId(command.newPlanId());
+        if (newPlanId.equals(subscription.getPlanIdValue())) {
+            return Result.failure(ApplicationError.conflict("Plan", "Subscription '%s' is already on plan '%s'".formatted(command.subscriptionId(), command.newPlanId())));
+        }
+
+        var plan = subscriptionRepository.findPlanById(newPlanId);
+        if (plan.isEmpty()) {
+            return Result.failure(ApplicationError.notFound("Plan", command.newPlanId().toString()));
+        }
+
+        subscription.changePlan(newPlanId);
+        try {
+            var saved = subscriptionRepository.save(subscription);
+            return Result.success(saved);
+        } catch (Exception e) {
+            return Result.failure(ApplicationError.unexpected("change-subscription-plan", e.getMessage()));
         }
     }
 }
