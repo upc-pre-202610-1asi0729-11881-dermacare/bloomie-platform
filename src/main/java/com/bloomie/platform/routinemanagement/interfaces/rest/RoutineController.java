@@ -102,7 +102,7 @@ public class RoutineController {
     @GetMapping("/{routineId}/items/{routineItemId}/replacement-options")
     @Operation(
             summary = "Get product replacement options for a routine item",
-            description = "Returns the 4 recommended product alternatives for the given routine item based on the patient's skin type."
+            description = "Returns AI-recommended product alternatives for the given routine item, based on the patient's skin type and current product."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Options retrieved successfully"),
