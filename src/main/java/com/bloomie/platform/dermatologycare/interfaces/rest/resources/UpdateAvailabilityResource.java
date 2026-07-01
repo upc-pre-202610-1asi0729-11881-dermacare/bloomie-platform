@@ -18,5 +18,8 @@ public record UpdateAvailabilityResource(
 
         @NotBlank(message = "{validation.not-blank}")
         @Schema(description = "End time (HH:mm)", example = "18:00")
-        String endTime) {
+        String endTime,
+
+        @Schema(description = "Whether this day is still an active working day. Defaults to true when omitted.", example = "true")
+        Boolean active) {
 }
