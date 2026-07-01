@@ -1,11 +1,7 @@
 package com.bloomie.platform.payments.interfaces.rest;
 
-import com.bloomie.platform.payments.application.commanservices.PaymentCommandService;
-import com.bloomie.platform.payments.domain.model.commands.ProcessSubscriptionPaymentCommand;
 import com.bloomie.platform.subscription.application.commandservices.SubscriptionCommandService;
-import com.bloomie.platform.subscription.domain.model.commands.ActivateSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.SelectSubscriptionPlanCommand;
-import com.bloomie.platform.shared.application.result.Result;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
@@ -31,12 +27,9 @@ public class StripeWebhookController {
     @Value("${stripe.webhook.secret}")
     private String webhookSecret;
 
-    private final PaymentCommandService      paymentCommandService;
     private final SubscriptionCommandService subscriptionCommandService;
 
-    public StripeWebhookController(PaymentCommandService paymentCommandService,
-                                   SubscriptionCommandService subscriptionCommandService) {
-        this.paymentCommandService      = paymentCommandService;
+    public StripeWebhookController(SubscriptionCommandService subscriptionCommandService) {
         this.subscriptionCommandService = subscriptionCommandService;
     }
 
@@ -78,16 +71,7 @@ public class StripeWebhookController {
                             new SelectSubscriptionPlanCommand(patientId, planId));
 
                     if (selectResult.isSuccess()) {
-                        var subscriptionId = ((com.bloomie.platform.shared.application.result.Result.Success<Long, ?>) selectResult).value();
-
-                        paymentCommandService.handle(new ProcessSubscriptionPaymentCommand(
-                                patientId, planId, subscriptionId, amount));
-
-                        subscriptionCommandService.handle(
-                                new ActivateSubscriptionCommand(patientId, planId));
-
-                        log.info("Subscription activated — patientId={} subscriptionId={}",
-                                patientId, subscriptionId);
+                        log.info("Subscription plan selected — patientId={} planId={}", patientId, planId);
                     } else {
                         log.warn("Failed to select subscription plan — patientId={} planId={}",
                                 patientId, planId);
