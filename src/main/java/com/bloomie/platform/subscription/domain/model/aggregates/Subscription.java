@@ -5,6 +5,7 @@ import com.bloomie.platform.subscription.domain.model.commands.SelectSubscriptio
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionActivatedEvent;
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionCancelledEvent;
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionExpiredEvent;
+import com.bloomie.platform.subscription.domain.model.events.SubscriptionPlanChangedEvent;
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionPlanSelectedEvent;
 import com.bloomie.platform.subscription.domain.model.events.SubscriptionRenewedEvent;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
@@ -42,6 +43,12 @@ public class Subscription extends AbstractDomainAggregateRoot<Subscription> {
     private boolean activating = false;
     @Getter
     private boolean renewing = false;
+    @Getter
+    private boolean changingPlan = false;
+
+    // Not persisted: only holds the pre-mutation plan id for the duration of a plan change,
+    // so it can be reported by SubscriptionPlanChangedEvent before being discarded.
+    private PlanId previousPlanId;
 
     public Subscription(Long id, PatientId patientId, PlanId planId,
                         SubscriptionStatus status, LocalDateTime startDate,
@@ -130,6 +137,28 @@ public class Subscription extends AbstractDomainAggregateRoot<Subscription> {
     }
 
     /**
+     * Switches this subscription to a different plan, capturing the previous plan id
+     * so {@link #onPlanChanged(Long)} can report the transition.
+     *
+     * @param newPlanId the plan id to switch this subscription to
+     */
+    public void changePlan(PlanId newPlanId) {
+        this.previousPlanId = this.planId;
+        this.planId = newPlanId;
+        this.changingPlan = true;
+    }
+
+    /**
+     * Registers the {@link SubscriptionPlanChangedEvent} domain event so the repository
+     * can publish it after persisting the updated aggregate.
+     *
+     * @param previousPlanId the plan id this subscription was previously on
+     */
+    public void onPlanChanged(Long previousPlanId) {
+        registerDomainEvent(SubscriptionPlanChangedEvent.from(this, previousPlanId));
+    }
+
+    /**
      * Transitions this subscription to {@link SubscriptionStatus#EXPIRED}.
      * The caller is responsible for verifying the subscription is in an expirable state
      * before invoking this method.
@@ -150,6 +179,7 @@ public class Subscription extends AbstractDomainAggregateRoot<Subscription> {
     public PatientId getPatientIdValue() { return patientId; }
     public Long getPlanId() { return planId.planId(); }
     public PlanId getPlanIdValue() { return planId; }
+    public Long getPreviousPlanId() { return previousPlanId == null ? null : previousPlanId.planId(); }
     public SubscriptionStatus getStatus() { return status; }
     public LocalDateTime getStartDate() { return startDate; }
     public LocalDateTime getEndDate() { return endDate; }
