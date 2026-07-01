@@ -52,6 +52,8 @@ public class PaymentRepositoryImpl implements PaymentRepository {
             } else {
                 savedPayment.onProcessSubscriptionPayment();
             }
+            // Persist the PENDING → PROCESSED status transition.
+            paymentPersistenceRepository.save(PaymentPersistenceAssembler.toPersistenceFromDomain(savedPayment));
         } else if (isRefunding) {
             savedPayment.onRefunded();
         }

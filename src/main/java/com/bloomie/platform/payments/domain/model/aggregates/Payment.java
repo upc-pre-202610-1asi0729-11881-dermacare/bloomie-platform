@@ -92,6 +92,7 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
      * Registers a {@link SubscriptionPaymentProcessedEvent} for publication.
      */
     public void onProcessSubscriptionPayment() {
+        this.status = PaymentStatus.PROCESSED;
         registerDomainEvent(SubscriptionPaymentProcessedEvent.from(this));
     }
 
@@ -100,6 +101,7 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
      * Registers a {@link SubscriptionRenewalPaymentProcessedEvent} for publication.
      */
     public void onProcessRenewalPayment() {
+        this.status = PaymentStatus.PROCESSED;
         registerDomainEvent(SubscriptionRenewalPaymentProcessedEvent.from(this));
     }
 
