@@ -53,11 +53,12 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
         boolean isExpiring  = !isNew && subscription.getStatus() == SubscriptionStatus.EXPIRED;
         boolean isRenewing  = !isNew && subscription.isRenewing();
         boolean isChangingPlan = !isNew && subscription.isChangingPlan();
+        boolean isResubscribing = !isNew && subscription.isResubscribing();
         Long previousPlanId = isChangingPlan ? subscription.getPreviousPlanId() : null;
         var savedEntity = subscriptionPersistenceRepository.save(
                 SubscriptionPersistenceAssembler.toPersistenceFromDomain(subscription));
         var savedSubscription = SubscriptionPersistenceAssembler.toDomainFromPersistence(savedEntity);
-        if (isNew) {
+        if (isNew || isResubscribing) {
             savedSubscription.onPlanSelected();
         } else if (isActivating) {
             savedSubscription.onActivated();
