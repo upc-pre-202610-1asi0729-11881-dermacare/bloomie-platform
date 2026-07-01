@@ -5,6 +5,7 @@ import com.bloomie.platform.shared.application.result.Result;
 import com.bloomie.platform.subscription.domain.model.aggregates.Subscription;
 import com.bloomie.platform.subscription.domain.model.commands.ActivateSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.CancelSubscriptionCommand;
+import com.bloomie.platform.subscription.domain.model.commands.ChangeSubscriptionPlanCommand;
 import com.bloomie.platform.subscription.domain.model.commands.ExpireSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.RenewSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.SelectSubscriptionPlanCommand;
@@ -20,4 +21,6 @@ public interface SubscriptionCommandService {
     Result<Subscription, ApplicationError> handle(RenewSubscriptionCommand command);
 
     Result<Subscription, ApplicationError> handle(ExpireSubscriptionCommand command);
+
+    Result<Subscription, ApplicationError> handle(ChangeSubscriptionPlanCommand command);
 }
