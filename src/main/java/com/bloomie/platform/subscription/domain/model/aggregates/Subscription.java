@@ -45,6 +45,8 @@ public class Subscription extends AbstractDomainAggregateRoot<Subscription> {
     private boolean renewing = false;
     @Getter
     private boolean changingPlan = false;
+    @Getter
+    private boolean resubscribing = false;
 
     // Not persisted: only holds the pre-mutation plan id for the duration of a plan change,
     // so it can be reported by SubscriptionPlanChangedEvent before being discarded.
@@ -145,6 +147,11 @@ public class Subscription extends AbstractDomainAggregateRoot<Subscription> {
     public void changePlan(PlanId newPlanId) {
         this.previousPlanId = this.planId;
         this.planId = newPlanId;
+        // A plan change during the CANCELLED grace period means the patient wants to
+        // keep going after all — un-cancel it.
+        if (this.status == SubscriptionStatus.CANCELLED) {
+            this.status = SubscriptionStatus.ACTIVE;
+        }
         this.changingPlan = true;
     }
 
@@ -156,6 +163,23 @@ public class Subscription extends AbstractDomainAggregateRoot<Subscription> {
      */
     public void onPlanChanged(Long previousPlanId) {
         registerDomainEvent(SubscriptionPlanChangedEvent.from(this, previousPlanId));
+    }
+
+    /**
+     * Reactivates a lapsed (CANCELLED/EXPIRED) subscription onto a (possibly new) plan.
+     *
+     * <p>Reuses this same row instead of requiring a brand-new subscription, so a
+     * returning patient isn't blocked by the one-subscription-per-patient constraint
+     * when they resubscribe after cancelling or letting their plan expire.</p>
+     *
+     * @param newPlanId the plan id to resubscribe onto
+     */
+    public void resubscribe(PlanId newPlanId) {
+        this.planId = newPlanId;
+        this.status = SubscriptionStatus.PENDING;
+        this.startDate = null;
+        this.endDate = null;
+        this.resubscribing = true;
     }
 
     /**

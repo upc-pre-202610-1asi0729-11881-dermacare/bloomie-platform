@@ -49,14 +49,28 @@ public class SubscriptionCommandServiceImpl implements SubscriptionCommandServic
             return Result.failure(ApplicationError.notFound("Patient", PATIENT_NOT_FOUND));
         }
 
-        if (subscriptionRepository.existsByPatientId(patientId)) {
-            return Result.failure(ApplicationError.conflict("Plan", "A plan with patient id '%s' already exists".formatted(command.patientId())));
-        }
-
         var planId = new PlanId(command.planId());
         var plan = subscriptionRepository.findPlanById(planId);
         if (plan.isEmpty()) {
             return Result.failure(ApplicationError.notFound("Plan", command.planId().toString()));
+        }
+
+        // A patient can only have one subscription row. If they already have one that is
+        // still ACTIVE/PENDING, selecting a plan again is a genuine conflict. But if their
+        // previous subscription lapsed (CANCELLED/EXPIRED), reactivate that same row onto
+        // the newly selected plan instead of rejecting the resubscription outright.
+        var existing = subscriptionRepository.findByPatientId(patientId).orElse(null);
+        if (existing != null) {
+            if (existing.getStatus() == SubscriptionStatus.ACTIVE || existing.getStatus() == SubscriptionStatus.PENDING) {
+                return Result.failure(ApplicationError.conflict("Plan", "A plan with patient id '%s' already exists".formatted(command.patientId())));
+            }
+            existing.resubscribe(planId);
+            try {
+                var saved = subscriptionRepository.save(existing);
+                return Result.success(saved.getId());
+            } catch (Exception e) {
+                return Result.failure(ApplicationError.unexpected("select-subscription-plan", e.getMessage()));
+            }
         }
 
         var subscription = new Subscription(command);
@@ -172,8 +186,15 @@ public class SubscriptionCommandServiceImpl implements SubscriptionCommandServic
             return Result.failure(ApplicationError.notFound("Subscription", SUBSCRIPTION_NOT_FOUND));
         }
 
-        if (subscription.getStatus() == SubscriptionStatus.CANCELLED
-                || subscription.getStatus() == SubscriptionStatus.EXPIRED) {
+        // A CANCELLED subscription still grants access until its paid endDate elapses
+        // (cancelling only stops auto-renewal). Switching plans during that grace period
+        // is treated as the patient changing their mind, so it un-cancels the subscription
+        // instead of being blocked. Only a truly lapsed subscription (EXPIRED, or CANCELLED
+        // past its endDate) cannot change plan — there is nothing left to switch.
+        boolean lapsed = subscription.getStatus() == SubscriptionStatus.EXPIRED
+                || (subscription.getStatus() == SubscriptionStatus.CANCELLED
+                    && (subscription.getEndDate() == null || !subscription.getEndDate().isAfter(java.time.LocalDateTime.now())));
+        if (lapsed) {
             return Result.failure(ApplicationError.businessRuleViolation("change-subscription-plan", SUBSCRIPTION_CANNOT_CHANGE_PLAN));
         }
 
