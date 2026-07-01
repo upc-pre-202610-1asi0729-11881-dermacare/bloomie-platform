@@ -13,8 +13,10 @@ import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.subscription.domain.model.commands.CancelSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.ExpireSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.commands.RenewSubscriptionCommand;
+import com.bloomie.platform.subscription.interfaces.rest.resources.ChangeSubscriptionPlanResource;
 import com.bloomie.platform.subscription.interfaces.rest.resources.SelectSubscriptionPlanResource;
 import com.bloomie.platform.subscription.interfaces.rest.resources.SubscriptionResource;
+import com.bloomie.platform.subscription.interfaces.rest.transform.ChangeSubscriptionPlanCommandFromResourceAssembler;
 import com.bloomie.platform.subscription.interfaces.rest.transform.SelectSubscriptionPlanCommandFromResourceAssembler;
 import com.bloomie.platform.subscription.interfaces.rest.transform.SubscriptionResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -208,6 +210,34 @@ public class SubscriptionController {
                 subscription.get().getPatientId(),
                 subscription.get().getPlanId()
         );
+        var result = subscriptionCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                SubscriptionResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.OK
+        );
+    }
+
+    @PatchMapping("/{subscriptionId}/change-plan")
+    @Operation(summary = "Change subscription plan", description = "Switches an existing subscription to a different plan.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Subscription plan changed successfully",
+                    content = @Content(schema = @Schema(implementation = SubscriptionResource.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Subscription cannot change plan in its current status"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - JWT token required"),
+            @ApiResponse(responseCode = "404", description = "Subscription or plan not found"),
+            @ApiResponse(responseCode = "409", description = "Subscription is already on the requested plan")
+    })
+    public ResponseEntity<?> changeSubscriptionPlan(
+            @PathVariable
+            @Parameter(description = "Unique subscription identifier", example = "1", required = true)
+            Long subscriptionId,
+            @RequestBody ChangeSubscriptionPlanResource resource
+    ) {
+        var command = ChangeSubscriptionPlanCommandFromResourceAssembler.toCommandFromResource(subscriptionId, resource);
         var result = subscriptionCommandService.handle(command);
         return ResponseEntityAssembler.toResponseEntityFromResult(
                 result,
