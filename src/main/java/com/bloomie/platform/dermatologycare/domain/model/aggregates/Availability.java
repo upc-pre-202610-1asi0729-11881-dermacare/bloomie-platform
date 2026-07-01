@@ -47,10 +47,11 @@ public class Availability extends AbstractDomainAggregateRoot<Availability> {
         this.active = true;
     }
 
-    /** Replaces the day and time slot with the values from the update command. */
+    /** Replaces the day, time slot, and active flag with the values from the update command. */
     public void update(UpdateAvailabilityCommand command) {
         this.day = command.dayOfWeek();
         this.timeSlot = new TimeSlot(command.startTime(), command.endTime());
+        this.active = command.active();
     }
 
     /** Registers an {@link AvailabilityDefinedEvent} after a new availability is persisted. */
