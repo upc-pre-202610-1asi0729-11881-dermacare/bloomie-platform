@@ -1,6 +1,6 @@
 package com.bloomie.platform.payments.application.internal.eventhandlers;
 
-import com.bloomie.platform.payments.application.commanservices.PaymentCommandService;
+import com.bloomie.platform.payments.application.commandservices.PaymentCommandService;
 import com.bloomie.platform.payments.application.internal.outboundservices.acl.ExternalSubscriptionService;
 import com.bloomie.platform.payments.domain.model.aggregates.Payment;
 import com.bloomie.platform.payments.domain.model.commands.ProcessSubscriptionPaymentCommand;

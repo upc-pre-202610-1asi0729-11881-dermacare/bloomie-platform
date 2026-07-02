@@ -1,8 +1,8 @@
 // PlanPersistenceRepository.java
-package com.bloomie.platform.subscription.infrastructure.repositories;
+package com.bloomie.platform.subscription.infrastructure.persistence.jpa.repositories;
 
 import com.bloomie.platform.subscription.domain.model.valueobjects.PlanType;
-import com.bloomie.platform.subscription.infrastructure.entities.PlanPersistenceEntity;
+import com.bloomie.platform.subscription.infrastructure.persistence.jpa.entities.PlanPersistenceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

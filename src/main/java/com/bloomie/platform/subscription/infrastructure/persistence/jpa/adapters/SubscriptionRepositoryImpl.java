@@ -1,4 +1,4 @@
-package com.bloomie.platform.subscription.infrastructure.adapters;
+package com.bloomie.platform.subscription.infrastructure.persistence.jpa.adapters;
 
 import com.bloomie.platform.subscription.domain.model.aggregates.Subscription;
 import com.bloomie.platform.subscription.domain.model.entities.Plan;
@@ -6,10 +6,10 @@ import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PlanId;
 import com.bloomie.platform.subscription.domain.model.valueobjects.SubscriptionStatus;
 import com.bloomie.platform.subscription.domain.repositories.SubscriptionRepository;
-import com.bloomie.platform.subscription.infrastructure.assemblers.PlanPersistenceAssembler;
-import com.bloomie.platform.subscription.infrastructure.assemblers.SubscriptionPersistenceAssembler;
-import com.bloomie.platform.subscription.infrastructure.repositories.PlanPersistenceRepository;
-import com.bloomie.platform.subscription.infrastructure.repositories.SubscriptionPersistenceRepository;
+import com.bloomie.platform.subscription.infrastructure.persistence.jpa.assemblers.PlanPersistenceAssembler;
+import com.bloomie.platform.subscription.infrastructure.persistence.jpa.assemblers.SubscriptionPersistenceAssembler;
+import com.bloomie.platform.subscription.infrastructure.persistence.jpa.repositories.PlanPersistenceRepository;
+import com.bloomie.platform.subscription.infrastructure.persistence.jpa.repositories.SubscriptionPersistenceRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Repository;
 

@@ -1,10 +1,10 @@
-package com.bloomie.platform.subscription.infrastructure.adapters;
+package com.bloomie.platform.subscription.infrastructure.persistence.jpa.adapters;
 
 import com.bloomie.platform.subscription.domain.model.entities.Plan;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PlanType;
 import com.bloomie.platform.subscription.domain.repositories.PlanRepository;
-import com.bloomie.platform.subscription.infrastructure.assemblers.PlanPersistenceAssembler;
-import com.bloomie.platform.subscription.infrastructure.repositories.PlanPersistenceRepository;
+import com.bloomie.platform.subscription.infrastructure.persistence.jpa.assemblers.PlanPersistenceAssembler;
+import com.bloomie.platform.subscription.infrastructure.persistence.jpa.repositories.PlanPersistenceRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

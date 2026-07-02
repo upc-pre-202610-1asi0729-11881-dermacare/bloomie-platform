@@ -1,4 +1,4 @@
-package com.bloomie.platform.subscription.infrastructure.entities;
+package com.bloomie.platform.subscription.infrastructure.persistence.jpa.entities;
 
 import com.bloomie.platform.shared.infrastructure.persistence.jpa.entities.AuditableAbstractPersistenceEntity;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PlanType;

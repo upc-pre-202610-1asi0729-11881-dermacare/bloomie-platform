@@ -1,8 +1,8 @@
 // SubscriptionPersistenceRepository.java
-package com.bloomie.platform.subscription.infrastructure.repositories;
+package com.bloomie.platform.subscription.infrastructure.persistence.jpa.repositories;
 
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
-import com.bloomie.platform.subscription.infrastructure.entities.SubscriptionPersistenceEntity;
+import com.bloomie.platform.subscription.infrastructure.persistence.jpa.entities.SubscriptionPersistenceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

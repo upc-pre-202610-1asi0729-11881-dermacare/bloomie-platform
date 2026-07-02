@@ -3,7 +3,7 @@ package com.bloomie.platform.dermatologycare.interfaces.rest.resources;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Response DTO for an {@code Availability} slot.
+ * Response resource for an {@code Availability} slot.
  */
 @Schema(name = "Availability", description = "Availability slot response")
 public record AvailabilityResource(

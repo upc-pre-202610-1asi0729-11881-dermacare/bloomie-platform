@@ -1,10 +1,10 @@
 // SubscriptionPersistenceAssembler.java
-package com.bloomie.platform.subscription.infrastructure.assemblers;
+package com.bloomie.platform.subscription.infrastructure.persistence.jpa.assemblers;
 
 import com.bloomie.platform.subscription.domain.model.aggregates.Subscription;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PlanId;
-import com.bloomie.platform.subscription.infrastructure.entities.SubscriptionPersistenceEntity;
+import com.bloomie.platform.subscription.infrastructure.persistence.jpa.entities.SubscriptionPersistenceEntity;
 
 public final class SubscriptionPersistenceAssembler {
 

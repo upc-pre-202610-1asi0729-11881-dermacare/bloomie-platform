@@ -1,4 +1,4 @@
-package com.bloomie.platform.payments.application.commanservices;
+package com.bloomie.platform.payments.application.commandservices;
 
 import com.bloomie.platform.payments.domain.model.aggregates.Payment;
 import com.bloomie.platform.payments.domain.model.commands.ProcessRenewalPaymentCommand;

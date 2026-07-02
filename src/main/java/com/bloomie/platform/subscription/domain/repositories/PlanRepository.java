@@ -11,7 +11,7 @@ import java.util.Optional;
  *
  * <p>Separates plan persistence from subscription persistence following the
  * single-responsibility principle. The infrastructure layer provides
- * the adapter via {@link com.bloomie.platform.subscription.infrastructure.adapters.PlanRepositoryImpl}.</p>
+ * the adapter via {@link com.bloomie.platform.subscription.infrastructure.persistence.jpa.adapters.PlanRepositoryImpl}.</p>
  */
 public interface PlanRepository {
 

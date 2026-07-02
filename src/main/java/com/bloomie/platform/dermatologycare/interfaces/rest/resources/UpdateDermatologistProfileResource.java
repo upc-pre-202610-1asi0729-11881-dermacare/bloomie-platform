@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Request DTO for updating a {@code DermatologistProfile}.
+ * Request resource for updating a {@code DermatologistProfile}.
  */
 @Schema(name = "UpdateDermatologistProfileRequest", description = "Request payload for updating a dermatologist profile")
 public record UpdateDermatologistProfileResource(

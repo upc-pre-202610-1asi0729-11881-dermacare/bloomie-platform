@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 /**
- * Request DTO for defining a new {@code Availability} slot.
+ * Request resource for defining a new {@code Availability} slot.
  */
 @Schema(name = "DefineAvailabilityRequest", description = "Request payload for defining an availability slot")
 public record DefineAvailabilityResource(

@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * Request DTO for updating an existing {@code Availability} slot.
+ * Request resource for updating an existing {@code Availability} slot.
  */
 @Schema(name = "UpdateAvailabilityRequest", description = "Request payload for updating an availability slot")
 public record UpdateAvailabilityResource(
