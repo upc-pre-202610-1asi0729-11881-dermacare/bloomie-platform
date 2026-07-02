@@ -54,8 +54,7 @@ public class StripeWebhookController {
                 try {
                     var deserializer = event.getDataObjectDeserializer();
                     var rawJson = deserializer.getRawJson();
-
-                    // Parsea directamente con Jackson en vez de Gson
+                    
                     var mapper = new com.fasterxml.jackson.databind.ObjectMapper();
                     var sessionNode = mapper.readTree(rawJson);
 

@@ -176,8 +176,7 @@ public class GeminiRoutineAiServiceImpl implements RoutineAiService {
             var text = root.path("candidates").get(0)
                     .path("content").path("parts").get(0)
                     .path("text").asText();
-
-            // limpia posibles backticks de markdown
+            
             text = text.replaceAll("```json|```", "").trim();
 
             return objectMapper.readValue(text, List.class);

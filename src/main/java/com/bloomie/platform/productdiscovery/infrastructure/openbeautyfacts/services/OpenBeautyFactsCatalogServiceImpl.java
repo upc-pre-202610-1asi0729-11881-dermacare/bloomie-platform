@@ -116,8 +116,7 @@ public class OpenBeautyFactsCatalogServiceImpl implements ProductCatalogService 
     private List<String> extractBenefitsFromDescription(String description, String category) {
         var lower = description.toLowerCase();
         List<String> benefits = new ArrayList<>();
-
-        // Detecta beneficios por keywords en la descripción
+        
         if (lower.contains("hydrat") || lower.contains("moistur")) benefits.add("Hydrating formula");
         if (lower.contains("bright") || lower.contains("glow"))    benefits.add("Brightening effect");
         if (lower.contains("anti-ag") || lower.contains("aging"))  benefits.add("Anti-aging properties");
@@ -134,8 +133,7 @@ public class OpenBeautyFactsCatalogServiceImpl implements ProductCatalogService 
         if (benefits.isEmpty()) {
             return getDefaultBenefits(category);
         }
-
-        // Máximo 3 benefits
+        
         return benefits.subList(0, Math.min(benefits.size(), 3));
     }
 
