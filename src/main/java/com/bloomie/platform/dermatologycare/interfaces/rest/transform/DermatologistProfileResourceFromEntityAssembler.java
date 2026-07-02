@@ -5,7 +5,7 @@ import com.bloomie.platform.dermatologycare.interfaces.rest.resources.Dermatolog
 
 /**
  * Stateless assembler that converts a {@link DermatologistProfile} aggregate
- * into a {@link DermatologistProfileResource} response DTO.
+ * into a {@link DermatologistProfileResource}.
  */
 public final class DermatologistProfileResourceFromEntityAssembler {
 

@@ -2,9 +2,7 @@ package com.bloomie.platform.dermatologycare.interfaces.rest.resources;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-/**
- * Response DTO for a {@code DermatologistProfile}.
- */
+
 @Schema(name = "DermatologistProfile", description = "Dermatologist profile response")
 public record DermatologistProfileResource(
         @Schema(description = "Profile id") Long id,
