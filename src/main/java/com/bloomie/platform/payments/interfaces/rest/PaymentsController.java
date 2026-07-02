@@ -1,6 +1,6 @@
 package com.bloomie.platform.payments.interfaces.rest;
 
-import com.bloomie.platform.payments.application.commanservices.PaymentCommandService;
+import com.bloomie.platform.payments.application.commandservices.PaymentCommandService;
 import com.bloomie.platform.payments.application.queryservices.PaymentQueryService;
 import com.bloomie.platform.payments.domain.model.queries.GetPaymentByIdQuery;
 import com.bloomie.platform.payments.domain.model.queries.GetPaymentsByPatientIdQuery;
