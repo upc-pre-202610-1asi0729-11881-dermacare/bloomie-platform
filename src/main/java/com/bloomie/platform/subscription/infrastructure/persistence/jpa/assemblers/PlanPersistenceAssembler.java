@@ -1,7 +1,7 @@
-package com.bloomie.platform.subscription.infrastructure.assemblers;
+package com.bloomie.platform.subscription.infrastructure.persistence.jpa.assemblers;
 
 import com.bloomie.platform.subscription.domain.model.entities.Plan;
-import com.bloomie.platform.subscription.infrastructure.entities.PlanPersistenceEntity;
+import com.bloomie.platform.subscription.infrastructure.persistence.jpa.entities.PlanPersistenceEntity;
 import java.util.ArrayList;
 
 public class PlanPersistenceAssembler {

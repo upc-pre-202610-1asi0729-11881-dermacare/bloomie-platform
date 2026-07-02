@@ -1,4 +1,4 @@
-package com.bloomie.platform.subscription.infrastructure.converters;
+package com.bloomie.platform.subscription.infrastructure.persistence.jpa.converters;
 
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
 import jakarta.persistence.AttributeConverter;

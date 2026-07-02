@@ -1,11 +1,11 @@
-package com.bloomie.platform.subscription.infrastructure.entities;
+package com.bloomie.platform.subscription.infrastructure.persistence.jpa.entities;
 
 import com.bloomie.platform.shared.infrastructure.persistence.jpa.entities.AuditableAbstractPersistenceEntity;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PlanId;
 import com.bloomie.platform.subscription.domain.model.valueobjects.SubscriptionStatus;
-import com.bloomie.platform.subscription.infrastructure.converters.PatientIdPersistenceConverter;
-import com.bloomie.platform.subscription.infrastructure.converters.PlanIdPersistenceConverter;
+import com.bloomie.platform.subscription.infrastructure.persistence.jpa.converters.PatientIdPersistenceConverter;
+import com.bloomie.platform.subscription.infrastructure.persistence.jpa.converters.PlanIdPersistenceConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
