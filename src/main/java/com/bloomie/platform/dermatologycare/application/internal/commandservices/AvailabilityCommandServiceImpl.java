@@ -27,12 +27,12 @@ public class AvailabilityCommandServiceImpl implements AvailabilityCommandServic
     }
 
     @Override
-    public Result<Long, ApplicationError> handle(DefineAvailabilityCommand command) {
+    public Result<Availability, ApplicationError> handle(DefineAvailabilityCommand command) {
         if (availabilityRepository.existsByDermatologyAndDay(command.dermatologistId(), command.dayOfWeek()))
             return Result.failure(ApplicationError.conflict("availability", AVAILABILITY_ALREADY_DEFINED));
 
         var availability = availabilityRepository.save(new Availability(command));
-        return Result.success(availability.getId());
+        return Result.success(availability);
     }
 
     @Override

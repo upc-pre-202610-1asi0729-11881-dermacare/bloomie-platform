@@ -73,7 +73,10 @@ public class AvailabilityController {
     public ResponseEntity<?> defineAvailability(@Valid @RequestBody DefineAvailabilityResource resource) {
         var command = DefineAvailabilityCommandFromResourceAssembler.toCommandFromResource(resource);
         var result = commandService.handle(command);
-        return ResponseEntityAssembler.toResponseEntityFromResult(result, id -> id, HttpStatus.CREATED);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                AvailabilityResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.CREATED);
     }
 
     @PutMapping("/{availabilityId}")

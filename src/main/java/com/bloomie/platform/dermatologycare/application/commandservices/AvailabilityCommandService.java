@@ -10,6 +10,6 @@ import com.bloomie.platform.shared.application.result.Result;
  * Application service port for write operations on the {@link Availability} aggregate.
  */
 public interface AvailabilityCommandService {
-    Result<Long, ApplicationError> handle(DefineAvailabilityCommand command);
+    Result<Availability, ApplicationError> handle(DefineAvailabilityCommand command);
     Result<Availability, ApplicationError> handle(UpdateAvailabilityCommand command);
 }
