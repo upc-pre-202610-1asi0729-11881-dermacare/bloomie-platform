@@ -98,6 +98,17 @@ public class ProductCommandServiceImpl implements ProductCommandService {
         product.setDescription(description);
         product.setBenefits(benefits);
         product.setAiRecommended(aiRecommended);
+        product.setImageUrl(fallbackImageFor(category));
         return product;
+    }
+
+    private String fallbackImageFor(ProductCategory category) {
+        return switch (category) {
+            case CLEANSER    -> "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80";
+            case TONER       -> "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&q=80";
+            case SERUM       -> "https://images.unsplash.com/photo-1617897903246-719242758050?w=400&q=80";
+            case MOISTURIZER -> "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab12?w=400&q=80";
+            case SUNSCREEN   -> "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&q=80";
+        };
     }
 }

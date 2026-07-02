@@ -70,38 +70,34 @@ public class ApplicationReadyEventHandler {
     }
 
     /**
-     * Generates compatibility evaluations for all products × skin types if none exist yet.
-     * A 500 ms delay is inserted between Gemini API calls to respect rate limits.
+     * Generates compatibility evaluations for each product × skin-type combination
+     * that does not already have a persisted record. Products are checked individually
+     * so that catalog growth or partially completed previous runs are healed over time.
      *
      * @param applicationName the Spring application context id, used for log messages
      */
     private void seedCompatibilitiesIfNeeded(String applicationName) {
-        if (productCompatibilityRepository.count() > 0) {
-            log.info("Product compatibility data already seeded — skipping for {}", applicationName);
+        var products = productRepository.findAll();
+        var missingProducts = products.stream()
+                .filter(product -> productCompatibilityRepository.findByProductId(product.getId()).isEmpty())
+                .toList();
+
+        if (missingProducts.isEmpty()) {
+            log.info("Product compatibility data already complete — skipping for {}", applicationName);
             return;
         }
 
-        var products = productRepository.findAll();
         log.info("Generating compatibility evaluations for {} products × {} skin types for {}",
-                products.size(), SKIN_TYPES.size(), applicationName);
+                missingProducts.size(), SKIN_TYPES.size(), applicationName);
 
-        for (var product : products) {
+        for (var product : missingProducts) {
             for (var skinType : SKIN_TYPES) {
-                try {
-                    productCompatibilityCommandService.handle(new GenerateProductCompatibilityCommand(
-                            product.getId(),
-                            product.getName(),
-                            product.getCategory().name(),
-                            skinType
-                    ));
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    log.warn("Compatibility seeding interrupted for product {} / {}", product.getId(), skinType);
-                } catch (Exception e) {
-                    log.error("Failed to generate compatibility for product {} / {}: {}",
-                            product.getId(), skinType, e.getMessage());
-                }
+                productCompatibilityCommandService.handle(new GenerateProductCompatibilityCommand(
+                        product.getId(),
+                        product.getName(),
+                        product.getCategory().name(),
+                        skinType
+                ));
             }
         }
 
