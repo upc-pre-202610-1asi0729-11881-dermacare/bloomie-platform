@@ -1,7 +1,9 @@
 package com.bloomie.platform.payments.domain.model.aggregates;
 
+import com.bloomie.platform.payments.domain.model.commands.ProcessConsultationPaymentCommand;
 import com.bloomie.platform.payments.domain.model.commands.ProcessRenewalPaymentCommand;
 import com.bloomie.platform.payments.domain.model.commands.ProcessSubscriptionPaymentCommand;
+import com.bloomie.platform.payments.domain.model.events.ConsultationPaymentProcessedEvent;
 import com.bloomie.platform.payments.domain.model.events.PaymentRefundedEvent;
 import com.bloomie.platform.payments.domain.model.events.SubscriptionPaymentProcessedEvent;
 import com.bloomie.platform.payments.domain.model.events.SubscriptionRenewalPaymentProcessedEvent;
@@ -20,23 +22,41 @@ import lombok.Setter;
  */
 @Getter
 public class Payment extends AbstractDomainAggregateRoot<Payment> {
+
+    /** Percentage of a consultation fee retained by the platform as its monetization cut. */
+    private static final double PLATFORM_FEE_PERCENTAGE = 0.15;
+
     @Setter
     Long id;
 
     @Setter
     PatientId patientId;
 
+    /** Only set for {@link PaymentType#SUBSCRIPTION} and {@link PaymentType#RENEWAL} payments. */
     @Setter
     PlanId planId;
 
+    /** Only set for {@link PaymentType#SUBSCRIPTION} and {@link PaymentType#RENEWAL} payments. */
     @Setter
     SubscriptionId subscriptionId;
+
+    /** Only set for {@link PaymentType#CONSULTATION} payments. */
+    @Setter
+    AppointmentId appointmentId;
+
+    /** Only set for {@link PaymentType#CONSULTATION} payments. */
+    @Setter
+    DermatologistId dermatologistId;
 
     @Setter
     PaymentType type;
 
     @Setter
     PaymentAmount amount;
+
+    /** The platform's monetization cut of {@link #amount}. Only set for {@link PaymentType#CONSULTATION} payments. */
+    @Setter
+    PaymentAmount platformFeeAmount;
 
     @Setter
     PaymentStatus status;
@@ -49,13 +69,18 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
     /**
      * Creates a payment from the provided domain values.
      */
-    public Payment(Long id, PatientId patientId, PlanId planId, SubscriptionId subscriptionId, PaymentType type, PaymentAmount amount, PaymentStatus status) {
+    public Payment(Long id, PatientId patientId, PlanId planId, SubscriptionId subscriptionId,
+                   AppointmentId appointmentId, DermatologistId dermatologistId,
+                   PaymentType type, PaymentAmount amount, PaymentAmount platformFeeAmount, PaymentStatus status) {
         this.id = id;
         this.patientId = patientId;
         this.planId = planId;
         this.subscriptionId = subscriptionId;
+        this.appointmentId = appointmentId;
+        this.dermatologistId = dermatologistId;
         this.type = type;
         this.amount = amount;
+        this.platformFeeAmount = platformFeeAmount;
         this.status = status;
     }
 
@@ -88,6 +113,25 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
     }
 
     /**
+     * Creates a consultation payment from the provided {@link ProcessConsultationPaymentCommand}.
+     *
+     * <p>The platform fee is computed up front as {@link #PLATFORM_FEE_PERCENTAGE} of the
+     * consultation fee — it is the platform's monetization cut, already included in {@code amount}
+     * rather than charged on top of it.</p>
+     *
+     * @param command The {@link ProcessConsultationPaymentCommand} command
+     */
+    public Payment(ProcessConsultationPaymentCommand command) {
+        this.patientId = new PatientId(command.patientId());
+        this.dermatologistId = new DermatologistId(command.dermatologistId());
+        this.appointmentId = new AppointmentId(command.appointmentId());
+        this.amount = new PaymentAmount(command.amount());
+        this.platformFeeAmount = new PaymentAmount(command.amount() * PLATFORM_FEE_PERCENTAGE);
+        this.type = PaymentType.CONSULTATION;
+        this.status = PaymentStatus.PENDING;
+    }
+
+    /**
      * Signals that this initial subscription payment has been processed and persisted.
      * Registers a {@link SubscriptionPaymentProcessedEvent} for publication.
      */
@@ -103,6 +147,15 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
     public void onProcessRenewalPayment() {
         this.status = PaymentStatus.PROCESSED;
         registerDomainEvent(SubscriptionRenewalPaymentProcessedEvent.from(this));
+    }
+
+    /**
+     * Signals that this consultation payment has been processed and persisted.
+     * Registers a {@link ConsultationPaymentProcessedEvent} for publication.
+     */
+    public void onProcessConsultationPayment() {
+        this.status = PaymentStatus.PROCESSED;
+        registerDomainEvent(ConsultationPaymentProcessedEvent.from(this));
     }
 
     /**
@@ -132,12 +185,12 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
     }
 
     /**
-     * Plan id getter.
+     * Plan id getter. Only present for SUBSCRIPTION and RENEWAL payments.
      *
-     * @return Plan id
+     * @return Plan id, or {@code null} for CONSULTATION payments
      */
     public Long getPlanId() {
-        return planId.planId();
+        return planId == null ? null : planId.planId();
     }
 
     /**
@@ -150,14 +203,38 @@ public class Payment extends AbstractDomainAggregateRoot<Payment> {
     }
 
     /**
-     * Subscription id getter.
+     * Subscription id getter. Only present for SUBSCRIPTION and RENEWAL payments.
      *
-     * @return Subscription id
+     * @return Subscription id, or {@code null} for CONSULTATION payments
      */
-    public Long getSubscriptionId() { return subscriptionId.subscriptionId(); }
+    public Long getSubscriptionId() { return subscriptionId == null ? null : subscriptionId.subscriptionId(); }
+
+    /**
+     * Appointment id getter. Only present for CONSULTATION payments.
+     *
+     * @return Appointment id, or {@code null} for SUBSCRIPTION and RENEWAL payments
+     */
+    public Long getAppointmentId() { return appointmentId == null ? null : appointmentId.appointmentId(); }
+
+    /**
+     * Dermatologist id getter. Only present for CONSULTATION payments.
+     *
+     * @return Dermatologist id, or {@code null} for SUBSCRIPTION and RENEWAL payments
+     */
+    public Long getDermatologistId() { return dermatologistId == null ? null : dermatologistId.dermatologistId(); }
+
+    /**
+     * Platform fee amount getter. Only present for CONSULTATION payments.
+     *
+     * @return the platform's monetization cut, or {@code null} for SUBSCRIPTION and RENEWAL payments
+     */
+    public Double getPlatformFeeAmount() { return platformFeeAmount == null ? null : platformFeeAmount.amount(); }
 
     public PatientId getPatientIdValue() { return patientId; }
     public PlanId getPlanIdValue() { return planId; }
     public SubscriptionId getSubscriptionIdValue() { return subscriptionId; }
+    public AppointmentId getAppointmentIdValue() { return appointmentId; }
+    public DermatologistId getDermatologistIdValue() { return dermatologistId; }
     public PaymentAmount getAmountValue() { return amount; }
+    public PaymentAmount getPlatformFeeAmountValue() { return platformFeeAmount; }
 }

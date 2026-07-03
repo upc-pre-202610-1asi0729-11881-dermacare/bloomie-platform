@@ -2,6 +2,7 @@ package com.bloomie.platform.payments.application.internal.queryservices;
 
 import com.bloomie.platform.payments.application.queryservices.PaymentQueryService;
 import com.bloomie.platform.payments.domain.model.aggregates.Payment;
+import com.bloomie.platform.payments.domain.model.queries.GetPaymentByAppointmentIdQuery;
 import com.bloomie.platform.payments.domain.model.queries.GetPaymentByIdQuery;
 import com.bloomie.platform.payments.domain.model.queries.GetPaymentBySubscriptionIdQuery;
 import com.bloomie.platform.payments.domain.model.queries.GetPaymentsByPatientIdQuery;
@@ -43,5 +44,11 @@ public class PaymentQueryServiceImpl implements PaymentQueryService {
     @Override
     public Optional<Payment> handle(GetPaymentBySubscriptionIdQuery query) {
         return paymentRepository.findBySubscriptionId(query.subscriptionId());
+    }
+
+    // inherited javadoc
+    @Override
+    public Optional<Payment> handle(GetPaymentByAppointmentIdQuery query) {
+        return paymentRepository.findByAppointmentId(query.appointmentId());
     }
 }
