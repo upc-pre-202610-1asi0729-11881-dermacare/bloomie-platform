@@ -21,4 +21,11 @@ public interface DermatologyCareContextFacade {
      * @param dermatologistId the IAM user id
      */
     Long fetchProfileIdByDermatologistId(Long dermatologistId);
+
+    /**
+     * Returns the dermatologist's consultation fee, or {@code 0.0} if no profile is found.
+     *
+     * @param dermatologistId the IAM user id
+     */
+    Double fetchConsultationFeeByDermatologistId(Long dermatologistId);
 }

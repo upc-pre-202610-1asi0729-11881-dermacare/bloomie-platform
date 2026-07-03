@@ -2,6 +2,7 @@ package com.bloomie.platform.payments.infrastructure.persistence.jpa.adapters;
 
 import com.bloomie.platform.payments.domain.model.aggregates.Payment;
 import com.bloomie.platform.payments.domain.model.events.SubscriptionPaymentProcessedEvent;
+import com.bloomie.platform.payments.domain.model.valueobjects.AppointmentId;
 import com.bloomie.platform.payments.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.payments.domain.model.valueobjects.PaymentType;
 import com.bloomie.platform.payments.domain.model.valueobjects.SubscriptionId;
@@ -46,9 +47,11 @@ public class PaymentRepositoryImpl implements PaymentRepository {
         var savedPayment = PaymentPersistenceAssembler.toDomainFromPersistence(savedEntity);
         if (isNew) {
             // Each payment type fires a different domain event so consumers can
-            // react appropriately (activate vs. renew the subscription).
+            // react appropriately (activate vs. renew the subscription vs. pay out a consultation).
             if (savedPayment.getType() == PaymentType.RENEWAL) {
                 savedPayment.onProcessRenewalPayment();
+            } else if (savedPayment.getType() == PaymentType.CONSULTATION) {
+                savedPayment.onProcessConsultationPayment();
             } else {
                 savedPayment.onProcessSubscriptionPayment();
             }
@@ -70,5 +73,10 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     @Override
     public Optional<Payment> findBySubscriptionId(SubscriptionId id) {
         return paymentPersistenceRepository.findBySubscriptionId(id).map(PaymentPersistenceAssembler::toDomainFromPersistence);
+    }
+
+    @Override
+    public Optional<Payment> findByAppointmentId(AppointmentId id) {
+        return paymentPersistenceRepository.findByAppointmentId(id).map(PaymentPersistenceAssembler::toDomainFromPersistence);
     }
 }

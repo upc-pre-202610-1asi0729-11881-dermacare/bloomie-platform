@@ -2,8 +2,10 @@ package com.bloomie.platform.payments.interfaces.rest;
 
 import com.bloomie.platform.payments.application.commandservices.PaymentCommandService;
 import com.bloomie.platform.payments.application.queryservices.PaymentQueryService;
+import com.bloomie.platform.payments.domain.model.queries.GetPaymentByAppointmentIdQuery;
 import com.bloomie.platform.payments.domain.model.queries.GetPaymentByIdQuery;
 import com.bloomie.platform.payments.domain.model.queries.GetPaymentsByPatientIdQuery;
+import com.bloomie.platform.payments.domain.model.valueobjects.AppointmentId;
 import com.bloomie.platform.payments.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.payments.domain.model.commands.RefundPaymentCommand;
 import com.bloomie.platform.payments.interfaces.rest.resources.PaymentResource;
@@ -108,6 +110,36 @@ public class PaymentsController {
         var payments = paymentQueryService.handle(getPaymentByPatientIdQuery);
         if (payments.isEmpty()) return ResponseEntity.ok(Collections.emptyList());
         return ResponseEntity.ok(payments.stream().map(PaymentResourceFromEntityAssembler::toResourceFromEntity).toList());
+    }
+
+    /**
+     * Get the payment for a dermatological consultation appointment.
+     *
+     * @param appointmentId The appointment ID
+     * @return A {@link PaymentResource} resource for the appointment's consultation payment
+     */
+    @GetMapping("/appointment/{appointmentId}")
+    @Operation(
+            summary = "Get payment by appointment ID",
+            description = "Retrieves the consultation payment associated with a dermatological appointment."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Payment retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = PaymentResource.class))
+            ),
+            @ApiResponse(responseCode = "404", description = "No payment found for appointment")
+    })
+    public ResponseEntity<?> getPaymentByAppointmentId(
+            @PathVariable
+            @Parameter(description = "Appointment unique identifier", example = "1", required = true)
+            Long appointmentId
+    ) {
+        var query = new GetPaymentByAppointmentIdQuery(new AppointmentId(appointmentId));
+        var payment = paymentQueryService.handle(query);
+        if (payment.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(PaymentResourceFromEntityAssembler.toResourceFromEntity(payment.get()));
     }
 
     /**

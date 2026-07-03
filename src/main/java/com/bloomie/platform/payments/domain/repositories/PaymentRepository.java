@@ -1,6 +1,7 @@
 package com.bloomie.platform.payments.domain.repositories;
 
 import com.bloomie.platform.payments.domain.model.aggregates.Payment;
+import com.bloomie.platform.payments.domain.model.valueobjects.AppointmentId;
 import com.bloomie.platform.payments.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.payments.domain.model.valueobjects.SubscriptionId;
 
@@ -16,6 +17,8 @@ public interface PaymentRepository {
     List<Payment> findAllByPatientId(PatientId patientId);
 
     Optional<Payment> findBySubscriptionId(SubscriptionId subscriptionId);
+
+    Optional<Payment> findByAppointmentId(AppointmentId appointmentId);
 
     Payment save(Payment payment);
 }

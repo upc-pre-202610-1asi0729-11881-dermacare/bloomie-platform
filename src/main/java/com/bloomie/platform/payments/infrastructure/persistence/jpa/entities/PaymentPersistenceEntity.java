@@ -1,6 +1,8 @@
 package com.bloomie.platform.payments.infrastructure.persistence.jpa.entities;
 
 import com.bloomie.platform.payments.domain.model.valueobjects.*;
+import com.bloomie.platform.payments.infrastructure.persistence.jpa.converters.AppointmentIdPersistenceConverter;
+import com.bloomie.platform.payments.infrastructure.persistence.jpa.converters.DermatologistIdPersistenceConverter;
 import com.bloomie.platform.payments.infrastructure.persistence.jpa.converters.PatientIdPersistenceConverter;
 import com.bloomie.platform.payments.infrastructure.persistence.jpa.converters.PaymentAmountPersistenceConverter;
 import com.bloomie.platform.payments.infrastructure.persistence.jpa.converters.PlanIdPersistenceConverter;
@@ -25,17 +27,29 @@ public class PaymentPersistenceEntity extends AuditableAbstractPersistenceEntity
     @Column(nullable = false)
     private PatientId patientId;
 
+    // Only set for SUBSCRIPTION and RENEWAL payments.
     @Convert(converter = PlanIdPersistenceConverter.class)
-    @Column(nullable = false)
     private PlanId planId;
 
+    // Only set for SUBSCRIPTION and RENEWAL payments.
     @Convert(converter = SubscriptionIdPersistenceConverter.class)
-    @Column(nullable = false)
     private SubscriptionId subscriptionId;
+
+    // Only set for CONSULTATION payments.
+    @Convert(converter = AppointmentIdPersistenceConverter.class)
+    private AppointmentId appointmentId;
+
+    // Only set for CONSULTATION payments.
+    @Convert(converter = DermatologistIdPersistenceConverter.class)
+    private DermatologistId dermatologistId;
 
     @Convert(converter = PaymentAmountPersistenceConverter.class)
     @Column(nullable = false)
     private PaymentAmount paymentAmount;
+
+    // The platform's monetization cut of paymentAmount. Only set for CONSULTATION payments.
+    @Convert(converter = PaymentAmountPersistenceConverter.class)
+    private PaymentAmount platformFeeAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
