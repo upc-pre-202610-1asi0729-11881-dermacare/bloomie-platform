@@ -1,5 +1,6 @@
 package com.bloomie.platform.productdiscovery.domain.model.aggregates;
 
+import com.bloomie.platform.productdiscovery.domain.model.events.ProductCompatibilityEvaluatedEvent;
 import com.bloomie.platform.shared.domain.model.aggregates.AbstractDomainAggregateRoot;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,5 +63,13 @@ public class ProductCompatibility extends AbstractDomainAggregateRoot<ProductCom
         this.skinType = skinType;
         this.compatibilityScore = compatibilityScore;
         this.reason = reason;
+    }
+
+    /**
+     * Registers the domain event for when this compatibility evaluation is generated.
+     * Called by the repository after the aggregate is persisted and has an assigned id.
+     */
+    public void onEvaluated() {
+        registerDomainEvent(new ProductCompatibilityEvaluatedEvent(this.id, this.productId, this.skinType, this.compatibilityScore));
     }
 }
