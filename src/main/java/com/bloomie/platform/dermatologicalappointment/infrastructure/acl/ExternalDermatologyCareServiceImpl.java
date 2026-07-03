@@ -21,4 +21,9 @@ public class ExternalDermatologyCareServiceImpl implements ExternalDermatologyCa
     public boolean existsDermatologistProfile(Long dermatologistId) {
         return dermatologyCareContextFacade.existsDermatologistProfileByDermatologistId(dermatologistId);
     }
+
+    @Override
+    public Double getConsultationFee(Long dermatologistId) {
+        return dermatologyCareContextFacade.fetchConsultationFeeByDermatologistId(dermatologistId);
+    }
 }

@@ -16,4 +16,11 @@ public interface ExternalDermatologyCareService {
      * @param dermatologistId the IAM user id to check
      */
     boolean existsDermatologistProfile(Long dermatologistId);
+
+    /**
+     * Returns the dermatologist's consultation fee, or {@code 0.0} if no profile is found.
+     *
+     * @param dermatologistId the IAM user id
+     */
+    Double getConsultationFee(Long dermatologistId);
 }
