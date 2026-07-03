@@ -4,6 +4,7 @@ import com.bloomie.platform.productdiscovery.domain.model.aggregates.ProductComp
 import com.bloomie.platform.productdiscovery.domain.repositories.ProductCompatibilityRepository;
 import com.bloomie.platform.productdiscovery.infrastructure.persistence.jpa.assemblers.ProductCompatibilityPersistenceAssembler;
 import com.bloomie.platform.productdiscovery.infrastructure.persistence.jpa.repositories.ProductCompatibilityPersistenceRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,15 +17,19 @@ import java.util.List;
 public class ProductCompatibilityRepositoryImpl implements ProductCompatibilityRepository {
 
     private final ProductCompatibilityPersistenceRepository productCompatibilityPersistenceRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * Constructs the adapter with its required Spring Data repository.
      *
      * @param productCompatibilityPersistenceRepository the underlying JPA repository
+     * @param eventPublisher                            publisher used to emit domain events after persistence
      */
     public ProductCompatibilityRepositoryImpl(
-            ProductCompatibilityPersistenceRepository productCompatibilityPersistenceRepository) {
+            ProductCompatibilityPersistenceRepository productCompatibilityPersistenceRepository,
+            ApplicationEventPublisher eventPublisher) {
         this.productCompatibilityPersistenceRepository = productCompatibilityPersistenceRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     /**
@@ -32,8 +37,15 @@ public class ProductCompatibilityRepositoryImpl implements ProductCompatibilityR
      */
     @Override
     public ProductCompatibility save(ProductCompatibility compatibility) {
+        boolean isNew = compatibility.getId() == null;
         var entity = ProductCompatibilityPersistenceAssembler.toPersistenceFromDomain(compatibility);
         var saved = productCompatibilityPersistenceRepository.save(entity);
+        if (isNew) {
+            compatibility.setId(saved.getId());
+            compatibility.onEvaluated();
+        }
+        compatibility.domainEvents().forEach(eventPublisher::publishEvent);
+        compatibility.clearDomainEvents();
         return ProductCompatibilityPersistenceAssembler.toDomainFromPersistence(saved);
     }
 
