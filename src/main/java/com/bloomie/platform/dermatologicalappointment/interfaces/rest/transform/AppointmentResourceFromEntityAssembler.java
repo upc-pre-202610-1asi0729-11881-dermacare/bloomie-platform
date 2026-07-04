@@ -12,7 +12,6 @@ public final class AppointmentResourceFromEntityAssembler {
                 appointment.getId(),
                 appointment.getPatientId().patientId(),
                 appointment.getDermatologistId().dermatologistId(),
-                appointment.getPaymentId(),
                 appointment.getScheduledAt().value(),
                 appointment.getStatus().name(),
                 appointment.getCancellationReason());
