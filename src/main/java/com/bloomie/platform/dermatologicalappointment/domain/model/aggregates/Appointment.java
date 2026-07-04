@@ -53,11 +53,6 @@ public class Appointment extends AbstractDomainAggregateRoot<Appointment> {
     @Getter
     private DermatologistId dermatologistId;
 
-    /** External reference to the payment record; set asynchronously after payment is processed. */
-    @Getter
-    @Setter
-    private Long paymentId;
-
     @Getter
     private AppointmentDateTime scheduledAt;
 
@@ -91,12 +86,11 @@ public class Appointment extends AbstractDomainAggregateRoot<Appointment> {
 
     /** Reconstitution constructor — used by the persistence assembler; skips business validation. */
     public Appointment(Long id, PatientId patientId, DermatologistId dermatologistId,
-                       Long paymentId, AppointmentDateTime scheduledAt, AppointmentStatus status,
+                       AppointmentDateTime scheduledAt, AppointmentStatus status,
                        String cancellationReason, String pendingReprogramDate) {
         this.id = id;
         this.patientId = patientId;
         this.dermatologistId = dermatologistId;
-        this.paymentId = paymentId;
         this.scheduledAt = scheduledAt;
         this.status = status;
         this.cancellationReason = cancellationReason;
