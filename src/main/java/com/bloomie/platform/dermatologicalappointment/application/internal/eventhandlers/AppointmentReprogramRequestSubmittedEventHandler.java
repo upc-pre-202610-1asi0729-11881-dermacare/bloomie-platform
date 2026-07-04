@@ -7,6 +7,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 /**
@@ -20,6 +21,7 @@ import java.time.temporal.ChronoUnit;
 public class AppointmentReprogramRequestSubmittedEventHandler {
 
     private static final long REPROGRAM_WINDOW_MINIMUM_HOURS = 24L;
+    private static final ZoneId APPOINTMENT_ZONE = ZoneId.of("America/Lima");
 
     private final AppointmentCommandService appointmentCommandService;
 
@@ -30,7 +32,7 @@ public class AppointmentReprogramRequestSubmittedEventHandler {
     @EventListener
     public void on(AppointmentReprogramRequestSubmittedEvent event) {
         var currentScheduledAt = LocalDateTime.parse(event.currentScheduledAt());
-        long hoursUntilAppointment = ChronoUnit.HOURS.between(LocalDateTime.now(), currentScheduledAt);
+        long hoursUntilAppointment = ChronoUnit.HOURS.between(LocalDateTime.now(APPOINTMENT_ZONE), currentScheduledAt);
         if (hoursUntilAppointment > REPROGRAM_WINDOW_MINIMUM_HOURS) {
             appointmentCommandService.handle(
                     new ReprogramAppointmentCommand(event.appointmentId(), event.requestedDate()));
