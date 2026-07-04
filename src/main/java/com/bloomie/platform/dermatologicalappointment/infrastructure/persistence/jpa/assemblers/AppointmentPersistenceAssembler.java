@@ -16,7 +16,6 @@ public final class AppointmentPersistenceAssembler {
                 entity.getId(),
                 entity.getPatientId(),
                 entity.getDermatologistId(),
-                entity.getPaymentId(),
                 entity.getScheduledAt(),
                 entity.getStatus(),
                 entity.getCancellationReason(),
@@ -30,7 +29,6 @@ public final class AppointmentPersistenceAssembler {
         }
         entity.setPatientId(appointment.getPatientId());
         entity.setDermatologistId(appointment.getDermatologistId());
-        entity.setPaymentId(appointment.getPaymentId());
         entity.setScheduledAt(appointment.getScheduledAt());
         entity.setStatus(appointment.getStatus());
         entity.setCancellationReason(appointment.getCancellationReason());
