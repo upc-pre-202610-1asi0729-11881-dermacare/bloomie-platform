@@ -22,9 +22,6 @@ public class AppointmentPersistenceEntity extends AuditableAbstractPersistenceEn
     @Column(name = "dermatologist_id", nullable = false)
     private DermatologistId dermatologistId;
 
-    @Column(name = "payment_id")
-    private Long paymentId;
-
     @Convert(converter = AppointmentDateTimePersistenceConverter.class)
     @Column(name = "scheduled_at", nullable = false)
     private AppointmentDateTime scheduledAt;
@@ -46,9 +43,6 @@ public class AppointmentPersistenceEntity extends AuditableAbstractPersistenceEn
 
     public DermatologistId getDermatologistId() { return dermatologistId; }
     public void setDermatologistId(DermatologistId dermatologistId) { this.dermatologistId = dermatologistId; }
-
-    public Long getPaymentId() { return paymentId; }
-    public void setPaymentId(Long paymentId) { this.paymentId = paymentId; }
 
     public AppointmentDateTime getScheduledAt() { return scheduledAt; }
     public void setScheduledAt(AppointmentDateTime scheduledAt) { this.scheduledAt = scheduledAt; }
