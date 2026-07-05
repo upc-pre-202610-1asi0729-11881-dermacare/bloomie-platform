@@ -125,6 +125,7 @@ public class AppointmentCommandServiceImpl implements AppointmentCommandService 
             return Result.failure(ApplicationError.notFound("appointment", APPOINTMENT_NOT_FOUND));
         }
         appointment.get().markInProgress();
+        appointment.get().onMarkedInProgress();
         return Result.success(appointmentRepository.save(appointment.get()));
     }
 
