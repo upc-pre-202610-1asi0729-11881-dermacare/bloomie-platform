@@ -8,6 +8,7 @@ import com.bloomie.platform.dermatologicalappointment.domain.model.commands.Sche
 import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentCancelledEvent;
 import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentCompletedEvent;
 import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentConfirmedEvent;
+import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentMarkedInProgressEvent;
 import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentReprogramRequestSubmittedEvent;
 import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentReprogrammedEvent;
 import com.bloomie.platform.dermatologicalappointment.domain.model.events.DermatologyAppointmentScheduledEvent;
@@ -176,6 +177,11 @@ public class Appointment extends AbstractDomainAggregateRoot<Appointment> {
             throw new IllegalStateException(CANNOT_MARK_IN_PROGRESS_KEY);
         }
         this.status = AppointmentStatus.IN_PROGRESS;
+    }
+
+    /** Registers {@link AppointmentMarkedInProgressEvent}. */
+    public void onMarkedInProgress() {
+        registerDomainEvent(AppointmentMarkedInProgressEvent.from(this));
     }
 
     /** Transitions from {@code IN_PROGRESS} to {@code COMPLETED}. */
