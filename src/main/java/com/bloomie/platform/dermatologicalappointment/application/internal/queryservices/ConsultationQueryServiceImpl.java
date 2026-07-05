@@ -7,6 +7,7 @@ import com.bloomie.platform.dermatologicalappointment.domain.model.queries.GetCo
 import com.bloomie.platform.dermatologicalappointment.domain.repositories.ConsultationRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -32,5 +33,10 @@ public class ConsultationQueryServiceImpl implements ConsultationQueryService {
     @Override
     public Optional<Consultation> handle(GetConsultationByAppointmentIdQuery query) {
         return consultationRepository.findByAppointmentId(query.appointmentId());
+    }
+
+    @Override
+    public List<Consultation> handleGetAll() {
+        return consultationRepository.findAll();
     }
 }

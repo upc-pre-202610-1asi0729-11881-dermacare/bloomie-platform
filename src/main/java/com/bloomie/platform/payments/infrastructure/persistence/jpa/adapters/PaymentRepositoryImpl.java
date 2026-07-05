@@ -2,7 +2,9 @@ package com.bloomie.platform.payments.infrastructure.persistence.jpa.adapters;
 
 import com.bloomie.platform.payments.domain.model.aggregates.Payment;
 import com.bloomie.platform.payments.domain.model.events.SubscriptionPaymentProcessedEvent;
+import com.bloomie.platform.payments.domain.model.valueobjects.AppointmentId;
 import com.bloomie.platform.payments.domain.model.valueobjects.PatientId;
+import com.bloomie.platform.payments.domain.model.valueobjects.PaymentType;
 import com.bloomie.platform.payments.domain.model.valueobjects.SubscriptionId;
 import com.bloomie.platform.payments.domain.repositories.PaymentRepository;
 import com.bloomie.platform.payments.infrastructure.persistence.jpa.assemblers.PaymentPersistenceAssembler;
@@ -38,13 +40,28 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     @Override
     public Payment save(Payment payment) {
         boolean isNew = payment.getId() == null;
+        // isRefunding is read from the original aggregate before it is replaced by
+        // the reconstructed savedPayment, which always starts with refunding = false.
+        boolean isRefunding = !isNew && payment.isRefunding();
         var savedEntity = paymentPersistenceRepository.save(PaymentPersistenceAssembler.toPersistenceFromDomain(payment));
         var savedPayment = PaymentPersistenceAssembler.toDomainFromPersistence(savedEntity);
         if (isNew) {
-            savedPayment.onProcessSubscriptionPayment();
-            savedPayment.domainEvents().forEach(eventPublisher::publishEvent);
-            savedPayment.clearDomainEvents();
+            // Each payment type fires a different domain event so consumers can
+            // react appropriately (activate vs. renew the subscription vs. pay out a consultation).
+            if (savedPayment.getType() == PaymentType.RENEWAL) {
+                savedPayment.onProcessRenewalPayment();
+            } else if (savedPayment.getType() == PaymentType.CONSULTATION) {
+                savedPayment.onProcessConsultationPayment();
+            } else {
+                savedPayment.onProcessSubscriptionPayment();
+            }
+            // Persist the PENDING → PROCESSED status transition.
+            paymentPersistenceRepository.save(PaymentPersistenceAssembler.toPersistenceFromDomain(savedPayment));
+        } else if (isRefunding) {
+            savedPayment.onRefunded();
         }
+        savedPayment.domainEvents().forEach(eventPublisher::publishEvent);
+        savedPayment.clearDomainEvents();
         return savedPayment;
     }
 
@@ -56,5 +73,10 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     @Override
     public Optional<Payment> findBySubscriptionId(SubscriptionId id) {
         return paymentPersistenceRepository.findBySubscriptionId(id).map(PaymentPersistenceAssembler::toDomainFromPersistence);
+    }
+
+    @Override
+    public Optional<Payment> findByAppointmentId(AppointmentId id) {
+        return paymentPersistenceRepository.findByAppointmentId(id).map(PaymentPersistenceAssembler::toDomainFromPersistence);
     }
 }

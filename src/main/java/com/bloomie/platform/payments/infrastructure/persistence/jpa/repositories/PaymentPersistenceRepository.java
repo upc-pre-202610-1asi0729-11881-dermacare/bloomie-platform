@@ -1,5 +1,6 @@
 package com.bloomie.platform.payments.infrastructure.persistence.jpa.repositories;
 
+import com.bloomie.platform.payments.domain.model.valueobjects.AppointmentId;
 import com.bloomie.platform.payments.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.payments.domain.model.valueobjects.SubscriptionId;
 import com.bloomie.platform.payments.infrastructure.persistence.jpa.entities.PaymentPersistenceEntity;
@@ -16,4 +17,5 @@ import java.util.Optional;
 public interface PaymentPersistenceRepository extends JpaRepository<PaymentPersistenceEntity, Long> {
     List<PaymentPersistenceEntity> findAllByPatientId(PatientId patientId);
     Optional<PaymentPersistenceEntity> findBySubscriptionId(SubscriptionId subscriptionId);
+    Optional<PaymentPersistenceEntity> findByAppointmentId(AppointmentId appointmentId);
 }

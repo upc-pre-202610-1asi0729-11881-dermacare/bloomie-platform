@@ -28,6 +28,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/v1/consultations", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Consultations", description = "Dermatological Consultation Endpoints")
@@ -63,20 +65,6 @@ public class ConsultationController {
             @ApiResponse(responseCode = "404", description = "Consultation not found.")})
     public ResponseEntity<?> getConsultationById(@PathVariable Long id) {
         var result = queryService.handle(new GetConsultationByIdQuery(id));
-        if (result.isEmpty()) {
-            return ErrorResponseAssembler.toErrorResponseFromApplicationError(
-                    ApplicationError.notFound("consultation", "consultation.not.found"));
-        }
-        return ResponseEntity.ok(ConsultationResourceFromEntityAssembler.toResourceFromEntity(result.get()));
-    }
-
-    @GetMapping
-    @Operation(summary = "Get a consultation by appointment id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Consultation retrieved successfully."),
-            @ApiResponse(responseCode = "404", description = "Consultation not found.")})
-    public ResponseEntity<?> getConsultationByAppointmentId(@RequestParam Long appointmentId) {
-        var result = queryService.handle(new GetConsultationByAppointmentIdQuery(appointmentId));
         if (result.isEmpty()) {
             return ErrorResponseAssembler.toErrorResponseFromApplicationError(
                     ApplicationError.notFound("consultation", "consultation.not.found"));
@@ -139,5 +127,27 @@ public class ConsultationController {
         var result = commandService.handle(command);
         return ResponseEntityAssembler.toResponseEntityFromResult(
                 result, ConsultationResourceFromEntityAssembler::toResourceFromEntity, HttpStatus.OK);
+    }
+
+    @GetMapping
+    @Operation(summary = "Get consultations - all or by appointment id")
+    public ResponseEntity<?> getConsultations(
+            @RequestParam(required = false) Long appointmentId) {
+
+        if (appointmentId != null) {
+            var result = queryService.handle(new GetConsultationByAppointmentIdQuery(appointmentId));
+            if (result.isEmpty()) {
+                return ErrorResponseAssembler.toErrorResponseFromApplicationError(
+                        ApplicationError.notFound("consultation", "consultation.not.found"));
+            }
+            return ResponseEntity.ok(List.of(
+                    ConsultationResourceFromEntityAssembler.toResourceFromEntity(result.get())));
+        }
+
+        var all = queryService.handleGetAll();
+        return ResponseEntity.ok(
+                all.stream()
+                        .map(ConsultationResourceFromEntityAssembler::toResourceFromEntity)
+                        .toList());
     }
 }

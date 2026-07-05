@@ -1,13 +1,11 @@
 package com.bloomie.platform.routinemanagement.application.internal.commandservices;
 
 import com.bloomie.platform.routinemanagement.application.commandservices.RoutineCommandService;
-import com.bloomie.platform.routinemanagement.application.queryservices.RoutineQueryService;
+import com.bloomie.platform.routinemanagement.application.internal.outboundservices.ai.RoutineAiService;
 import com.bloomie.platform.routinemanagement.domain.model.aggregates.Routine;
 import com.bloomie.platform.routinemanagement.domain.model.commands.GeneratePersonalizedRoutineCommand;
 import com.bloomie.platform.routinemanagement.domain.model.commands.RemoveProductFromRoutineCommand;
 import com.bloomie.platform.routinemanagement.domain.model.commands.ReplaceProductInRoutineCommand;
-import com.bloomie.platform.routinemanagement.domain.model.queries.GetRecommendedProductsForRoutineItemQuery;
-import com.bloomie.platform.routinemanagement.domain.model.queries.GetRoutineByIdQuery;
 import com.bloomie.platform.routinemanagement.domain.model.valueobjects.PatientId;
 import com.bloomie.platform.routinemanagement.domain.model.valueobjects.RoutineStatus;
 import com.bloomie.platform.routinemanagement.domain.repositories.RoutineRepository;
@@ -23,11 +21,11 @@ public class RoutineCommandServiceImpl implements RoutineCommandService {
 
     private final RoutineRepository routineRepository;
 
-    private final RoutineQueryService routineQueryService;
+    private final RoutineAiService routineAiService;
 
-    public RoutineCommandServiceImpl(RoutineRepository routineRepository, RoutineQueryService routineQueryService) {
+    public RoutineCommandServiceImpl(RoutineRepository routineRepository, RoutineAiService routineAiService) {
         this.routineRepository = routineRepository;
-        this.routineQueryService = routineQueryService;
+        this.routineAiService = routineAiService;
     }
 
     @Override
@@ -41,6 +39,18 @@ public class RoutineCommandServiceImpl implements RoutineCommandService {
             });
 
             var routine = new Routine(command);
+
+            var stepNames = routine.getItems().stream()
+                    .map(item -> item.getStep())
+                    .toList();
+            var aiProducts = routineAiService.selectProductsForRoutine(command.skinType(), stepNames);
+            routine.getItems().forEach(item -> {
+                var aiProduct = aiProducts.get(item.getStep());
+                if (aiProduct != null) {
+                    item.updateProductRecommendation(aiProduct);
+                }
+            });
+
             routine = routineRepository.save(routine);
             return Result.success(routine.getId());
         } catch (Exception e) {
@@ -75,11 +85,17 @@ public class RoutineCommandServiceImpl implements RoutineCommandService {
             return Result.failure(ApplicationError.notFound("Routine",
                     command.routineId().toString()));
 
-        var validOptions = routineQueryService.handle(
-                new GetRecommendedProductsForRoutineItemQuery(
-                        command.routineId(),
-                        command.routineItemId()));
+        var item = routine.get().getItems().stream()
+                .filter(i -> i.getId().equals(command.routineItemId()))
+                .findFirst();
+        if (item.isEmpty())
+            return Result.failure(ApplicationError.notFound("RoutineItem",
+                    command.routineItemId().toString()));
 
+        // Validated against the full product catalog for this step rather than a fresh AI
+        // call: the AI-suggested alternatives shown to the patient can vary between calls,
+        // but every catalog product for the step is always a legitimate replacement.
+        var validOptions = routineAiService.getCatalogProductsForStep(item.get().getStep());
         if (!validOptions.contains(command.newProductRecommendation()))
             return Result.failure(ApplicationError.businessRuleViolation(
                     "replace-product",
@@ -97,4 +113,7 @@ public class RoutineCommandServiceImpl implements RoutineCommandService {
                     "replace-product", e.getMessage()));
         }
     }
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.bloomie.platform.productdiscovery.infrastructure.persistence.jpa.repositories;
 
+import com.bloomie.platform.productdiscovery.domain.model.aggregates.Product;
 import com.bloomie.platform.productdiscovery.infrastructure.persistence.jpa.entities.ProductPersistenceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -9,4 +10,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ProductPersistenceRepository extends JpaRepository<ProductPersistenceEntity, Long> {
+    Product save(Product product);
 }

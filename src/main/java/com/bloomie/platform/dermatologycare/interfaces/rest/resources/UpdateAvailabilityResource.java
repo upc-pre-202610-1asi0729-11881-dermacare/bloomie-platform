@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * Request DTO for updating an existing {@code Availability} slot.
+ * Request resource for updating an existing {@code Availability} slot.
  */
 @Schema(name = "UpdateAvailabilityRequest", description = "Request payload for updating an availability slot")
 public record UpdateAvailabilityResource(
@@ -18,5 +18,8 @@ public record UpdateAvailabilityResource(
 
         @NotBlank(message = "{validation.not-blank}")
         @Schema(description = "End time (HH:mm)", example = "18:00")
-        String endTime) {
+        String endTime,
+
+        @Schema(description = "Whether this day is still an active working day. Defaults to true when omitted.", example = "true")
+        Boolean active) {
 }

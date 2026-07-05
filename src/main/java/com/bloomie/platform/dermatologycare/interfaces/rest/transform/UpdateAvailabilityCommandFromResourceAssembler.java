@@ -19,6 +19,7 @@ public final class UpdateAvailabilityCommandFromResourceAssembler {
                 availabilityId,
                 DayOfWeek.valueOf(resource.day().toUpperCase()),
                 LocalTime.parse(resource.startTime()),
-                LocalTime.parse(resource.endTime()));
+                LocalTime.parse(resource.endTime()),
+                resource.active() == null || resource.active());
     }
 }

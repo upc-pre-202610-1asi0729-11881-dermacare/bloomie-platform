@@ -8,6 +8,7 @@ import com.bloomie.platform.dermatologicalappointment.domain.model.commands.Sche
 import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentCancelledEvent;
 import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentCompletedEvent;
 import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentConfirmedEvent;
+import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentMarkedInProgressEvent;
 import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentReprogramRequestSubmittedEvent;
 import com.bloomie.platform.dermatologicalappointment.domain.model.events.AppointmentReprogrammedEvent;
 import com.bloomie.platform.dermatologicalappointment.domain.model.events.DermatologyAppointmentScheduledEvent;
@@ -20,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * Aggregate root representing a dermatological appointment between a patient and a dermatologist.
@@ -42,6 +44,12 @@ public class Appointment extends AbstractDomainAggregateRoot<Appointment> {
     private static final String CANNOT_MARK_IN_PROGRESS_KEY = "appointment.cannot.mark.in.progress";
     private static final String MUST_BE_FUTURE_KEY = "appointment.scheduled.at.must.be.future";
     private static final long REFUND_WINDOW_HOURS = 24L;
+    /**
+     * scheduledAt is a naive local date-time (no offset) representing wall-clock time in the
+     * practice's timezone. "Now" must be computed in this same zone so the comparison isn't
+     * skewed by the server's system default zone (e.g. UTC in production).
+     */
+    private static final ZoneId APPOINTMENT_ZONE = ZoneId.of("America/Lima");
 
     @Getter
     @Setter
@@ -52,11 +60,6 @@ public class Appointment extends AbstractDomainAggregateRoot<Appointment> {
 
     @Getter
     private DermatologistId dermatologistId;
-
-    /** External reference to the payment record; set asynchronously after payment is processed. */
-    @Getter
-    @Setter
-    private Long paymentId;
 
     @Getter
     private AppointmentDateTime scheduledAt;
@@ -80,7 +83,7 @@ public class Appointment extends AbstractDomainAggregateRoot<Appointment> {
      */
     public Appointment(ScheduleDermatologyAppointmentCommand command) {
         var dateTime = LocalDateTime.parse(command.scheduledAt());
-        if (!dateTime.isAfter(LocalDateTime.now())) {
+        if (!dateTime.isAfter(LocalDateTime.now(APPOINTMENT_ZONE))) {
             throw new IllegalArgumentException(MUST_BE_FUTURE_KEY);
         }
         this.patientId = new PatientId(command.patientId());
@@ -91,12 +94,11 @@ public class Appointment extends AbstractDomainAggregateRoot<Appointment> {
 
     /** Reconstitution constructor — used by the persistence assembler; skips business validation. */
     public Appointment(Long id, PatientId patientId, DermatologistId dermatologistId,
-                       Long paymentId, AppointmentDateTime scheduledAt, AppointmentStatus status,
+                       AppointmentDateTime scheduledAt, AppointmentStatus status,
                        String cancellationReason, String pendingReprogramDate) {
         this.id = id;
         this.patientId = patientId;
         this.dermatologistId = dermatologistId;
-        this.paymentId = paymentId;
         this.scheduledAt = scheduledAt;
         this.status = status;
         this.cancellationReason = cancellationReason;
@@ -177,6 +179,11 @@ public class Appointment extends AbstractDomainAggregateRoot<Appointment> {
         this.status = AppointmentStatus.IN_PROGRESS;
     }
 
+    /** Registers {@link AppointmentMarkedInProgressEvent}. */
+    public void onMarkedInProgress() {
+        registerDomainEvent(AppointmentMarkedInProgressEvent.from(this));
+    }
+
     /** Transitions from {@code IN_PROGRESS} to {@code COMPLETED}. */
     public void complete() {
         if (this.status == AppointmentStatus.CANCELLED || this.status == AppointmentStatus.COMPLETED) {
@@ -196,6 +203,6 @@ public class Appointment extends AbstractDomainAggregateRoot<Appointment> {
      */
     public boolean isEligibleForRefund() {
         var scheduledDateTime = LocalDateTime.parse(scheduledAt.value());
-        return scheduledDateTime.isAfter(LocalDateTime.now().plusHours(REFUND_WINDOW_HOURS));
+        return scheduledDateTime.isAfter(LocalDateTime.now(APPOINTMENT_ZONE).plusHours(REFUND_WINDOW_HOURS));
     }
 }

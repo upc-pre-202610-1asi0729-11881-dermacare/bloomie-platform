@@ -18,8 +18,11 @@ public class PaymentPersistenceAssembler {
                 entity.getPatientId(),
                 entity.getPlanId(),
                 entity.getSubscriptionId(),
+                entity.getAppointmentId(),
+                entity.getDermatologistId(),
                 entity.getType(),
                 entity.getPaymentAmount(),
+                entity.getPlatformFeeAmount(),
                 entity.getStatus()
         );
     }
@@ -27,13 +30,16 @@ public class PaymentPersistenceAssembler {
     public static PaymentPersistenceEntity toPersistenceFromDomain(Payment payment) {
         if (payment == null) return null;
         var entity = new PaymentPersistenceEntity();
-        if (entity.getId() != null) {
+        if (payment.getId() != null) {
             entity.setId(payment.getId());
         }
         entity.setPatientId(payment.getPatientIdValue());
         entity.setPlanId(payment.getPlanIdValue());
         entity.setSubscriptionId(payment.getSubscriptionIdValue());
+        entity.setAppointmentId(payment.getAppointmentIdValue());
+        entity.setDermatologistId(payment.getDermatologistIdValue());
         entity.setPaymentAmount(payment.getAmountValue());
+        entity.setPlatformFeeAmount(payment.getPlatformFeeAmountValue());
         entity.setStatus(payment.getStatus());
         entity.setType(payment.getType());
         return entity;

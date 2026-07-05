@@ -34,4 +34,12 @@ public class DermatologyCareContextFacadeImpl implements DermatologyCareContextF
                 .map(p -> p.getId())
                 .orElse(0L);
     }
+
+    @Override
+    public Double fetchConsultationFeeByDermatologistId(Long dermatologistId) {
+        var query = new GetDermatologistProfileByDermatologistIdQuery(new DermatologistId(dermatologistId));
+        return profileQueryService.handle(query)
+                .map(p -> p.getConsultationFee())
+                .orElse(0.0);
+    }
 }

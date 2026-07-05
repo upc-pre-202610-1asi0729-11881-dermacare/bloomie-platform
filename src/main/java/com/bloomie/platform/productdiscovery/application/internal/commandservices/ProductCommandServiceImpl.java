@@ -1,6 +1,7 @@
 package com.bloomie.platform.productdiscovery.application.internal.commandservices;
 
 import com.bloomie.platform.productdiscovery.application.commandservices.ProductCommandService;
+import com.bloomie.platform.productdiscovery.application.internal.outboundservices.catalog.ProductCatalogService;
 import com.bloomie.platform.productdiscovery.domain.model.aggregates.Product;
 import com.bloomie.platform.productdiscovery.domain.model.commands.SeedProductsCommand;
 import com.bloomie.platform.productdiscovery.domain.model.valueobjects.ProductCategory;
@@ -8,19 +9,25 @@ import com.bloomie.platform.productdiscovery.domain.repositories.ProductReposito
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Application service that handles product catalog commands.
+ * Fetches products from Open Beauty Facts via the ProductCatalogService outbound port.
  */
 @Service
 @Slf4j
 public class ProductCommandServiceImpl implements ProductCommandService {
 
-    private final ProductRepository productRepository;
+    private final ProductRepository    productRepository;
+    private final ProductCatalogService productCatalogService;
 
-    public ProductCommandServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductCommandServiceImpl(ProductRepository productRepository,
+                                     ProductCatalogService productCatalogService) {
+        this.productRepository    = productRepository;
+        this.productCatalogService = productCatalogService;
     }
 
     @Override
@@ -29,59 +36,56 @@ public class ProductCommandServiceImpl implements ProductCommandService {
             log.info("Product catalog already seeded — skipping.");
             return;
         }
-        log.info("Seeding initial product catalog...");
-        productRepository.saveAll(buildInitialCatalog());
-        log.info("Product catalog seeding complete.");
+        log.info("Seeding product catalog from Open Beauty Facts...");
+        seedFromOpenBeautyFacts();
+    }
+
+    private void seedFromOpenBeautyFacts() {
+        var searchTerms = Map.of(
+                "CLEANSER",    "face cleanser",
+                "TONER",       "face toner",
+                "SERUM",       "face serum",
+                "MOISTURIZER", "face moisturizer",
+                "SUNSCREEN",   "face sunscreen SPF"
+        );
+
+        List<Product> allProducts = new ArrayList<>();
+        for (var entry : searchTerms.entrySet()) {
+            var products = productCatalogService.fetchProductsByCategory(
+                    entry.getValue(), entry.getKey(), 24);
+            allProducts.addAll(products);
+            log.info("Fetched {} products for {}", products.size(), entry.getKey());
+        }
+
+        if (!allProducts.isEmpty()) {
+            productRepository.saveAll(allProducts);
+            log.info("Seeded {} products from Open Beauty Facts.", allProducts.size());
+        } else {
+            log.warn("Open Beauty Facts returned nothing — falling back to default catalog.");
+            productRepository.saveAll(buildInitialCatalog());
+        }
     }
 
     private List<Product> buildInitialCatalog() {
         return List.of(
                 buildProduct("CeraVe Foaming Facial Cleanser", "CeraVe", ProductCategory.CLEANSER,
-                        "A gentle foaming cleanser for normal to oily skin that removes excess oil without disrupting the skin barrier.",
+                        "A gentle foaming cleanser for normal to oily skin.",
                         List.of("Removes excess oil", "Maintains skin barrier", "Non-comedogenic"), true),
                 buildProduct("La Roche-Posay Toleriane Hydrating Gentle Cleanser", "La Roche-Posay", ProductCategory.CLEANSER,
-                        "A hydrating gentle cleanser for sensitive and dry skin that soothes and protects.",
+                        "A hydrating gentle cleanser for sensitive and dry skin.",
                         List.of("Hydrates while cleansing", "Suitable for sensitive skin", "Fragrance-free"), false),
-                buildProduct("Neutrogena Ultra Gentle Daily Cleanser", "Neutrogena", ProductCategory.CLEANSER,
-                        "A daily gentle cleanser for all skin types formulated with minimal ingredients.",
-                        List.of("Fragrance-free", "Hypoallergenic", "Soap-free"), false),
-
                 buildProduct("Paula's Choice Skin Balancing Pore-Reducing Toner", "Paula's Choice", ProductCategory.TONER,
-                        "A lightweight toner that minimizes pores and balances oil production for combination and oily skin.",
+                        "A lightweight toner that minimizes pores and balances oil production.",
                         List.of("Minimizes pores", "Balances oil production", "Brightens skin"), true),
-                buildProduct("Thayers Witch Hazel Alcohol-Free Toner", "Thayers", ProductCategory.TONER,
-                        "An alcohol-free toner with witch hazel and aloe vera that soothes and refreshes all skin types.",
-                        List.of("Soothes skin", "Alcohol-free", "Refreshes complexion"), false),
-
                 buildProduct("The Ordinary Hyaluronic Acid 2% + B5", "The Ordinary", ProductCategory.SERUM,
-                        "A hydration serum that supports healthy skin moisture levels and plumps dry skin.",
+                        "A hydration serum that supports healthy skin moisture levels.",
                         List.of("Deep hydration", "Plumps skin", "Lightweight"), true),
-                buildProduct("SkinCeuticals C E Ferulic", "SkinCeuticals", ProductCategory.SERUM,
-                        "A vitamin C serum that provides environmental protection and brightening benefits.",
-                        List.of("Brightens skin", "Antioxidant protection", "Reduces fine lines"), true),
-                buildProduct("Paula's Choice 10% Niacinamide Booster", "Paula's Choice", ProductCategory.SERUM,
-                        "A concentrated serum that visibly reduces enlarged pores and evens skin tone.",
-                        List.of("Reduces pore size", "Evens skin tone", "Reduces redness"), false),
-
                 buildProduct("Cetaphil Moisturizing Lotion", "Cetaphil", ProductCategory.MOISTURIZER,
-                        "A fast-absorbing, non-greasy moisturizer for all skin types that provides long-lasting hydration.",
-                        List.of("Long-lasting hydration", "Non-greasy formula", "Gentle for daily use"), true),
-                buildProduct("First Aid Beauty Ultra Repair Cream", "First Aid Beauty", ProductCategory.MOISTURIZER,
-                        "An intense moisturizer for dry and sensitive skin with colloidal oatmeal and shea butter.",
-                        List.of("Intensive repair", "Soothes irritation", "Rich barrier cream"), false),
-                buildProduct("Neutrogena Hydro Boost Water Gel", "Neutrogena", ProductCategory.MOISTURIZER,
-                        "An oil-free water gel moisturizer with hyaluronic acid designed for normal to oily skin.",
-                        List.of("Oil-free", "Intense hydration", "Lightweight gel texture"), true),
-
+                        "A fast-absorbing moisturizer for all skin types.",
+                        List.of("Long-lasting hydration", "Non-greasy formula", "Gentle"), true),
                 buildProduct("EltaMD UV Clear Broad-Spectrum SPF 46", "EltaMD", ProductCategory.SUNSCREEN,
-                        "A lightweight, oil-free sunscreen that calms and protects sensitive skin prone to breakouts.",
-                        List.of("SPF 46 broad-spectrum", "Oil-free formula", "Calms acne-prone skin"), true),
-                buildProduct("Supergoop! Unseen Sunscreen SPF 40", "Supergoop!", ProductCategory.SUNSCREEN,
-                        "An invisible, weightless sunscreen that doubles as a makeup primer for all skin tones.",
-                        List.of("Invisible finish", "Makeup-friendly primer", "SPF 40 broad-spectrum"), false),
-                buildProduct("La Roche-Posay Anthelios Mineral SPF 50", "La Roche-Posay", ProductCategory.SUNSCREEN,
-                        "A mineral sunscreen ideal for sensitive skin with a soothing matte finish.",
-                        List.of("Mineral formula", "Sensitive skin safe", "SPF 50 broad-spectrum"), true)
+                        "A lightweight sunscreen that calms and protects sensitive skin.",
+                        List.of("SPF 46", "Oil-free formula", "Calms acne-prone skin"), true)
         );
     }
 
@@ -94,6 +98,17 @@ public class ProductCommandServiceImpl implements ProductCommandService {
         product.setDescription(description);
         product.setBenefits(benefits);
         product.setAiRecommended(aiRecommended);
+        product.setImageUrl(fallbackImageFor(category));
         return product;
+    }
+
+    private String fallbackImageFor(ProductCategory category) {
+        return switch (category) {
+            case CLEANSER    -> "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&q=80";
+            case TONER       -> "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&q=80";
+            case SERUM       -> "https://images.unsplash.com/photo-1617897903246-719242758050?w=400&q=80";
+            case MOISTURIZER -> "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab12?w=400&q=80";
+            case SUNSCREEN   -> "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&q=80";
+        };
     }
 }

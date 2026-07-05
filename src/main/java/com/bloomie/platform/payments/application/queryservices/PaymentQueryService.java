@@ -1,6 +1,7 @@
 package com.bloomie.platform.payments.application.queryservices;
 
 import com.bloomie.platform.payments.domain.model.aggregates.Payment;
+import com.bloomie.platform.payments.domain.model.queries.GetPaymentByAppointmentIdQuery;
 import com.bloomie.platform.payments.domain.model.queries.GetPaymentByIdQuery;
 import com.bloomie.platform.payments.domain.model.queries.GetPaymentBySubscriptionIdQuery;
 import com.bloomie.platform.payments.domain.model.queries.GetPaymentsByPatientIdQuery;
@@ -35,4 +36,12 @@ public interface PaymentQueryService {
      * @return A {@link Payment} instance if found, otherwise empty
      */
     Optional<Payment> handle(GetPaymentBySubscriptionIdQuery query);
+
+    /**
+     * Handle Get Payment By Appointment ID Query
+     *
+     * @param query The {@link GetPaymentByAppointmentIdQuery} query
+     * @return A {@link Payment} instance if found, otherwise empty
+     */
+    Optional<Payment> handle(GetPaymentByAppointmentIdQuery query);
 }

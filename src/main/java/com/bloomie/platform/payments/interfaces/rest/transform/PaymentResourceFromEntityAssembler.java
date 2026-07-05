@@ -20,8 +20,11 @@ public class PaymentResourceFromEntityAssembler {
                 entity.getPatientId(),
                 entity.getPlanId(),
                 entity.getSubscriptionId(),
+                entity.getAppointmentId(),
+                entity.getDermatologistId(),
                 entity.getType().name(),
                 entity.getAmount(),
+                entity.getPlatformFeeAmount(),
                 entity.getStatus().name());
     }
 }

@@ -6,11 +6,17 @@ import com.bloomie.platform.shared.application.result.Result;
 import com.bloomie.platform.shared.interfaces.rest.transform.ResponseEntityAssembler;
 import com.bloomie.platform.subscription.application.commandservices.SubscriptionCommandService;
 import com.bloomie.platform.subscription.application.queryservices.SubscriptionQueryService;
+import com.bloomie.platform.subscription.domain.model.commands.ActivateSubscriptionCommand;
 import com.bloomie.platform.subscription.domain.model.queries.GetSubscriptionByIdQuery;
 import com.bloomie.platform.subscription.domain.model.queries.GetSubscriptionByPatientIdQuery;
 import com.bloomie.platform.subscription.domain.model.valueobjects.PatientId;
+import com.bloomie.platform.subscription.domain.model.commands.CancelSubscriptionCommand;
+import com.bloomie.platform.subscription.domain.model.commands.ExpireSubscriptionCommand;
+import com.bloomie.platform.subscription.domain.model.commands.RenewSubscriptionCommand;
+import com.bloomie.platform.subscription.interfaces.rest.resources.ChangeSubscriptionPlanResource;
 import com.bloomie.platform.subscription.interfaces.rest.resources.SelectSubscriptionPlanResource;
 import com.bloomie.platform.subscription.interfaces.rest.resources.SubscriptionResource;
+import com.bloomie.platform.subscription.interfaces.rest.transform.ChangeSubscriptionPlanCommandFromResourceAssembler;
 import com.bloomie.platform.subscription.interfaces.rest.transform.SelectSubscriptionPlanCommandFromResourceAssembler;
 import com.bloomie.platform.subscription.interfaces.rest.transform.SubscriptionResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -111,5 +117,132 @@ public class SubscriptionController {
         var subscriptionEntity = subscription.get();
         var subscriptionResource = SubscriptionResourceFromEntityAssembler.toResourceFromEntity(subscriptionEntity);
         return ResponseEntity.ok(subscriptionResource);
+    }
+
+    @DeleteMapping("/{subscriptionId}")
+    @Operation(summary = "Cancel subscription", description = "Cancels an active or pending subscription by its unique identifier.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Subscription cancelled successfully",
+                    content = @Content(schema = @Schema(implementation = SubscriptionResource.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Subscription cannot be cancelled in its current status"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - JWT token required"),
+            @ApiResponse(responseCode = "404", description = "Subscription not found")
+    })
+    public ResponseEntity<?> cancelSubscription(
+            @PathVariable
+            @Parameter(description = "Unique subscription identifier", example = "1", required = true)
+            Long subscriptionId
+    ) {
+        var command = new CancelSubscriptionCommand(subscriptionId);
+        var result = subscriptionCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                SubscriptionResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.OK
+        );
+    }
+
+    @PatchMapping("/{subscriptionId}/renew")
+    @Operation(summary = "Renew subscription", description = "Renews an active subscription by extending its end date according to the plan duration.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Subscription renewed successfully",
+                    content = @Content(schema = @Schema(implementation = SubscriptionResource.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Subscription cannot be renewed in its current status"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - JWT token required"),
+            @ApiResponse(responseCode = "404", description = "Subscription not found")
+    })
+    public ResponseEntity<?> renewSubscription(
+            @PathVariable
+            @Parameter(description = "Unique subscription identifier", example = "1", required = true)
+            Long subscriptionId
+    ) {
+        var command = new RenewSubscriptionCommand(subscriptionId);
+        var result = subscriptionCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                SubscriptionResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.OK
+        );
+    }
+
+    @PatchMapping("/{subscriptionId}/expire")
+    @Operation(summary = "Expire subscription", description = "Marks an active subscription as expired when the billing period ends and renewal payment could not be processed.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Subscription expired successfully",
+                    content = @Content(schema = @Schema(implementation = SubscriptionResource.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Subscription cannot be expired in its current status"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - JWT token required"),
+            @ApiResponse(responseCode = "404", description = "Subscription not found")
+    })
+    public ResponseEntity<?> expireSubscription(
+            @PathVariable
+            @Parameter(description = "Unique subscription identifier", example = "1", required = true)
+            Long subscriptionId
+    ) {
+        var command = new ExpireSubscriptionCommand(subscriptionId);
+        var result = subscriptionCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                SubscriptionResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.OK
+        );
+    }
+
+    @PatchMapping("/{subscriptionId}/activate")
+    @Operation(summary = "Activate subscription")
+    public ResponseEntity<?> activateSubscription(
+            @PathVariable Long subscriptionId) {
+
+        var subscription = subscriptionQueryService
+                .handle(new GetSubscriptionByIdQuery(subscriptionId));
+        if (subscription.isEmpty()) return ResponseEntity.notFound().build();
+
+        var command = new ActivateSubscriptionCommand(
+                subscription.get().getPatientId(),
+                subscription.get().getPlanId()
+        );
+        var result = subscriptionCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                SubscriptionResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.OK
+        );
+    }
+
+    @PatchMapping("/{subscriptionId}/change-plan")
+    @Operation(summary = "Change subscription plan", description = "Switches an existing subscription to a different plan.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Subscription plan changed successfully",
+                    content = @Content(schema = @Schema(implementation = SubscriptionResource.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Subscription cannot change plan in its current status"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - JWT token required"),
+            @ApiResponse(responseCode = "404", description = "Subscription or plan not found"),
+            @ApiResponse(responseCode = "409", description = "Subscription is already on the requested plan")
+    })
+    public ResponseEntity<?> changeSubscriptionPlan(
+            @PathVariable
+            @Parameter(description = "Unique subscription identifier", example = "1", required = true)
+            Long subscriptionId,
+            @RequestBody ChangeSubscriptionPlanResource resource
+    ) {
+        var command = ChangeSubscriptionPlanCommandFromResourceAssembler.toCommandFromResource(subscriptionId, resource);
+        var result = subscriptionCommandService.handle(command);
+        return ResponseEntityAssembler.toResponseEntityFromResult(
+                result,
+                SubscriptionResourceFromEntityAssembler::toResourceFromEntity,
+                HttpStatus.OK
+        );
     }
 }

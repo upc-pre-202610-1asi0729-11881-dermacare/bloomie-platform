@@ -2,6 +2,7 @@ package com.bloomie.platform.dermatologicalappointment.domain.repositories;
 
 import com.bloomie.platform.dermatologicalappointment.domain.model.aggregates.Consultation;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -41,4 +42,6 @@ public interface ConsultationRepository {
      * @return the persisted aggregate
      */
     Consultation save(Consultation consultation);
+
+    List<Consultation> findAll();
 }

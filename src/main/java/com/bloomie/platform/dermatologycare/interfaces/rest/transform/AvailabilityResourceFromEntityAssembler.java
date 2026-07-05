@@ -5,7 +5,7 @@ import com.bloomie.platform.dermatologycare.interfaces.rest.resources.Availabili
 
 /**
  * Stateless assembler that converts an {@link Availability} aggregate
- * into an {@link AvailabilityResource} response DTO.
+ * into an {@link AvailabilityResource}.
  */
 public final class AvailabilityResourceFromEntityAssembler {
 
